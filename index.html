@@ -64,7 +64,19 @@
   .ocr-row .tag.ok{background:#dcfce7;color:#166534;}
   .ocr-row .tag.empty{background:#f1f5f9;color:#64748b;}
 
-  /* Picker fecha+hora */
+  /* ===== Fecha/hora colapsada ===== */
+  .datetime-summary{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    background:#f8fafc;border:1px solid var(--border);border-radius:8px;
+    padding:8px 10px;font-size:.9rem;
+  }
+  .datetime-summary .txt{font-weight:600;color:var(--text);}
+  .datetime-summary .txt small{color:var(--muted);font-weight:400;font-size:.75rem;margin-right:4px;}
+  .datetime-summary button{width:auto;padding:6px 10px;font-size:.78rem;}
+  #datetimePanel{display:none;margin-top:8px;}
+  #datetimePanel.open{display:block;}
+
+  /* ===== Picker ruleta ===== */
   .picker{
     display:flex;background:#f8fafc;border:1px solid var(--border);
     border-radius:8px;overflow:hidden;height:112px;position:relative;
@@ -92,7 +104,7 @@
   .picker-col .item.sel{font-weight:700;color:var(--primary);}
   .picker-col .item.dim{color:#94a3b8;}
 
-  /* Cámara */
+  /* ===== Cámara ===== */
   #cameraWrap{display:none;position:fixed;inset:0;background:#000;z-index:1000;}
   #cameraWrap.active{display:block;}
   #video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;}
@@ -131,7 +143,7 @@
   .dest-picker button{flex-direction:column;padding:12px;line-height:1.2;font-size:.85rem;}
   .dest-picker button small{font-weight:400;font-size:.68rem;opacity:.85;margin-top:2px;}
 
-  /* Cropper de respaldo (una zona) */
+  /* ===== Cropper respaldo ===== */
   #cropperWrap{display:none;position:fixed;inset:0;background:#000;z-index:1001;flex-direction:column;}
   #cropperWrap.active{display:flex;}
   #cropperWrap .cropper-container-wrap{flex:1;min-height:0;overflow:hidden;position:relative;}
@@ -141,71 +153,65 @@
   .crop-bar .actions{display:flex;gap:8px;}
   .crop-bar .actions button{flex:1;}
 
-  /* ================= MODO LENS ================= */
-  #lensWrap{display:none;position:fixed;inset:0;background:#0b0f17;z-index:1002;flex-direction:column;}
+  /* ===== MODO LENS ===== */
+  #lensWrap{display:none;position:fixed;inset:0;background:#0a0a0a;z-index:1002;flex-direction:column;}
   #lensWrap.active{display:flex;}
 
-  /* Barra superior: modo CITE/DETALLE + acciones */
+  /* Barra superior Lens */
   .lens-top{
-    padding:calc(var(--safe-top) + 10px) 10px 10px;
-    background:#0b0f17;display:flex;flex-direction:column;gap:8px;
-    border-bottom:1px solid #1e293b;z-index:3;
+    padding:calc(var(--safe-top) + 10px) 12px 10px;
+    background:#111;display:flex;flex-direction:column;gap:8px;
+    border-bottom:1px solid #222;
   }
-  .lens-top .mode-row{display:flex;gap:6px;align-items:center;}
-  .mode-btn{
-    flex:1;padding:10px 8px;font-size:.85rem;font-weight:700;
-    background:#1e293b;color:#94a3b8;border:2px solid transparent;
-    border-radius:8px;
+  .lens-top .row1{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .lens-top .title{color:#fff;font-size:.85rem;font-weight:700;}
+  .lens-top .modes{display:flex;gap:6px;}
+  .lens-top .modes button{
+    flex:1;padding:8px 6px;border-radius:8px;font-size:.82rem;font-weight:700;
+    background:#1f2937;color:#cbd5e1;border:2px solid transparent;
   }
-  .mode-btn.active[data-mode="cite"]{background:rgba(251,191,36,.18);color:var(--cite);border-color:var(--cite);}
-  .mode-btn.active[data-mode="detalle"]{background:rgba(56,189,248,.18);color:var(--detalle);border-color:var(--detalle);}
-  .lens-top .actions-row{display:flex;gap:6px;}
-  .lens-top .actions-row button{flex:1;padding:8px;font-size:.78rem;}
-  .lens-status{
-    color:#94a3b8;font-size:.72rem;text-align:center;
-    padding:2px 4px;line-height:1.2;
+  .lens-top .modes button.active[data-mode="cite"]{background:rgba(251,191,36,.18);border-color:var(--cite);color:#fbbf24;}
+  .lens-top .modes button.active[data-mode="detalle"]{background:rgba(56,189,248,.18);border-color:var(--detalle);color:#38bdf8;}
+  .lens-top .tools{display:flex;gap:6px;}
+  .lens-top .tools button{
+    width:auto;padding:6px 10px;font-size:.75rem;background:#1f2937;color:#e2e8f0;border-radius:6px;
   }
 
-  /* Área de la imagen (zoom + pan) */
+  /* Área de imagen Lens */
   #lensStage{
     flex:1;min-height:0;position:relative;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
     background:#000;touch-action:none;
   }
-  #lensCanvas{
-    position:absolute;top:0;left:0;
-    transform-origin:0 0;
+  #lensCanvasWrap{
+    position:relative;transform-origin:0 0;
+    transition:none;
     will-change:transform;
-    user-select:none;-webkit-user-drag:none;
   }
+  #lensImage{display:block;max-width:100%;max-height:100%;user-select:none;-webkit-user-drag:none;pointer-events:none;}
+  #lensOverlay{position:absolute;inset:0;width:100%;height:100%;touch-action:none;}
 
-  /* Spinner overlay mientras corre OCR */
+  /* Barra inferior Lens */
+  .lens-bottom{
+    padding:12px 12px calc(var(--safe-bottom) + 12px);
+    background:#111;display:flex;flex-direction:column;gap:8px;
+    border-top:1px solid #222;
+  }
+  .lens-bottom .info{
+    color:#94a3b8;font-size:.72rem;text-align:center;
+  }
+  .lens-bottom .actions{display:flex;gap:8px;}
+  .lens-bottom .actions button{flex:1;font-size:.85rem;padding:11px;}
+
+  /* Spinner overlay */
   #lensLoading{
-    position:absolute;inset:0;background:rgba(0,0,0,.75);
-    display:none;align-items:center;justify-content:center;
-    flex-direction:column;gap:14px;z-index:5;color:#fff;
-    font-size:.9rem;text-align:center;padding:20px;
+    position:absolute;inset:0;background:rgba(0,0,0,.75);z-index:10;
+    display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:#fff;
   }
   #lensLoading.active{display:flex;}
-  #lensLoading .spinner{width:36px;height:36px;border-width:4px;border-color:#334155;border-top-color:#fff;}
+  #lensLoading .spinner{width:32px;height:32px;border-width:4px;border-top-color:#38bdf8;}
+  #lensLoading .msg{font-size:.85rem;}
 
-  /* Barra inferior del Lens */
-  .lens-bottom{
-    padding:10px 10px calc(var(--safe-bottom) + 10px);
-    background:#0b0f17;border-top:1px solid #1e293b;
-    display:flex;flex-direction:column;gap:6px;z-index:3;
-  }
-  .lens-bottom .primary-row{display:flex;gap:8px;}
-  .lens-bottom .primary-row button{flex:1;}
-  .lens-bottom .secondary-row{display:flex;gap:6px;}
-  .lens-bottom .secondary-row button{flex:1;padding:8px;font-size:.78rem;}
-
-  /* Contador de selecciones */
-  .sel-count{
-    display:inline-block;background:#1e293b;color:#e2e8f0;
-    padding:1px 6px;border-radius:99px;font-size:.68rem;margin-left:4px;
-  }
-
-  /* Preview + estado en el form */
   #preview{max-width:100%;border-radius:6px;display:none;margin-top:6px;}
 
   .spinner{display:inline-block;width:16px;height:16px;border:3px solid #fff3;border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
@@ -220,7 +226,7 @@
   }
   .toast.show{transform:translateX(-50%) translateY(0);}
 
-  /* Modal registros tipo Excel */
+  /* ===== Modal registros ===== */
   #listModal{display:none;position:fixed;inset:0;background:var(--bg);z-index:1500;flex-direction:column;}
   #listModal.active{display:flex;}
   .list-header{
@@ -253,9 +259,7 @@
   table.xls tbody tr:nth-child(even){background:#f8fafc;}
   table.xls td .del-btn{background:none;border:none;color:var(--danger);font-size:.95rem;padding:0;width:auto;cursor:pointer;}
   .empty-state{text-align:center;color:var(--muted);padding:36px 20px;font-size:.85rem;}
-
   .hint{font-size:.72rem;color:var(--muted);margin-top:2px;}
-  .picker-note{font-size:.65rem;color:var(--muted);text-align:center;margin-top:3px;}
 </style>
 </head>
 <body>
@@ -263,6 +267,7 @@
 <h1>📋 Registro de Documentación</h1>
 
 <div class="card">
+
   <div class="row">
     <div class="field">
       <label for="tipo">Tipo de documento *</label>
@@ -297,37 +302,34 @@
   <div class="field">
     <label>Escanear con cámara</label>
     <button id="btnScanLens" class="btn-primary" style="margin-bottom:8px;">
-      📸 Escanear documento (seleccionar texto)
+      📸 Escanear documento (modo Lens)
     </button>
     <div class="dest-picker">
-      <button class="btn-ghost" data-target="cite">
-        🎯 Solo CITE
-        <small>modo manual con recorte</small>
-      </button>
-      <button class="btn-ghost" data-target="contenido">
-        📝 Solo DETALLE
-        <small>modo manual con recorte</small>
-      </button>
-    </div>
-    <div class="btn-group">
-      <button id="btnGallery" class="btn-ghost" style="flex:1;">🖼️ Galería (modo manual)</button>
+      <button class="btn-ghost" data-target="cite">🎯 Solo CITE<small>respaldo manual</small></button>
+      <button class="btn-ghost" data-target="contenido">📝 Solo DETALLE<small>respaldo manual</small></button>
     </div>
     <input id="fileInput" type="file" accept="image/*" style="display:none">
     <img id="preview" alt="Última captura">
     <div class="status" id="status" style="font-size:.78rem;color:var(--muted);margin-top:6px;text-align:center;min-height:16px;"></div>
   </div>
 
+  <!-- Fecha/hora colapsada -->
   <div class="field">
     <label>Fecha y hora *</label>
-    <div class="picker" id="dateTimePicker">
-      <div class="picker-highlight"></div>
-      <div class="picker-col" data-col="day"></div>
-      <div class="picker-col" data-col="month" style="flex:1.3;"></div>
-      <div class="picker-col" data-col="year"></div>
-      <div class="picker-col" data-col="hour"></div>
-      <div class="picker-col" data-col="min"></div>
+    <div class="datetime-summary">
+      <div class="txt" id="dtSummary"><small>📅</small> -- --- ---- · --:--</div>
+      <button class="btn-ghost" id="btnEditDT">✏️ Editar</button>
     </div>
-    <div class="picker-note">Desliza cada columna · por defecto fecha y hora actuales</div>
+    <div id="datetimePanel">
+      <div class="picker" id="dateTimePicker">
+        <div class="picker-highlight"></div>
+        <div class="picker-col" data-col="day"></div>
+        <div class="picker-col" data-col="month" style="flex:1.3;"></div>
+        <div class="picker-col" data-col="year"></div>
+        <div class="picker-col" data-col="hour"></div>
+        <div class="picker-col" data-col="min"></div>
+      </div>
+    </div>
   </div>
 
   <div class="field">
@@ -353,53 +355,18 @@
   <video id="video" autoplay playsinline muted></video>
   <div id="frameGuide"></div>
   <div class="cam-top">
-    <button class="icon-btn" id="btnCancelCam" aria-label="Cerrar">✕</button>
+    <button class="icon-btn" id="btnCancelCam">✕</button>
     <span class="cam-title" id="camTitle">Encuadra el documento</span>
-    <button class="icon-btn" id="btnSwitchCam" aria-label="Cambiar cámara">🔄</button>
+    <button class="icon-btn" id="btnSwitchCam">🔄</button>
   </div>
   <div class="cam-bottom">
     <div style="width:44px"></div>
-    <button class="shutter" id="btnShutter" aria-label="Capturar"></button>
+    <button class="shutter" id="btnShutter"></button>
     <div style="width:44px"></div>
   </div>
 </div>
 
-<!-- ============ MODO LENS ============ -->
-<div id="lensWrap">
-  <div class="lens-top">
-    <div class="mode-row">
-      <button class="mode-btn active" data-mode="cite" id="modeCite">🟡 CITE <span class="sel-count" id="cntCite">0</span></button>
-      <button class="mode-btn" data-mode="detalle" id="modeDetalle">🔵 DETALLE <span class="sel-count" id="cntDetalle">0</span></button>
-    </div>
-    <div class="actions-row">
-      <button class="btn-ghost" id="btnLensUndo">↩ Deshacer</button>
-      <button class="btn-ghost" id="btnLensReset">🔄 Reiniciar</button>
-      <button class="btn-ghost" id="btnLensZoomIn">➕ Zoom</button>
-      <button class="btn-ghost" id="btnLensZoomOut">➖ Zoom</button>
-    </div>
-    <div class="lens-status" id="lensStatus">Toca o arrastra sobre las palabras para seleccionarlas.</div>
-  </div>
-
-  <div id="lensStage">
-    <canvas id="lensCanvas"></canvas>
-    <div id="lensLoading">
-      <div class="spinner"></div>
-      <div>Analizando documento…</div>
-    </div>
-  </div>
-
-  <div class="lens-bottom">
-    <div class="primary-row">
-      <button class="btn-success" id="btnLensExtract">✂️ Extraer selección</button>
-    </div>
-    <div class="secondary-row">
-      <button class="btn-danger" id="btnLensCancel">✕ Cancelar</button>
-      <button class="btn-ghost" id="btnLensManual">❌ Modo manual</button>
-    </div>
-  </div>
-</div>
-
-<!-- ============ CROPPER (respaldo manual) ============ -->
+<!-- ============ CROPPER RESPALDO ============ -->
 <div id="cropperWrap">
   <div class="cropper-container-wrap">
     <img id="cropperImage" alt="Recorte">
@@ -409,6 +376,46 @@
     <div class="actions">
       <button class="btn-danger" id="btnCancelCrop">Cancelar</button>
       <button class="btn-primary" id="btnApplyCrop">✂️ Extraer texto</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODO LENS ============ -->
+<div id="lensWrap">
+  <div class="lens-top">
+    <div class="row1">
+      <span class="title">🔍 Selecciona el texto</span>
+      <div class="tools">
+        <button id="btnLensClose">✕</button>
+      </div>
+    </div>
+    <div class="modes">
+      <button data-mode="cite" class="active">🟡 CITE</button>
+      <button data-mode="detalle">🔵 DETALLE</button>
+    </div>
+    <div class="tools" style="justify-content:space-between;">
+      <button id="btnLensUndo">↩ Deshacer</button>
+      <button id="btnLensZoomMode">🔍 Zoom: OFF</button>
+      <button id="btnLensReset">🔄 Reiniciar</button>
+      <button id="btnLensManual">✂️ Manual</button>
+    </div>
+  </div>
+
+  <div id="lensStage">
+    <div id="lensCanvasWrap">
+      <img id="lensImage" alt="Documento">
+      <canvas id="lensOverlay"></canvas>
+    </div>
+    <div id="lensLoading">
+      <div class="spinner"></div>
+      <div class="msg" id="lensLoadingMsg">Analizando documento…</div>
+    </div>
+  </div>
+
+  <div class="lens-bottom">
+    <div class="info" id="lensInfo">Toca o arrastra sobre las palabras para seleccionar</div>
+    <div class="actions">
+      <button class="btn-success" id="btnLensExtract">✂️ Extraer selección</button>
     </div>
   </div>
 </div>
@@ -426,7 +433,7 @@
     <div class="count" id="countFiltered">0 registros</div>
   </div>
   <div class="xls-wrap">
-    <table class="xls" id="xlsTable">
+    <table class="xls">
       <thead>
         <tr>
           <th style="width:36px;">#</th>
@@ -450,31 +457,34 @@
 
 <script>
 /* ============================================================
-   Estado global
+   CONSTANTES Y ESTADO
    ============================================================ */
 const STORAGE_KEY = 'registros_docs_v5';
 const TYPES_KEY   = 'tipos_documento_v5';
+const MESES_CORTOS = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+const TIPOS_DEFAULT = ['Oficio','Memorándum','Carta','Informe','Solicitud','Resolución','Circular','Nota','Otro'];
+const OCR_MAX_WIDTH = 1600;
+const MIN_CONFIDENCE = 40;
 
 const state = {
   stream: null,
   cropper: null,
   facingMode: 'environment',
+  currentTarget: null,
   ocrWorker: null,
   ocrReady: false,
   ocrLoading: false,
-  currentTarget: null,
-  currentMode: null,      // 'single' | 'lens'
   registros: JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'),
   tipos: JSON.parse(localStorage.getItem(TYPES_KEY) || 'null'),
   fecha: { day:1, month:0, year:new Date().getFullYear() },
   hora:  { hour:0, min:0 }
 };
-const $ = (id) => document.getElementById(id);
+
+const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2,'0');
-const MESES_CORTOS = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
 
 /* ============================================================
-   UI helpers
+   UI UTILS
    ============================================================ */
 function toast(msg, ms=2800){
   const t = $('toast'); t.textContent = msg; t.classList.add('show');
@@ -490,25 +500,18 @@ function updateBadge(target, val){
   else{ tag.textContent='vacío'; tag.className='tag empty'; }
 }
 function updateCount(){ $('countRegistros').textContent = state.registros.length; }
-function escapeHtml(s){
-  return String(s ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
 
 /* ============================================================
-   Tipos de documento
+   TIPOS DE DOCUMENTO
    ============================================================ */
-const TIPOS_DEFAULT = ['Oficio','Memorándum','Carta','Informe','Solicitud','Resolución','Circular','Nota','Otro'];
 function loadTipos(){
-  const sel = $('tipo');
-  const tipos = state.tipos || TIPOS_DEFAULT;
+  const sel = $('tipo'); const tipos = state.tipos || TIPOS_DEFAULT;
   sel.innerHTML = '<option value="">— Seleccionar —</option>';
-  tipos.forEach(t => {
-    const o = document.createElement('option'); o.value=t; o.textContent=t; sel.appendChild(o);
-  });
-  const add = document.createElement('option');
-  add.value='__ADD__'; add.textContent='➕ Agregar tipo…'; sel.appendChild(add);
+  tipos.forEach(t => { const o=document.createElement('option'); o.value=t; o.textContent=t; sel.appendChild(o); });
+  const add = document.createElement('option'); add.value='__ADD__'; add.textContent='➕ Agregar tipo…';
+  sel.appendChild(add);
 }
-$('tipo').addEventListener('change', (e)=>{
+$('tipo').addEventListener('change', e => {
   if(e.target.value!=='__ADD__') return;
   const nuevo = prompt('Nombre del nuevo tipo:');
   if(!nuevo || !nuevo.trim()){ e.target.value=''; return; }
@@ -521,7 +524,7 @@ $('tipo').addEventListener('change', (e)=>{
 });
 
 /* ============================================================
-   Picker fecha + hora
+   PICKER FECHA/HORA
    ============================================================ */
 function buildPickerCol(containerEl, colKey, items, renderItem, selectedIdx, onChange){
   const col = containerEl.querySelector(`[data-col="${colKey}"]`);
@@ -529,7 +532,7 @@ function buildPickerCol(containerEl, colKey, items, renderItem, selectedIdx, onC
   const padTop = document.createElement('div'); padTop.style.height='37px';
   const padBottom = document.createElement('div'); padBottom.style.height='37px';
   col.appendChild(padTop);
-  items.forEach((val, idx)=>{
+  items.forEach((val, idx) => {
     const d = document.createElement('div');
     d.className='item'; d.dataset.idx=idx; d.textContent=renderItem(val);
     d.addEventListener('click', ()=> col.scrollTo({top: idx*38, behavior:'smooth'}));
@@ -552,6 +555,7 @@ function buildPickerCol(containerEl, colKey, items, renderItem, selectedIdx, onC
         el.classList.toggle('dim', i!==clamped);
       });
       onChange(clamped, items[clamped]);
+      updateDTSummary();
     }, 90);
   }
   col.addEventListener('scroll', onScroll, {passive:true});
@@ -575,48 +579,50 @@ function initDateTimePicker(){
   buildPickerCol($('dateTimePicker'), 'day',   days,   v=>v,       state.fecha.day-1, i=> state.fecha.day = days[i]);
   buildPickerCol($('dateTimePicker'), 'month', months, v=>v.label, state.fecha.month, i=> state.fecha.month = months[i].idx);
   buildPickerCol($('dateTimePicker'), 'year',  years,  v=>v,       years.indexOf(now.getFullYear()), i=> state.fecha.year = years[i]);
-  buildPickerCol($('dateTimePicker'), 'hour',  hours,  v=>pad(v),  state.hora.hour,  i=> state.hora.hour = hours[i]);
-  buildPickerCol($('dateTimePicker'), 'min',   mins,   v=>pad(v),  state.hora.min,   i=> state.hora.min = mins[i]);
+  buildPickerCol($('dateTimePicker'), 'hour',  hours,  v=>pad(v),  state.hora.hour,   i=> state.hora.hour = hours[i]);
+  buildPickerCol($('dateTimePicker'), 'min',   mins,   v=>pad(v),  state.hora.min,    i=> state.hora.min  = mins[i]);
+  updateDTSummary();
 }
 
-function getFechaISO(){
-  const f = state.fecha;
-  return `${f.year}-${pad(f.month+1)}-${pad(f.day)}`;
+function updateDTSummary(){
+  const f = state.fecha, h = state.hora;
+  $('dtSummary').innerHTML = `<small>📅</small> ${pad(f.day)} ${MESES_CORTOS[f.month]} ${f.year} · ${pad(h.hour)}:${pad(h.min)}`;
 }
-function getHoraHHMM(){
-  return `${pad(state.hora.hour)}:${pad(state.hora.min)}`;
-}
+function getFechaISO(){ return `${state.fecha.year}-${pad(state.fecha.month+1)}-${pad(state.fecha.day)}`; }
+function getHoraHHMM(){ return `${pad(state.hora.hour)}:${pad(state.hora.min)}`; }
+
+$('btnEditDT').addEventListener('click', ()=>{
+  const panel = $('datetimePanel');
+  const open = panel.classList.toggle('open');
+  $('btnEditDT').textContent = open ? '✔ Listo' : '✏️ Editar';
+});
 
 /* ============================================================
-   OCR worker
+   PRECARGA OCR
    ============================================================ */
 async function preloadOCR(){
   if(state.ocrReady || state.ocrLoading) return;
   state.ocrLoading = true;
   try{
     state.ocrWorker = await Tesseract.createWorker('spa', 1, {logger:()=>{}});
+    await state.ocrWorker.setParameters({
+      tessedit_pageseg_mode: '1',
+      preserve_interword_spaces: '1'
+    });
     state.ocrReady = true;
-  }catch(e){ console.warn('[OCR]',e); }
+    console.log('[OCR] listo');
+  }catch(e){ console.warn('[OCR]', e); }
   finally{ state.ocrLoading = false; }
-}
-
-async function ensureOCR(){
-  if(state.ocrReady) return true;
-  setStatus('Cargando motor OCR (primera vez)...', true);
-  await preloadOCR();
-  if(!state.ocrReady){ setStatus('❌ No se pudo cargar OCR'); return false; }
-  return true;
 }
 
 /* ============================================================
    CÁMARA
    ============================================================ */
-async function openCamera(mode, target=null){
-  state.currentMode = mode;
+async function openCamera(target=null){
   state.currentTarget = target;
-  $('camTitle').textContent = mode==='lens'
-    ? 'Captura el documento completo'
-    : (target==='cite' ? 'Encuadra el CITE' : 'Encuadra el detalle');
+  $('camTitle').textContent = target
+    ? (target==='cite' ? 'Encuadra el CITE' : 'Encuadra el detalle')
+    : 'Encuadra el documento completo';
   try{
     state.stream = await navigator.mediaDevices.getUserMedia({
       video:{ facingMode:{ideal:state.facingMode}, width:{ideal:1280}, height:{ideal:720}, frameRate:{ideal:30,max:30} },
@@ -638,7 +644,7 @@ function closeCamera(){
 async function switchCamera(){
   state.facingMode = state.facingMode==='environment' ? 'user' : 'environment';
   closeCamera();
-  await openCamera(state.currentMode, state.currentTarget);
+  await openCamera(state.currentTarget);
 }
 function capturePhoto(){
   const v = $('video');
@@ -647,508 +653,488 @@ function capturePhoto(){
   c.width = v.videoWidth; c.height = v.videoHeight;
   c.getContext('2d').drawImage(v, 0, 0);
   const dataUrl = c.toDataURL('image/jpeg', 0.92);
-  const mode = state.currentMode;
+  const target = state.currentTarget;
   closeCamera();
-  if(mode==='lens') openLens(dataUrl);
-  else openCropper(dataUrl);
+  if(target) openCropper(dataUrl);
+  else openLens(dataUrl);
 }
 
 /* ============================================================
-   MODO LENS — estado y render
+   PREPROCESADO
+   ============================================================ */
+function preprocessForOCR(sourceCanvas, opts={}){
+  const { scale = 1, adaptive = true } = opts;
+  const c = document.createElement('canvas');
+  c.width  = Math.round(sourceCanvas.width  * scale);
+  c.height = Math.round(sourceCanvas.height * scale);
+  const ctx = c.getContext('2d', {willReadFrequently:true});
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(sourceCanvas, 0, 0, c.width, c.height);
+
+  const img = ctx.getImageData(0,0,c.width,c.height);
+  const d = img.data;
+
+  // Contraste + brillo suave
+  const contrast = 1.15, brightness = 8;
+  for(let i=0;i<d.length;i+=4){
+    let r = d[i], g = d[i+1], b = d[i+2];
+    r = Math.min(255, Math.max(0, (r-128)*contrast + 128 + brightness));
+    g = Math.min(255, Math.max(0, (g-128)*contrast + 128 + brightness));
+    b = Math.min(255, Math.max(0, (b-128)*contrast + 128 + brightness));
+    d[i]=r; d[i+1]=g; d[i+2]=b;
+  }
+
+  // Escala de grises + binarización adaptativa (block mean)
+  const gray = new Uint8ClampedArray(c.width * c.height);
+  for(let i=0;i<d.length;i+=4){
+    gray[i>>2] = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+  }
+
+  if(adaptive){
+    const w = c.width, h = c.height;
+    const block = 25;
+    const offset = 8;
+    const bw = Math.ceil(w/block), bh = Math.ceil(h/block);
+    const means = new Float32Array(bw * bh);
+    for(let by=0; by<bh; by++){
+      for(let bx=0; bx<bw; bx++){
+        let s=0, n=0;
+        for(let y=by*block; y<Math.min((by+1)*block, h); y++){
+          for(let x=bx*block; x<Math.min((bx+1)*block, w); x++){
+            s += gray[y*w + x]; n++;
+          }
+        }
+        means[by*bw + bx] = s/n;
+      }
+    }
+    for(let y=0; y<h; y++){
+      const by = Math.floor(y/block);
+      for(let x=0; x<w; x++){
+        const bx = Math.floor(x/block);
+        const th = means[by*bw + bx] - offset;
+        const v = gray[y*w + x] < th ? 0 : 255;
+        const i4 = (y*w + x) * 4;
+        d[i4] = d[i4+1] = d[i4+2] = v;
+        d[i4+3] = 255;
+      }
+    }
+  } else {
+    for(let i=0;i<d.length;i+=4){
+      const v = gray[i>>2] < 128 ? 0 : 255;
+      d[i]=d[i+1]=d[i+2]=v;
+    }
+  }
+
+  ctx.putImageData(img, 0, 0);
+  return c;
+}
+
+/* ============================================================
+   OCR ROBUSTO (con reintento)
+   ============================================================ */
+async function recognizeRobust(sourceCanvas, { onProgress } = {}){
+  if(!state.ocrReady){
+    if(onProgress) onProgress('Cargando motor OCR…');
+    await preloadOCR();
+    if(!state.ocrReady) throw new Error('Motor OCR no disponible');
+  }
+
+  // Intento 1: 1600px máximo, preprocesado adaptativo
+  const scale1 = Math.min(1, OCR_MAX_WIDTH / sourceCanvas.width);
+  const c1 = preprocessForOCR(sourceCanvas, { scale: scale1, adaptive: true });
+  if(onProgress) onProgress('Analizando documento…');
+  let res = await state.ocrWorker.recognize(c1);
+
+  // Si detecta poco texto, reintento con escala 2x sobre la original
+  const wordsCount = (res.data.words || []).filter(w => (w.confidence||0) >= MIN_CONFIDENCE).length;
+  if(wordsCount < 5){
+    if(onProgress) onProgress('Pocas palabras detectadas, reintentando con mayor resolución…');
+    const c2 = preprocessForOCR(sourceCanvas, { scale: 2, adaptive: true });
+    const res2 = await state.ocrWorker.recognize(c2);
+    // Escalar coordenadas de res2 a las de sourceCanvas (dividir por 2)
+    res2.data.words = (res2.data.words || []).map(w => ({
+      ...w,
+      bbox: {
+        x0: w.bbox.x0 / 2, y0: w.bbox.y0 / 2,
+        x1: w.bbox.x1 / 2, y1: w.bbox.y1 / 2
+      }
+    }));
+    if((res2.data.words||[]).filter(w=>(w.confidence||0)>=MIN_CONFIDENCE).length > wordsCount){
+      res = res2;
+    }
+  }
+
+  return res;
+}
+
+/* ============================================================
+   LENS — ESTADO
    ============================================================ */
 const lens = {
-  img: null,             // HTMLImageElement (original, ya reducida si aplica)
+  imgEl: null,
+  overlayEl: null,
+  ctx: null,
   imgW: 0, imgH: 0,
-  canvas: null, ctx: null,
-  words: [],             // [{ text, x0,y0,x1,y1, lineId, group:'cite'|'detalle'|null }]
-  // transformación de vista (zoom/pan)
-  scale: 1, minScale: 0.2, maxScale: 8,
-  tx: 0, ty: 0,
-  // gestos
-  pointers: new Map(),
-  pinchStartDist: 0, pinchStartScale: 1, pinchStartMid: {x:0,y:0}, pinchStartTx:0, pinchStartTy:0,
-  panStart: null,
-  // selección con arrastre
-  drag: null,            // { x0,y0,x1,y1, mode:'cite'|'detalle', touched:Set }
+  words: [],           // { text, bbox, conf, lineId, group: null|'cite'|'detalle' }
   currentMode: 'cite',
-  history: [],           // snapshots de groups
-  touchMargin: 4         // px extra en coordenadas de imagen
+  history: [],
+  zoom: 1, panX: 0, panY: 0,
+  zoomMode: false,
+  dragSelect: null,
+  gesture: null,
+  lastTap: 0
 };
 
+/* ============================================================
+   LENS — ABRIR / CERRAR
+   ============================================================ */
 async function openLens(dataUrl){
   $('lensWrap').classList.add('active');
   $('lensLoading').classList.add('active');
-  $('lensStatus').textContent = 'Preparando…';
+  $('lensLoadingMsg').textContent = 'Preparando imagen…';
 
-  // Reset estado
-  lens.words = [];
-  lens.history = [];
-  lens.currentMode = 'cite';
-  setLensMode('cite');
-  updateSelCounts();
+  const img = $('lensImage');
+  img.onload = async () => {
+    lens.imgEl = img;
+    lens.overlayEl = $('lensOverlay');
+    lens.ctx = lens.overlayEl.getContext('2d');
+    lens.imgW = img.naturalWidth;
+    lens.imgH = img.naturalHeight;
 
-  // Cargar imagen
-  const img = new Image();
-  img.src = dataUrl;
-  await img.decode();
+    // Ajustar tamaño del canvas al de la imagen mostrada
+    resizeOverlay();
+    window.addEventListener('resize', resizeOverlay);
 
-  // Reducir a 1600 px máx (manteniendo proporción) para velocidad OCR
-  const MAX = 1600;
-  const ratio = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
-  const w = Math.round(img.naturalWidth * ratio);
-  const h = Math.round(img.naturalHeight * ratio);
-
-  const off = document.createElement('canvas');
-  off.width = w; off.height = h;
-  off.getContext('2d').drawImage(img, 0, 0, w, h);
-
-  lens.img = off;
-  lens.imgW = w; lens.imgH = h;
-
-  // Canvas del visor (coordenadas CSS = coordenadas de imagen, se escala con transform)
-  const canvas = $('lensCanvas');
-  canvas.width = w; canvas.height = h;
-  canvas.style.width = w + 'px';
-  canvas.style.height = h + 'px';
-  lens.canvas = canvas;
-  lens.ctx = canvas.getContext('2d');
-
-  // Ajuste inicial: caber en el stage
-  fitToStage();
-  bindLensGestures();
-  renderLens();
-
-  // OCR completo
-  if(!await ensureOCR()){
-    $('lensLoading').classList.remove('active');
-    return;
-  }
-  $('lensStatus').textContent = 'Analizando palabras…';
-  try {
-    const { data } = await state.ocrWorker.recognize(off, {}, { blocks: true });
-    buildWordsFromOCR(data);
-    $('lensStatus').textContent = lens.words.length
-      ? `${lens.words.length} palabras detectadas · toca o arrastra para seleccionar`
-      : 'No se detectaron palabras. Usa "Modo manual".';
-  } catch(err){
-    console.error(err);
-    $('lensStatus').textContent = '❌ Error al analizar. Usa "Modo manual".';
-  }
-  $('lensLoading').classList.remove('active');
-  renderLens();
-}
-
-function buildWordsFromOCR(data){
-  const words = [];
-  // Tesseract devuelve data.words con bbox si el output incluye esa info
-  // Usamos data.words cuando está disponible (Tesseract v5 lo trae por defecto)
-  const raw = data.words || [];
-  raw.forEach((w, i)=>{
-    if(!w.text || !w.text.trim()) return;
-    const b = w.bbox || {};
-    if(b.x0 == null) return;
-    words.push({
-      text: w.text,
-      x0: b.x0, y0: b.y0, x1: b.x1, y1: b.y1,
-      lineId: inferLineId(w),
-      group: null
-    });
-  });
-  // Inferir línea agrupando por rango de y
-  assignLineIds(words);
-  lens.words = words;
-}
-
-function inferLineId(w){
-  // Aproximación: usamos baseline.y0 si existe, si no el y0
-  return (w.baseline && w.baseline.y0 != null) ? w.baseline.y0 : w.bbox.y0;
-}
-
-function assignLineIds(words){
-  // Agrupa por y0 aproximado con tolerancia
-  const sorted = [...words].sort((a,b)=> a.y0 - b.y0);
-  let currentLine = 0, lastY = -999;
-  const tol = 10;
-  sorted.forEach(w=>{
-    if(Math.abs(w.y0 - lastY) > tol){ currentLine++; lastY = w.y0; }
-    w.lineId = currentLine;
-  });
-}
-
-/* ============================================================
-   Vista: transformación, pan, zoom
-   ============================================================ */
-function fitToStage(){
-  const stage = $('lensStage').getBoundingClientRect();
-  const sw = stage.width, sh = stage.height;
-  const iw = lens.imgW, ih = lens.imgH;
-  const scale = Math.min(sw/iw, sh/ih);
-  lens.minScale = scale * 0.9;
-  lens.scale = scale;
-  lens.tx = (sw - iw*scale)/2;
-  lens.ty = (sh - ih*scale)/2;
-  applyTransform();
-}
-function applyTransform(){
-  const c = lens.canvas;
-  c.style.transform = `translate(${lens.tx}px, ${lens.ty}px) scale(${lens.scale})`;
-}
-
-/* ============================================================
-   Render del canvas: imagen + resaltados
-   ============================================================ */
-function renderLens(){
-  const ctx = lens.ctx;
-  ctx.clearRect(0,0,lens.imgW, lens.imgH);
-  ctx.drawImage(lens.img, 0, 0);
-
-  // Contornos de palabras no asignadas
-  ctx.lineWidth = 1.2;
-  ctx.font = '10px sans-serif';
-  lens.words.forEach(w=>{
-    if(w.group) return;
-    ctx.strokeStyle = 'rgba(255,255,255,0.55)';
-    ctx.strokeRect(w.x0, w.y0, w.x1-w.x0, w.y1-w.y0);
-  });
-  // Palabras asignadas: relleno según grupo
-  lens.words.forEach(w=>{
-    if(!w.group) return;
-    const fill = w.group==='cite' ? 'rgba(251,191,36,0.38)' : 'rgba(56,189,248,0.38)';
-    const stroke = w.group==='cite' ? '#fbbf24' : '#38bdf8';
-    ctx.fillStyle = fill;
-    ctx.fillRect(w.x0, w.y0, w.x1-w.x0, w.y1-w.y0);
-    ctx.strokeStyle = stroke;
-    ctx.lineWidth = 1.6;
-    ctx.strokeRect(w.x0, w.y0, w.x1-w.x0, w.y1-w.y0);
-  });
-}
-
-function updateSelCounts(){
-  const c = lens.words.filter(w=>w.group==='cite').length;
-  const d = lens.words.filter(w=>w.group==='detalle').length;
-  $('cntCite').textContent = c;
-  $('cntDetalle').textContent = d;
-}
-
-function setLensMode(mode){
-  lens.currentMode = mode;
-  $('modeCite').classList.toggle('active', mode==='cite');
-  $('modeDetalle').classList.toggle('active', mode==='detalle');
-}
-
-/* ============================================================
-   Coordenadas: pantalla → imagen
-   ============================================================ */
-function screenToImage(clientX, clientY){
-  const stage = $('lensStage').getBoundingClientRect();
-  const x = (clientX - stage.left - lens.tx) / lens.scale;
-  const y = (clientY - stage.top  - lens.ty) / lens.scale;
-  return { x, y };
-}
-
-/* ============================================================
-   Hit-testing y selección
-   ============================================================ */
-function pointInWord(px, py, w, margin){
-  const m = margin || 0;
-  return px >= w.x0 - m && px <= w.x1 + m && py >= w.y0 - m && py <= w.y1 + m;
-}
-
-function wordIndexAt(px, py){
-  for(let i=0;i<lens.words.length;i++){
-    if(pointInWord(px, py, lens.words[i], lens.touchMargin)) return i;
-  }
-  return -1;
-}
-
-function wordIndexesInLine(lineId){
-  const idx = [];
-  lens.words.forEach((w,i)=>{ if(w.lineId===lineId) idx.push(i); });
-  return idx;
-}
-
-function pushHistory(){
-  lens.history.push(lens.words.map(w=>w.group));
-  if(lens.history.length > 30) lens.history.shift();
-}
-
-function assignWords(indexes, mode){
-  if(!indexes.length) return;
-  pushHistory();
-  indexes.forEach(i=>{ lens.words[i].group = mode; });
-  updateSelCounts();
-  renderLens();
-}
-
-function unassignAll(){
-  pushHistory();
-  lens.words.forEach(w=> w.group = null);
-  updateSelCounts();
-  renderLens();
-}
-
-function undo(){
-  const snap = lens.history.pop();
-  if(!snap) return;
-  lens.words.forEach((w,i)=> w.group = snap[i] ?? null);
-  updateSelCounts();
-  renderLens();
-}
-
-/* ============================================================
-   Gestos: pan + pinch + selección
-   ============================================================ */
-function bindLensGestures(){
-  const stage = $('lensStage');
-  // Evitar rebinding
-  if(stage.dataset.bound) return;
-  stage.dataset.bound = '1';
-
-  const getPoint = (ev)=>{
-    const t = ev.touches ? ev.touches[0] : ev;
-    return { x: t.clientX, y: t.clientY };
-  };
-
-  function onStart(ev){
-    // Si hay 2+ dedos: pinch
-    if(ev.touches && ev.touches.length === 2){
-      ev.preventDefault();
-      const [a,b] = ev.touches;
-      lens.pointers.clear();
-      lens.drag = null;
-      lens.pinchStartDist = Math.hypot(a.clientX-b.clientX, a.clientY-b.clientY);
-      lens.pinchStartScale = lens.scale;
-      lens.pinchStartMid = { x:(a.clientX+b.clientX)/2, y:(a.clientY+b.clientY)/2 };
-      lens.pinchStartTx = lens.tx;
-      lens.pinchStartTy = lens.ty;
-      return;
-    }
-    if(ev.touches && ev.touches.length > 2) return;
-
-    // Un dedo: empezar drag de selección
-    const p = getPoint(ev);
-    const imgPt = screenToImage(p.x, p.y);
-    lens.drag = {
-      startScreen: { x:p.x, y:p.y },
-      startImg: imgPt,
-      currentScreen: { x:p.x, y:p.y },
-      currentImg: imgPt,
-      mode: lens.currentMode,
-      moved: false,
-      touched: new Set()
-    };
-    ev.preventDefault();
-  }
-
-  function onMove(ev){
-    // Pinch
-    if(ev.touches && ev.touches.length === 2){
-      ev.preventDefault();
-      const [a,b] = ev.touches;
-      const dist = Math.hypot(a.clientX-b.clientX, a.clientY-b.clientY);
-      const mid  = { x:(a.clientX+b.clientX)/2, y:(a.clientY+b.clientY)/2 };
-      const factor = dist / lens.pinchStartDist;
-      const newScale = Math.max(lens.minScale, Math.min(lens.maxScale, lens.pinchStartScale * factor));
-
-      // Mantener el punto medio fijo
-      const stage = $('lensStage').getBoundingClientRect();
-      const mx = lens.pinchStartMid.x - stage.left;
-      const my = lens.pinchStartMid.y - stage.top;
-      // Punto en coords de imagen bajo el mid original
-      const imgX = (mx - lens.pinchStartTx) / lens.pinchStartScale;
-      const imgY = (my - lens.pinchStartTy) / lens.pinchStartScale;
-
-      lens.scale = newScale;
-      // Re-centrar mid en coords de pantalla según el nuevo zoom, siguiendo el dedo
-      const curMx = mid.x - stage.left;
-      const curMy = mid.y - stage.top;
-      lens.tx = curMx - imgX * newScale;
-      lens.ty = curMy - imgY * newScale;
-      applyTransform();
-      return;
-    }
-
-    if(!lens.drag) return;
-    ev.preventDefault();
-    const p = getPoint(ev);
-    lens.drag.currentScreen = { x:p.x, y:p.y };
-    lens.drag.currentImg = screenToImage(p.x, p.y);
-    const dx = p.x - lens.drag.startScreen.x;
-    const dy = p.y - lens.drag.startScreen.y;
-    if(Math.hypot(dx,dy) > 6) lens.drag.moved = true;
-
-    // Resaltar provisional
-    if(lens.drag.moved){
-      // Recorrer palabras que intersectan el segmento y agregarlas
-      applyDragSelection();
-    }
-  }
-
-  function onEnd(ev){
-    if(ev.touches && ev.touches.length > 0) return; // aún hay dedos
-    const d = lens.drag;
-    lens.drag = null;
-
-    if(!d) return;
-
-    if(!d.moved){
-      // TOQUE simple o DOBLE
-      const now = Date.now();
-      const last = stage._lastTap || 0;
-      const lastPt = stage._lastTapPt || { x:0, y:0 };
-      const near = Math.hypot(d.startScreen.x - lastPt.x, d.startScreen.y - lastPt.y) < 30;
-      if(now - last < 320 && near){
-        // DOBLE TOQUE: seleccionar línea entera
-        const idx = wordIndexAt(d.startImg.x, d.startImg.y);
-        if(idx >= 0){
-          const lineId = lens.words[idx].lineId;
-          const indexes = wordIndexesInLine(lineId);
-          assignWords(indexes, lens.currentMode);
-          stage._lastTap = 0;
-          return;
-        }
-      }
-      // TOQUE simple
-      const idx = wordIndexAt(d.startImg.x, d.startImg.y);
-      if(idx >= 0){
-        assignWords([idx], lens.currentMode);
-      } else {
-        // Toque en zona vacía: si esa palabra ya estaba, no cambia; si tocas el fondo no hace nada
-      }
-      stage._lastTap = now;
-      stage._lastTapPt = d.startScreen;
-    } else {
-      // El drag ya aplicó selecciones
-      updateSelCounts();
-      renderLens();
-    }
-  }
-
-  function onCancel(){
-    lens.drag = null;
-  }
-
-  stage.addEventListener('touchstart', onStart, {passive:false});
-  stage.addEventListener('touchmove', onMove, {passive:false});
-  stage.addEventListener('touchend', onEnd);
-  stage.addEventListener('touchcancel', onCancel);
-
-  stage.addEventListener('mousedown', onStart);
-  stage.addEventListener('mousemove', (ev)=>{
-    // Solo drag con botón presionado
-    if(!lens.drag) return;
-    onMove(ev);
-  });
-  stage.addEventListener('mouseup', onEnd);
-  stage.addEventListener('mouseleave', onCancel);
-
-  // Zoom con Ctrl+rueda (escritorio)
-  stage.addEventListener('wheel', (ev)=>{
-    if(!ev.ctrlKey && !ev.metaKey) return;
-    ev.preventDefault();
-    const factor = ev.deltaY < 0 ? 1.15 : 1/1.15;
-    const newScale = Math.max(lens.minScale, Math.min(lens.maxScale, lens.scale * factor));
-    const stageRect = stage.getBoundingClientRect();
-    const mx = ev.clientX - stageRect.left;
-    const my = ev.clientY - stageRect.top;
-    const imgX = (mx - lens.tx) / lens.scale;
-    const imgY = (my - lens.ty) / lens.scale;
-    lens.scale = newScale;
-    lens.tx = mx - imgX * newScale;
-    lens.ty = my - imgY * newScale;
+    // Reset estado
+    lens.words = [];
+    lens.history = [];
+    lens.currentMode = 'cite';
+    lens.zoom = 1; lens.panX = 0; lens.panY = 0; lens.zoomMode = false;
     applyTransform();
-  }, {passive:false});
-}
+    updateModeButtons();
+    updateZoomButton();
 
-/* Selección por arrastre: palabras cuyo bbox intersecta el segmento */
-function applyDragSelection(){
-  const d = lens.drag;
-  if(!d) return;
-  const a = d.startImg, b = d.currentImg;
-  // Expandir segmento a un "área" (rectángulo entre a y b)
-  const xmin = Math.min(a.x,b.x), xmax = Math.max(a.x,b.x);
-  const ymin = Math.min(a.y,b.y), ymax = Math.max(a.y,b.y);
+    // Ejecutar OCR
+    try{
+      const sourceCanvas = document.createElement('canvas');
+      sourceCanvas.width = lens.imgW;
+      sourceCanvas.height = lens.imgH;
+      sourceCanvas.getContext('2d').drawImage(img, 0, 0);
 
-  let added = false;
-  lens.words.forEach((w,i)=>{
-    if(w.group === d.mode) return;
-    // Intersección de rectángulos
-    const inter = !(w.x1 < xmin || w.x0 > xmax || w.y1 < ymin || w.y0 > ymax);
-    if(inter && !d.touched.has(i)){
-      d.touched.add(i);
-      w.group = d.mode;
-      added = true;
+      const res = await recognizeRobust(sourceCanvas, {
+        onProgress: (msg) => $('lensLoadingMsg').textContent = msg
+      });
+
+      // Extraer palabras con bbox
+      const words = [];
+      const rawWords = (res.data.words || []).filter(w => (w.confidence||0) >= MIN_CONFIDENCE && w.text.trim());
+
+      // Asignar lineId agrupando por baseline
+      let lineCounter = 0;
+      let prevY = null;
+      rawWords.sort((a,b) => a.bbox.y0 - b.bbox.y0 || a.bbox.x0 - b.bbox.x0);
+      rawWords.forEach(w => {
+        const midY = (w.bbox.y0 + w.bbox.y1) / 2;
+        if(prevY === null || Math.abs(midY - prevY) > 12){
+          lineCounter++; prevY = midY;
+        }
+        words.push({
+          text: w.text,
+          bbox: { x0: w.bbox.x0, y0: w.bbox.y0, x1: w.bbox.x1, y1: w.bbox.y1 },
+          conf: w.confidence || 0,
+          lineId: lineCounter,
+          group: null
+        });
+      });
+      lens.words = words;
+
+      $('lensInfo').textContent = words.length
+        ? `${words.length} palabras detectadas · toca o arrastra para seleccionar`
+        : 'No se detectaron palabras legibles · usa "✂️ Manual"';
+
+      drawOverlay();
+    }catch(err){
+      console.error(err);
+      $('lensInfo').textContent = 'Error OCR · usa "✂️ Manual" como respaldo';
+    }finally{
+      $('lensLoading').classList.remove('active');
     }
-  });
-  if(added){
-    updateSelCounts();
-    renderLens();
-  }
+  };
+  img.src = dataUrl;
 }
 
-/* ============================================================
-   Extraer selección → campos
-   ============================================================ */
-function orderWords(words){
-  // Agrupa por lineId, luego ordena por x0
-  const byLine = new Map();
-  words.forEach(w=>{
-    if(!byLine.has(w.lineId)) byLine.set(w.lineId, []);
-    byLine.get(w.lineId).push(w);
-  });
-  const lines = [...byLine.entries()].sort((a,b)=> a[0]-b[0]);
-  const out = [];
-  lines.forEach(([_, ws])=>{
-    ws.sort((x,y)=> x.x0 - y.x0);
-    out.push(ws);
-  });
-  return out;
-}
-
-function extractSelection(){
-  const citeWords = lens.words.filter(w=>w.group==='cite');
-  const detWords  = lens.words.filter(w=>w.group==='detalle');
-
-  if(!citeWords.length && !detWords.length){
-    toast('No has seleccionado ninguna palabra');
-    return;
-  }
-
-  // CITE: unir todas con espacio (en orden de lectura)
-  if(citeWords.length){
-    const lines = orderWords(citeWords);
-    const txt = lines.map(l => l.map(w=>w.text).join(' ')).join(' ');
-    $('cite').value = txt.trim();
-    updateBadge('cite', txt);
-  }
-  // DETALLE: agregar con salto de línea si ya había algo
-  if(detWords.length){
-    const lines = orderWords(detWords);
-    const txt = lines.map(l => l.map(w=>w.text).join(' ')).join('\n');
-    const ta = $('detalle');
-    ta.value = ta.value ? (ta.value.trimEnd() + '\n' + txt) : txt;
-    updateBadge('contenido', ta.value);
-  }
-
-  $('preview').src = lens.img.toDataURL('image/jpeg', 0.85);
-  $('preview').style.display = 'block';
-  toast(`✅ Extraído: ${citeWords.length} → CITE, ${detWords.length} → DETALLE`);
-  closeLens();
+function resizeOverlay(){
+  const rect = lens.imgEl.getBoundingClientRect();
+  lens.overlayEl.width  = rect.width;
+  lens.overlayEl.height = rect.height;
+  lens.overlayEl.style.width  = rect.width + 'px';
+  lens.overlayEl.style.height = rect.height + 'px';
+  // Escala entre coords imagen y coords canvas
+  lens.scaleX = rect.width / lens.imgW;
+  lens.scaleY = rect.height / lens.imgH;
+  drawOverlay();
 }
 
 function closeLens(){
   $('lensWrap').classList.remove('active');
-  $('lensLoading').classList.remove('active');
-  lens.drag = null;
-  lens.pointers.clear();
-  lens.words = [];
-  lens.history = [];
-  lens.canvas = null;
-  lens.ctx = null;
+  window.removeEventListener('resize', resizeOverlay);
+  lens.imgEl = null;
+  $('lensImage').src = '';
 }
 
 /* ============================================================
-   Cropper manual (respaldo)
+   LENS — DIBUJO
+   ============================================================ */
+function drawOverlay(){
+  if(!lens.ctx || !lens.scaleX) return;
+  const ctx = lens.ctx;
+  ctx.clearRect(0, 0, lens.overlayEl.width, lens.overlayEl.height);
+
+  for(const w of lens.words){
+    const x = w.bbox.x0 * lens.scaleX;
+    const y = w.bbox.y0 * lens.scaleY;
+    const ww = (w.bbox.x1 - w.bbox.x0) * lens.scaleX;
+    const hh = (w.bbox.y1 - w.bbox.y0) * lens.scaleY;
+
+    // Contorno base
+    if(!w.group){
+      ctx.strokeStyle = 'rgba(148,163,184,0.55)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([]);
+      ctx.strokeRect(x, y, ww, hh);
+    } else if(w.group === 'cite'){
+      ctx.fillStyle = 'rgba(251,191,36,0.30)';
+      ctx.fillRect(x, y, ww, hh);
+      ctx.strokeStyle = 'rgba(251,191,36,0.95)';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(x, y, ww, hh);
+    } else {
+      ctx.fillStyle = 'rgba(56,189,248,0.30)';
+      ctx.fillRect(x, y, ww, hh);
+      ctx.strokeStyle = 'rgba(56,189,248,0.95)';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(x, y, ww, hh);
+    }
+  }
+}
+
+/* ============================================================
+   LENS — SELECCIÓN
+   ============================================================ */
+function pointToImage(px, py){
+  // px,py en coords del canvas overlay
+  return { x: px / lens.scaleX, y: py / lens.scaleY };
+}
+
+function hitTest(imgPoint, margin=6){
+  for(let i=lens.words.length-1; i>=0; i--){
+    const w = lens.words[i];
+    if(imgPoint.x >= w.bbox.x0 - margin && imgPoint.x <= w.bbox.x1 + margin &&
+       imgPoint.y >= w.bbox.y0 - margin && imgPoint.y <= w.bbox.y1 + margin){
+      return i;
+    }
+  }
+  return -1;
+}
+
+function pushHistory(){
+  lens.history.push(lens.words.map(w => w.group));
+  if(lens.history.length > 50) lens.history.shift();
+}
+
+function undo(){
+  if(!lens.history.length) return;
+  const snap = lens.history.pop();
+  lens.words.forEach((w,i) => w.group = snap[i] || null);
+  drawOverlay();
+}
+
+function resetSelection(){
+  pushHistory();
+  lens.words.forEach(w => w.group = null);
+  drawOverlay();
+}
+
+function applyGroupAt(idx, group){
+  if(idx < 0) return;
+  lens.words[idx].group = group;
+  drawOverlay();
+}
+
+function setMode(mode){
+  lens.currentMode = mode;
+  updateModeButtons();
+}
+function updateModeButtons(){
+  document.querySelectorAll('.lens-top .modes button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.mode === lens.currentMode);
+  });
+}
+document.querySelectorAll('.lens-top .modes button').forEach(btn=>{
+  btn.addEventListener('click', ()=> setMode(btn.dataset.mode));
+});
+
+/* ============================================================
+   LENS — GESTOS (toque, arrastre, pinch, zoom mode)
+   ============================================================ */
+function getCanvasPoint(ev){
+  const rect = lens.overlayEl.getBoundingClientRect();
+  const t = ev.touches ? ev.touches[0] : ev;
+  return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+}
+
+function setupGestures(){
+  const el = lens.overlayEl;
+
+  el.addEventListener('mousedown', onDown);
+  el.addEventListener('mousemove', onMove);
+  el.addEventListener('mouseup', onUp);
+  el.addEventListener('touchstart', onDown, {passive:false});
+  el.addEventListener('touchmove', onMove, {passive:false});
+  el.addEventListener('touchend', onUp);
+  el.addEventListener('touchcancel', onUp);
+}
+
+function onDown(ev){
+  if(!lens.imgEl) return;
+
+  // Pinch/pan con 2 dedos (siempre activo)
+  if(ev.touches && ev.touches.length === 2){
+    ev.preventDefault();
+    lens.gesture = { type:'pinch', startDist: touchDist(ev), startZoom: lens.zoom,
+                     startMidX: touchMid(ev).x, startMidY: touchMid(ev).y,
+                     startPanX: lens.panX, startPanY: lens.panY };
+    return;
+  }
+
+  // Un dedo
+  ev.preventDefault();
+  const p = getCanvasPoint(ev);
+
+  // Modo zoom: arrastrar imagen
+  if(lens.zoomMode){
+    lens.gesture = { type:'pan', startX: p.x, startY: p.y, startPanX: lens.panX, startPanY: lens.panY };
+    return;
+  }
+
+  // Modo selección
+  const imgP = pointToImage(p.x, p.y);
+  const idx = hitTest(imgP);
+  if(idx >= 0){
+    pushHistory();
+    applyGroupAt(idx, lens.currentMode);
+    lens.dragSelect = { lastIdx: idx, startImg: imgP };
+  } else {
+    lens.dragSelect = { lastIdx: -1, startImg: imgP };
+  }
+}
+
+function onMove(ev){
+  if(!lens.gesture && !lens.dragSelect) return;
+
+  // Pinch
+  if(lens.gesture && lens.gesture.type === 'pinch' && ev.touches && ev.touches.length === 2){
+    ev.preventDefault();
+    const dist = touchDist(ev);
+    const ratio = dist / lens.gesture.startDist;
+    const newZoom = Math.max(1, Math.min(4, lens.gesture.startZoom * ratio));
+    lens.zoom = newZoom;
+    applyTransform();
+    return;
+  }
+
+  // Pan en modo zoom
+  if(lens.gesture && lens.gesture.type === 'pan'){
+    ev.preventDefault();
+    const p = getCanvasPoint(ev);
+    lens.panX = lens.gesture.startPanX + (p.x - lens.gesture.startX);
+    lens.panY = lens.gesture.startPanY + (p.y - lens.gesture.startY);
+    applyTransform();
+    return;
+  }
+
+  // Arrastre para selección múltiple
+  if(lens.dragSelect){
+    ev.preventDefault();
+    const p = getCanvasPoint(ev);
+    const imgP = pointToImage(p.x, p.y);
+    // Marcar palabras entre el inicio y el punto actual (línea)
+    const idx = hitTest(imgP);
+    if(idx >= 0 && idx !== lens.dragSelect.lastIdx){
+      applyGroupAt(idx, lens.currentMode);
+      lens.dragSelect.lastIdx = idx;
+    }
+    return;
+  }
+}
+
+function onUp(ev){
+  lens.gesture = null;
+  lens.dragSelect = null;
+}
+
+function touchDist(ev){
+  const a = ev.touches[0], b = ev.touches[1];
+  return Math.hypot(a.clientX-b.clientX, a.clientY-b.clientY);
+}
+function touchMid(ev){
+  const a = ev.touches[0], b = ev.touches[1];
+  return { x: (a.clientX+b.clientX)/2, y: (a.clientY+b.clientY)/2 };
+}
+
+function applyTransform(){
+  const wrap = $('lensCanvasWrap');
+  wrap.style.transform = `translate(${lens.panX}px, ${lens.panY}px) scale(${lens.zoom})`;
+}
+
+function toggleZoomMode(){
+  lens.zoomMode = !lens.zoomMode;
+  updateZoomButton();
+  $('lensInfo').textContent = lens.zoomMode
+    ? 'Modo ZOOM · un dedo arrastra la imagen · dos dedos hacen pinch'
+    : 'Modo SELECCIÓN · toca o arrastra sobre las palabras';
+}
+function updateZoomButton(){
+  $('btnLensZoomMode').textContent = lens.zoomMode ? '🔍 Zoom: ON' : '🔍 Zoom: OFF';
+}
+
+/* ============================================================
+   LENS — EXTRAER
+   ============================================================ */
+function extractSelection(){
+  const citeWords = lens.words.filter(w => w.group === 'cite');
+  const detWords  = lens.words.filter(w => w.group === 'detalle');
+
+  if(!citeWords.length && !detWords.length){
+    toast('No has seleccionado palabras'); return;
+  }
+
+  // Ordenar por lectura natural: línea (y0 agrupado) y luego x0
+  const sortByReading = arr => arr.slice().sort((a,b) => {
+    const lineDiff = a.bbox.y0 - b.bbox.y0;
+    if(Math.abs(lineDiff) > 8) return lineDiff;
+    return a.bbox.x0 - b.bbox.x0;
+  });
+
+  if(citeWords.length){
+    const texto = sortByReading(citeWords).map(w => w.text).join(' ').trim();
+    $('cite').value = texto;
+    updateBadge('cite', texto);
+  }
+  if(detWords.length){
+    const texto = sortByReading(detWords).map(w => w.text).join(' ').trim();
+    const ta = $('detalle');
+    ta.value = ta.value ? ta.value + '\n' + texto : texto;
+    updateBadge('contenido', ta.value);
+  }
+
+  toast(`✅ Extraído · CITE: ${citeWords.length} palabras · DETALLE: ${detWords.length} palabras`);
+  closeLens();
+}
+
+/* ============================================================
+   CROPPER RESPALDO
    ============================================================ */
 function openCropper(dataUrl){
   $('cropTargetLabel').textContent = state.currentTarget==='cite'
@@ -1157,7 +1143,7 @@ function openCropper(dataUrl){
   const img = $('cropperImage');
   img.src = dataUrl;
   $('cropperWrap').classList.add('active');
-  img.onload = ()=>{
+  img.onload = () => {
     if(state.cropper) state.cropper.destroy();
     state.cropper = new Cropper(img, {
       viewMode:1, autoCropArea:0.7, movable:true, zoomable:true,
@@ -1173,19 +1159,27 @@ function closeCropper(){
 async function applyCropAndOCR(){
   if(!state.cropper) return;
   const canvas = state.cropper.getCroppedCanvas({ maxWidth:1400, maxHeight:1400, fillColor:'#fff' });
-  const processed = preprocessForOCR(canvas);
+  const processed = preprocessForOCR(canvas, { scale:1, adaptive:true });
   const dataUrl = processed.toDataURL('image/jpeg', 0.92);
   $('preview').src = dataUrl;
-  $('preview').style.display='block';
+  $('preview').style.display = 'block';
   const target = state.currentTarget;
   closeCropper();
+  await runOCRCropper(dataUrl, target);
+}
 
-  if(!await ensureOCR()) return;
+async function runOCRCropper(imageDataUrl, target){
+  if(!state.ocrReady){
+    setStatus('Cargando motor OCR…', true);
+    await preloadOCR();
+    if(!state.ocrReady){ setStatus('❌ OCR no disponible'); return; }
+  }
   setStatus('Reconociendo texto...', true);
   try{
-    const { data:{ text } } = await state.ocrWorker.recognize(dataUrl);
+    const { data:{ text } } = await state.ocrWorker.recognize(imageDataUrl);
     const limpio = text.trim().replace(/\n{3,}/g,'\n\n');
     if(!limpio){ setStatus('⚠️ No se detectó texto'); toast('No se detectó texto'); return; }
+
     if(target==='cite'){
       const primera = limpio.split(/\n/)[0].trim();
       $('cite').value = primera; updateBadge('cite', primera);
@@ -1198,45 +1192,12 @@ async function applyCropAndOCR(){
     toast('Texto reconocido');
   }catch(err){
     console.error(err);
-    setStatus('❌ Error al reconocer texto');
-    toast('Error OCR: ' + err.message, 4000);
+    setStatus('❌ Error OCR'); toast('Error OCR: ' + err.message, 4000);
   }
-}
-function preprocessForOCR(sourceCanvas){
-  const c = document.createElement('canvas');
-  c.width = sourceCanvas.width; c.height = sourceCanvas.height;
-  const ctx = c.getContext('2d', {willReadFrequently:true});
-  ctx.drawImage(sourceCanvas, 0, 0);
-  const img = ctx.getImageData(0,0,c.width,c.height);
-  const d = img.data;
-  for(let i=0;i<d.length;i+=4){
-    const g = d[i]*0.299 + d[i+1]*0.587 + d[i+2]*0.114;
-    const v = g<110 ? 0 : g>160 ? 255 : g;
-    d[i]=d[i+1]=d[i+2]=v;
-  }
-  ctx.putImageData(img,0,0);
-  return c;
 }
 
 /* ============================================================
-   Galería (una zona manual)
-   ============================================================ */
-$('btnGallery').addEventListener('click', ()=>{
-  const t = prompt('¿Para qué campo es esta imagen? Escribe "cite" o "contenido":', 'contenido');
-  if(!t) return;
-  state.currentTarget = t.trim().toLowerCase().startsWith('c') ? 'cite' : 'contenido';
-  $('fileInput').click();
-});
-$('fileInput').addEventListener('change', (e)=>{
-  const f = e.target.files?.[0]; if(!f) return;
-  const reader = new FileReader();
-  reader.onload = ev => openCropper(ev.target.result);
-  reader.readAsDataURL(f);
-  e.target.value = '';
-});
-
-/* ============================================================
-   Guardar registro
+   GUARDAR
    ============================================================ */
 function guardar(){
   const tipo          = $('tipo').value.trim();
@@ -1244,31 +1205,35 @@ function guardar(){
   const cite          = $('cite').value.trim();
   const detalle       = $('detalle').value.trim();
   const medidas       = $('medidas').value.trim();
-  const fecha = getFechaISO();
-  const hora  = getHoraHHMM();
+  const fecha         = getFechaISO();
+  const hora          = getHoraHHMM();
 
   if(!tipo || !entradaSalida){ toast('Complete Tipo y Entrada/Salida'); return; }
   if(!cite && !detalle){ toast('Debe registrar al menos CITE o Detalle'); return; }
 
   state.registros.push({
-    id: Date.now(),
-    tipo, cite, detalle, entradaSalida, fecha, hora, medidas,
+    id: Date.now(), tipo, cite, detalle, entradaSalida, fecha, hora, medidas,
     creadoEn: new Date().toISOString()
   });
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state.registros));
   updateCount();
   toast('✅ Registro guardado');
 
-  ['cite','detalle','medidas'].forEach(id=> $(id).value='');
+  ['cite','detalle','medidas'].forEach(id => $(id).value='');
   $('tipo').value=''; $('entradaSalida').value='';
   $('preview').style.display='none';
   updateBadge('cite',''); updateBadge('contenido','');
   setStatus('');
+
+  // Refrescar fecha/hora a la actual
+  const now = new Date();
+  state.fecha.day = now.getDate(); state.fecha.month = now.getMonth(); state.fecha.year = now.getFullYear();
+  state.hora.hour = now.getHours(); state.hora.min = now.getMinutes();
   initDateTimePicker();
 }
 
 /* ============================================================
-   Modal registros
+   MODAL REGISTROS
    ============================================================ */
 function openList(){ renderTabla(''); $('listModal').classList.add('active'); setTimeout(()=>$('searchInput').focus(), 100); }
 function closeList(){ $('listModal').classList.remove('active'); }
@@ -1304,7 +1269,7 @@ function renderTabla(filtro){
       <td>${escapeHtml(r.fecha)}</td>
       <td>${escapeHtml(r.hora)}</td>
       <td>${escapeHtml(r.medidas)}</td>
-      <td><button class="del-btn" data-id="${r.id}" title="Eliminar">🗑️</button></td>
+      <td><button class="del-btn" data-id="${r.id}">🗑️</button></td>
     </tr>
   `).join('');
 
@@ -1320,10 +1285,13 @@ function renderTabla(filtro){
   });
 }
 
+function escapeHtml(s){
+  return String(s ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 $('searchInput').addEventListener('input', e=> renderTabla(e.target.value));
 
 /* ============================================================
-   Exportar Excel
+   EXCEL
    ============================================================ */
 function exportarExcel(){
   if(!state.registros.length){ toast('No hay registros para exportar'); return; }
@@ -1345,11 +1313,11 @@ function exportarExcel(){
 }
 
 /* ============================================================
-   Eventos
+   EVENTOS
    ============================================================ */
-$('btnScanLens').addEventListener('click', ()=> openCamera('lens'));
+$('btnScanLens').addEventListener('click', ()=> openCamera(null));
 document.querySelectorAll('.dest-picker button').forEach(btn=>{
-  btn.addEventListener('click', ()=> openCamera('single', btn.dataset.target));
+  btn.addEventListener('click', ()=> openCamera(btn.dataset.target));
 });
 $('btnCancelCam').addEventListener('click', closeCamera);
 $('btnShutter').addEventListener('click', capturePhoto);
@@ -1361,36 +1329,18 @@ $('btnVerRegistros').addEventListener('click', openList);
 $('btnCloseList').addEventListener('click', closeList);
 $('btnExportar').addEventListener('click', exportarExcel);
 
-// Controles Lens
-$('modeCite').addEventListener('click', ()=> setLensMode('cite'));
-$('modeDetalle').addEventListener('click', ()=> setLensMode('detalle'));
+$('btnLensClose').addEventListener('click', closeLens);
 $('btnLensUndo').addEventListener('click', undo);
-$('btnLensReset').addEventListener('click', ()=> { unassignAll(); toast('Selección reiniciada'); });
+$('btnLensReset').addEventListener('click', resetSelection);
 $('btnLensExtract').addEventListener('click', extractSelection);
-$('btnLensCancel').addEventListener('click', closeLens);
+$('btnLensZoomMode').addEventListener('click', toggleZoomMode);
 $('btnLensManual').addEventListener('click', ()=>{
+  // Abre cropper manual sobre la imagen actual
+  const src = $('lensImage').src;
   closeLens();
-  // Preguntamos a qué campo
-  const t = prompt('¿Para qué campo? "cite" o "contenido":', 'contenido');
-  if(!t) return;
-  state.currentTarget = t.trim().toLowerCase().startsWith('c') ? 'cite' : 'contenido';
-  // Reusamos la última imagen del Lens
-  if(lens.img){ openCropper(lens.img.toDataURL('image/jpeg', 0.92)); }
+  state.currentTarget = 'contenido';
+  openCropper(src);
 });
-$('btnLensZoomIn').addEventListener('click', ()=> zoomBy(1.4));
-$('btnLensZoomOut').addEventListener('click', ()=> zoomBy(1/1.4));
-
-function zoomBy(factor){
-  const stageRect = $('lensStage').getBoundingClientRect();
-  const cx = stageRect.width/2, cy = stageRect.height/2;
-  const newScale = Math.max(lens.minScale, Math.min(lens.maxScale, lens.scale * factor));
-  const imgX = (cx - lens.tx) / lens.scale;
-  const imgY = (cy - lens.ty) / lens.scale;
-  lens.scale = newScale;
-  lens.tx = cx - imgX * newScale;
-  lens.ty = cy - imgY * newScale;
-  applyTransform();
-}
 
 $('cite').addEventListener('input', e=> updateBadge('cite', e.target.value));
 $('detalle').addEventListener('input', e=> updateBadge('contenido', e.target.value));
@@ -1400,13 +1350,15 @@ window.addEventListener('beforeunload', ()=>{
 });
 
 /* ============================================================
-   Init
+   INIT
    ============================================================ */
 (function init(){
   loadTipos();
   updateCount();
   updateBadge('cite',''); updateBadge('contenido','');
   initDateTimePicker();
+  setupGestures();
+
   if('requestIdleCallback' in window) requestIdleCallback(preloadOCR, {timeout:3000});
   else setTimeout(preloadOCR, 1500);
 })();
