@@ -63,20 +63,21 @@
   .ocr-row .tag.ok{background:#dcfce7;color:#166534;}
   .ocr-row .tag.empty{background:#f1f5f9;color:#64748b;}
 
-  /* ========= Fecha/hora colapsada ========= */
-  .dtbar{
-    display:flex;align-items:center;justify-content:space-between;gap:8px;
+  /* ========= FECHA/HORA COLAPSABLE ========= */
+  .dt-summary{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
     background:#f8fafc;border:1px solid var(--border);border-radius:8px;
-    padding:8px 10px;font-size:.9rem;
+    padding:10px 12px;
   }
-  .dtbar .dt-value{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-  .dtbar .dt-value b{color:var(--text);}
-  .dtbar button{width:auto;padding:6px 10px;font-size:.78rem;}
+  .dt-summary .dt-text{font-size:.92rem;font-weight:600;color:var(--text);}
+  .dt-summary .dt-text small{display:block;font-size:.68rem;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;}
+  .dt-summary button{width:auto;padding:7px 12px;font-size:.78rem;}
 
-  #dtEditor{display:none;margin-top:8px;}
+  #dtEditor{
+    margin-top:8px;display:none;
+  }
   #dtEditor.open{display:block;}
 
-  /* ========= Picker compacto ========= */
   .picker{
     display:flex;background:#f8fafc;border:1px solid var(--border);
     border-radius:8px;overflow:hidden;height:112px;position:relative;
@@ -99,12 +100,14 @@
   .picker-col .item{
     height:38px;line-height:38px;text-align:center;font-size:.92rem;
     scroll-snap-align:center;color:var(--text);font-variant-numeric:tabular-nums;
-    transition:opacity .12s;
   }
   .picker-col .item.sel{font-weight:700;color:var(--primary);}
   .picker-col .item.dim{color:#94a3b8;}
 
-  /* ========= Cámara ========= */
+  .dt-actions{display:flex;gap:8px;margin-top:8px;}
+  .dt-actions button{flex:1;}
+
+  /* Cámara */
   #cameraWrap{display:none;position:fixed;inset:0;background:#000;z-index:1000;}
   #cameraWrap.active{display:block;}
   #video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;}
@@ -143,7 +146,7 @@
   .dest-picker button{flex-direction:column;padding:12px;line-height:1.2;font-size:.85rem;}
   .dest-picker button small{font-weight:400;font-size:.68rem;opacity:.85;margin-top:2px;}
 
-  /* ========= Cropper simple (una zona) ========= */
+  /* Cropper simple (una zona) */
   #cropperWrap{display:none;position:fixed;inset:0;background:#000;z-index:1001;flex-direction:column;}
   #cropperWrap.active{display:flex;}
   #cropperWrap .cropper-container-wrap{flex:1;min-height:0;overflow:hidden;position:relative;}
@@ -153,70 +156,112 @@
   .crop-bar .actions{display:flex;gap:8px;}
   .crop-bar .actions button{flex:1;}
 
-  /* ========= MODO LENS ========= */
-  #lensWrap{display:none;position:fixed;inset:0;background:#0a0a0a;z-index:1002;flex-direction:column;}
-  #lensWrap.active{display:flex;}
+  /* ========= MODO SELECCIÓN LIBRE (trazo + zoom pinch) ========= */
+  #multiWrap{display:none;position:fixed;inset:0;background:#000;z-index:1002;flex-direction:column;}
+  #multiWrap.active{display:flex;}
 
-  .lens-top{
-    padding:calc(var(--safe-top) + 8px) 10px 8px;
-    background:#111;display:flex;flex-direction:column;gap:8px;
+  .multi-tabs{
+    display:flex;background:#111;padding:calc(var(--safe-top) + 8px) 8px 8px;gap:8px;
   }
-  .lens-top .row1{
-    display:flex;justify-content:space-between;align-items:center;gap:8px;color:#fff;
+  .multi-tab{
+    flex:1;padding:10px;border-radius:8px;background:#1e293b;color:#94a3b8;
+    font-size:.82rem;font-weight:700;border:2px solid transparent;
+    display:flex;align-items:center;justify-content:center;gap:6px;
   }
-  .lens-top .row1 .title{font-size:.85rem;font-weight:700;}
-  .lens-top .row1 button{
-    width:38px;height:38px;border-radius:50%;
-    background:rgba(255,255,255,.1);color:#fff;
-    font-size:1.1rem;padding:0;border:none;
+  .multi-tab.active{color:#000;border-color:#000;}
+  .multi-tab[data-tipo="cite"].active{background:var(--cite);}
+  .multi-tab[data-tipo="detalle"].active{background:var(--detalle);}
+  .multi-tab .dot{
+    width:10px;height:10px;border-radius:50%;background:currentColor;opacity:.6;
   }
-  .mode-switch{
-    display:grid;grid-template-columns:1fr 1fr;gap:6px;
-  }
-  .mode-switch button{
-    padding:8px;border-radius:8px;font-size:.82rem;font-weight:700;
-    border:2px solid transparent;background:rgba(255,255,255,.08);color:#cbd5e1;
-  }
-  .mode-switch button.active[data-mode="cite"]{background:rgba(251,191,36,.18);color:#fbbf24;border-color:#fbbf24;}
-  .mode-switch button.active[data-mode="detalle"]{background:rgba(56,189,248,.18);color:#38bdf8;border-color:#38bdf8;}
+  .multi-tab .dot.done{background:#16a34a;opacity:1;}
 
-  #lensStage{
+  #multiStage{
     flex:1;min-height:0;position:relative;overflow:hidden;
-    touch-action:none;background:#000;
-    display:flex;align-items:center;justify-content:center;
+    background:#000;touch-action:none;
   }
-  #lensImg{
-    position:absolute;top:0;left:0;transform-origin:0 0;
-    user-select:none;-webkit-user-drag:none;max-width:none;max-height:none;
-    will-change:transform;
+  #multiCanvasWrap{
+    position:absolute;top:0;left:0;
+    transform-origin: 0 0;
+    will-change: transform;
   }
-  #lensCanvas{
-    position:absolute;top:0;left:0;pointer-events:none;
-    transform-origin:0 0;will-change:transform;
+  #multiImage{
+    display:block;
+    user-select:none;-webkit-user-drag:none;
+    pointer-events:none;
   }
-  #lensLoading{
-    position:absolute;inset:0;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:14px;
-    background:rgba(0,0,0,.7);color:#fff;z-index:5;
+  /* Selección activa */
+  .sel-box{
+    position:absolute;border:2px solid;box-sizing:border-box;
+    background:transparent;
+    box-shadow:0 0 0 9999px rgba(0,0,0,.55);
   }
-  #lensLoading .spinner{width:38px;height:38px;border-width:4px;}
-  #lensLoading .msg{font-size:.9rem;opacity:.9;}
+  .sel-box[data-tipo="cite"]{border-color:var(--cite);--c:var(--cite);}
+  .sel-box[data-tipo="detalle"]{border-color:var(--detalle);--c:var(--detalle);}
+  .sel-box .box-label{
+    position:absolute;top:-22px;left:0;padding:2px 8px;
+    background:var(--c);color:#000;font-size:.7rem;font-weight:800;
+    border-radius:4px;white-space:nowrap;
+  }
+  .sel-box .handle{
+    position:absolute;width:26px;height:26px;background:var(--c);
+    border:2px solid #000;border-radius:50%;
+    touch-action:none;
+  }
+  .sel-box .handle.br{right:-13px;bottom:-13px;cursor:nwse-resize;}
+  .sel-box .handle.tr{right:-13px;top:-13px;cursor:nesw-resize;}
+  .sel-box .handle.bl{left:-13px;bottom:-13px;cursor:nesw-resize;}
+  .sel-box .handle.tl{left:-13px;top:-13px;cursor:nwse-resize;}
 
-  .lens-bottom{
-    padding:10px 10px calc(var(--safe-bottom) + 10px);
-    background:#111;display:flex;flex-direction:column;gap:8px;
+  /* Rectángulo de trazo (preview mientras arrastras) */
+  #traceRect{
+    position:absolute;border:2px dashed var(--cite);
+    background:rgba(251,191,36,.15);
+    pointer-events:none;box-sizing:border-box;
+    display:none;
   }
-  .lens-bottom .actions{display:flex;gap:8px;}
-  .lens-bottom .actions button{flex:1;padding:11px;font-size:.85rem;}
-  .lens-bottom .sub-actions{display:flex;gap:8px;}
-  .lens-bottom .sub-actions button{flex:1;padding:8px;font-size:.78rem;}
+  #traceRect[data-tipo="detalle"]{border-color:var(--detalle);background:rgba(56,189,248,.15);}
 
-  .lens-hint{
-    color:#94a3b8;font-size:.7rem;text-align:center;
-    padding:2px 0;line-height:1.3;
+  /* Instrucción flotante */
+  #multiHint{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    color:#fff;font-size:.9rem;text-align:center;pointer-events:none;
+    background:rgba(0,0,0,.55);padding:12px 18px;border-radius:10px;
+    max-width:80%;
   }
 
-  /* ========= Modal registros Excel ========= */
+  /* Botones flotantes arriba del stage */
+  .multi-top-actions{
+    position:absolute;top:8px;right:8px;z-index:5;display:flex;gap:6px;
+  }
+  .multi-top-actions button{
+    width:38px;height:38px;padding:0;border-radius:50%;
+    background:rgba(0,0,0,.6);color:#fff;font-size:1rem;
+  }
+
+  .multi-bar{
+    background:#111;padding:10px 10px calc(var(--safe-bottom) + 10px);
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .multi-bar .hint-bar{color:#cbd5e1;font-size:.72rem;text-align:center;padding:0 6px;}
+  .multi-bar .actions{display:flex;gap:8px;}
+  .multi-bar .actions button{flex:1;}
+
+  #preview{max-width:100%;border-radius:6px;display:none;margin-top:6px;}
+
+  .spinner{display:inline-block;width:16px;height:16px;border:3px solid #fff3;border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .toast{
+    position:fixed;bottom:calc(20px + var(--safe-bottom));left:50%;
+    transform:translateX(-50%) translateY(120%);
+    background:var(--text);color:#fff;padding:10px 18px;border-radius:8px;
+    font-size:.85rem;transition:transform .3s;z-index:2000;max-width:90%;
+    text-align:center;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0);}
+
+  /* Modal registros tipo Excel */
   #listModal{display:none;position:fixed;inset:0;background:var(--bg);z-index:1500;flex-direction:column;}
   #listModal.active{display:flex;}
   .list-header{
@@ -250,25 +295,7 @@
   table.xls td .del-btn{background:none;border:none;color:var(--danger);font-size:.95rem;padding:0;width:auto;cursor:pointer;}
   .empty-state{text-align:center;color:var(--muted);padding:36px 20px;font-size:.85rem;}
 
-  #preview{max-width:100%;border-radius:6px;display:none;margin-top:6px;}
-
-  .spinner{
-    display:inline-block;width:16px;height:16px;border:3px solid #fff3;
-    border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;
-  }
-  @keyframes spin{to{transform:rotate(360deg);}}
-
-  .toast{
-    position:fixed;bottom:calc(20px + var(--safe-bottom));left:50%;
-    transform:translateX(-50%) translateY(120%);
-    background:var(--text);color:#fff;padding:10px 18px;border-radius:8px;
-    font-size:.85rem;transition:transform .3s;z-index:2000;max-width:90%;
-    text-align:center;
-  }
-  .toast.show{transform:translateX(-50%) translateY(0);}
-
   .hint{font-size:.72rem;color:var(--muted);margin-top:2px;}
-  .picker-note{font-size:.65rem;color:var(--muted);text-align:center;margin-top:3px;}
 </style>
 </head>
 <body>
@@ -314,8 +341,8 @@
   <!-- Escaneo -->
   <div class="field">
     <label>Escanear con cámara</label>
-    <button id="btnScanLens" class="btn-primary" style="margin-bottom:8px;">
-      📸 Escanear documento (modo Lens)
+    <button id="btnScanDouble" class="btn-primary" style="margin-bottom:8px;">
+      📸 Escanear CITE + DETALLE en una sola foto
     </button>
     <div class="dest-picker">
       <button class="btn-ghost" data-target="cite">🎯 Solo CITE<small>una zona</small></button>
@@ -329,14 +356,12 @@
     <div class="status" id="status" style="font-size:.78rem;color:var(--muted);margin-top:6px;text-align:center;min-height:16px;"></div>
   </div>
 
-  <!-- Fecha / hora colapsada -->
+  <!-- FECHA Y HORA (colapsable) -->
   <div class="field">
     <label>Fecha y hora *</label>
-    <div class="dtbar">
-      <div class="dt-value">
-        📅 <b id="dtFechaLabel">—</b> · 🕒 <b id="dtHoraLabel">—</b>
-      </div>
-      <button class="btn-ghost" id="btnToggleDt">✏️ Editar</button>
+    <div class="dt-summary">
+      <div class="dt-text" id="dtSummaryText">—</div>
+      <button class="btn-outline" id="btnEditDT">✏️ Editar</button>
     </div>
     <div id="dtEditor">
       <div class="picker" id="dateTimePicker">
@@ -347,7 +372,10 @@
         <div class="picker-col" data-col="hour"></div>
         <div class="picker-col" data-col="min"></div>
       </div>
-      <div class="picker-note">Desliza cada columna · por defecto fecha y hora actuales</div>
+      <div class="dt-actions">
+        <button class="btn-ghost" id="btnCancelDT">Cancelar</button>
+        <button class="btn-primary" id="btnApplyDT">Aplicar</button>
+      </div>
     </div>
   </div>
 
@@ -365,9 +393,7 @@
     <button id="btnVerRegistros" class="btn-outline">📚 Ver registros</button>
     <button id="btnExportar" class="btn-warn">📊 Exportar Excel</button>
   </div>
-  <p class="hint" style="text-align:center;margin-top:6px;">
-    Registros guardados: <strong id="countRegistros">0</strong>
-  </p>
+  <p class="hint" style="text-align:center;margin-top:6px;">Registros guardados: <strong id="countRegistros">0</strong></p>
 </div>
 
 <!-- ============ CÁMARA ============ -->
@@ -400,40 +426,48 @@
   </div>
 </div>
 
-<!-- ============ MODO LENS ============ -->
-<div id="lensWrap">
-  <div class="lens-top">
-    <div class="row1">
-      <button id="btnCloseLens" aria-label="Cerrar">✕</button>
-      <span class="title">Selecciona el texto</span>
-      <button id="btnResetZoom" aria-label="Reset zoom">🔍</button>
+<!-- ============ MODO SELECCIÓN LIBRE (doble zona) ============ -->
+<div id="multiWrap">
+  <div class="multi-tabs">
+    <button class="multi-tab active" data-tipo="cite" id="tabCite">
+      <span class="dot" id="dotCite"></span> 🎯 CITE
+    </button>
+    <button class="multi-tab" data-tipo="detalle" id="tabDetalle">
+      <span class="dot" id="dotDetalle"></span> 📝 DETALLE
+    </button>
+  </div>
+
+  <div id="multiStage">
+    <div id="multiCanvasWrap">
+      <img id="multiImage" alt="Documento">
+      <div class="sel-box" id="selCite" data-tipo="cite" style="display:none;">
+        <span class="box-label">CITE</span>
+        <div class="handle tl" data-h="tl"></div>
+        <div class="handle tr" data-h="tr"></div>
+        <div class="handle bl" data-h="bl"></div>
+        <div class="handle br" data-h="br"></div>
+      </div>
+      <div class="sel-box" id="selDetalle" data-tipo="detalle" style="display:none;">
+        <span class="box-label">DETALLE</span>
+        <div class="handle tl" data-h="tl"></div>
+        <div class="handle tr" data-h="tr"></div>
+        <div class="handle bl" data-h="bl"></div>
+        <div class="handle br" data-h="br"></div>
+      </div>
+      <div id="traceRect" data-tipo="cite"></div>
     </div>
-    <div class="mode-switch">
-      <button data-mode="cite" class="active">🟡 CITE</button>
-      <button data-mode="detalle">🔵 DETALLE</button>
+    <div id="multiHint">Mantén pulsado y arrastra sobre el texto<br>para dibujar la selección</div>
+    <div class="multi-top-actions">
+      <button id="btnZoomReset" title="Restablecer zoom">⤢</button>
+      <button id="btnClearSel" title="Borrar selección actual">🗑️</button>
     </div>
   </div>
 
-  <div id="lensStage">
-    <img id="lensImg" alt="Documento">
-    <canvas id="lensCanvas"></canvas>
-    <div id="lensLoading">
-      <div class="spinner"></div>
-      <div class="msg" id="lensMsg">Analizando documento…</div>
-    </div>
-  </div>
-
-  <div class="lens-bottom">
-    <div class="lens-hint" id="lensHint">
-      Toca palabras · arrastra para varias · doble toque = línea · pinch = zoom
-    </div>
+  <div class="multi-bar">
+    <div class="hint-bar">Toca arriba para cambiar entre CITE y DETALLE · usa 2 dedos para zoom · arrastra para seleccionar</div>
     <div class="actions">
-      <button class="btn-success" id="btnExtractLens">✂️ Extraer selección</button>
-      <button class="btn-warn" id="btnManualLens">❌ Manual</button>
-    </div>
-    <div class="sub-actions">
-      <button class="btn-ghost" id="btnUndoLens">↺ Deshacer</button>
-      <button class="btn-ghost" id="btnResetSelLens">↻ Reiniciar</button>
+      <button class="btn-danger" id="btnCancelMulti">Cancelar</button>
+      <button class="btn-success" id="btnApplyMulti">✂️ Extraer ambos textos</button>
     </div>
   </div>
 </div>
@@ -477,8 +511,8 @@
 /* ============================================================
    Estado
    ============================================================ */
-const STORAGE_KEY = 'registros_docs_v5';
-const TYPES_KEY   = 'tipos_documento_v5';
+const STORAGE_KEY = 'registros_docs_v4';
+const TYPES_KEY   = 'tipos_documento_v4';
 
 const state = {
   stream: null,
@@ -488,179 +522,182 @@ const state = {
   ocrReady: false,
   ocrLoading: false,
   currentTarget: null,
-  sourceImage: null,
+  currentMode: null,
   registros: JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'),
   tipos: JSON.parse(localStorage.getItem(TYPES_KEY) || 'null'),
   fecha: { day:1, month:0, year:new Date().getFullYear() },
   hora:  { hour:0, min:0 },
-  dtEdited: false
+  fechaBackup: null,
+  horaBackup: null
 };
 const $ = (id) => document.getElementById(id);
 const pad = n => String(n).padStart(2, '0');
 const MESES_CORTOS = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
 
 /* ============================================================
-   Helpers
+   Utilidades
    ============================================================ */
 function toast(msg, ms=2800){
   const t=$('toast'); t.textContent=msg; t.classList.add('show');
-  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'), ms);
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),ms);
 }
 function setStatus(msg, loading=false){
   $('status').innerHTML = loading ? `<span class="spinner"></span> ${msg}` : msg;
 }
-function updateBadge(target, val){
+function updateBadge(target,val){
   const tag = target==='cite' ? $('tagCite') : $('tagContenido');
   if(!tag) return;
   if(val && val.trim()){ tag.textContent='listo'; tag.className='tag ok'; }
   else{ tag.textContent='vacío'; tag.className='tag empty'; }
 }
 function updateCount(){ $('countRegistros').textContent = state.registros.length; }
-function escapeHtml(s){
-  return String(s ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
 
 /* ============================================================
-   Tipos de documento
+   TIPOS
    ============================================================ */
-const TIPOS_DEFAULT = ['Oficio','Memorándum','Carta','Informe','Solicitud','Resolución','Circular','Nota','Otro'];
+const TIPOS_DEFAULT=['Oficio','Memorándum','Carta','Informe','Solicitud','Resolución','Circular','Nota','Otro'];
 function loadTipos(){
-  const sel = $('tipo');
-  const tipos = state.tipos || TIPOS_DEFAULT;
-  sel.innerHTML = '<option value="">— Seleccionar —</option>';
+  const sel=$('tipo'); const tipos=state.tipos||TIPOS_DEFAULT;
+  sel.innerHTML='<option value="">— Seleccionar —</option>';
   tipos.forEach(t=>{
     const o=document.createElement('option'); o.value=t; o.textContent=t; sel.appendChild(o);
   });
-  const add=document.createElement('option');
-  add.value='__ADD__'; add.textContent='➕ Agregar tipo…'; sel.appendChild(add);
+  const add=document.createElement('option'); add.value='__ADD__'; add.textContent='➕ Agregar tipo…';
+  sel.appendChild(add);
 }
-$('tipo').addEventListener('change', (e)=>{
+$('tipo').addEventListener('change', e=>{
   if(e.target.value!=='__ADD__') return;
-  const nuevo = prompt('Nombre del nuevo tipo:');
-  if(!nuevo || !nuevo.trim()){ e.target.value=''; return; }
-  const tipos = (state.tipos || TIPOS_DEFAULT).slice();
-  const limpio = nuevo.trim();
+  const nuevo=prompt('Nombre del nuevo tipo:');
+  if(!nuevo||!nuevo.trim()){ e.target.value=''; return; }
+  const tipos=(state.tipos||TIPOS_DEFAULT).slice();
+  const limpio=nuevo.trim();
   if(!tipos.includes(limpio)) tipos.push(limpio);
-  state.tipos = tipos;
-  localStorage.setItem(TYPES_KEY, JSON.stringify(tipos));
-  loadTipos(); $('tipo').value = limpio; toast('Tipo agregado');
+  state.tipos=tipos; localStorage.setItem(TYPES_KEY,JSON.stringify(tipos));
+  loadTipos(); $('tipo').value=limpio; toast('Tipo agregado');
 });
 
 /* ============================================================
-   Fecha/hora colapsada + picker
+   FECHA/HORA COLAPSABLE
    ============================================================ */
-function buildPickerCol(containerEl, colKey, items, renderItem, selectedIdx, onChange){
-  const col = containerEl.querySelector(`[data-col="${colKey}"]`);
+let dtBuilt = false;
+function setDTNow(){
+  const now = new Date();
+  state.fecha = { day:now.getDate(), month:now.getMonth(), year:now.getFullYear() };
+  state.hora  = { hour:now.getHours(), min:now.getMinutes() };
+}
+function fechaBonita(){
+  const f=state.fecha;
+  return `${pad(f.day)} ${MESES_CORTOS[f.month]} ${f.year}`;
+}
+function horaBonita(){ return `${pad(state.hora.hour)}:${pad(state.hora.min)}`; }
+function refreshDTSummary(){
+  $('dtSummaryText').innerHTML = `${fechaBonita()} <span style="color:#94a3b8;margin:0 4px;">·</span> ${horaBonita()}`;
+}
+function buildPickerCol(containerEl,colKey,items,renderItem,selectedIdx,onChange){
+  const col=containerEl.querySelector(`[data-col="${colKey}"]`);
   col.innerHTML='';
-  const pT=document.createElement('div'); pT.style.height='37px';
-  const pB=document.createElement('div'); pB.style.height='37px';
-  col.appendChild(pT);
-  items.forEach((val, idx)=>{
+  const padT=document.createElement('div'); padT.style.height='37px';
+  const padB=document.createElement('div'); padB.style.height='37px';
+  col.appendChild(padT);
+  items.forEach((val,idx)=>{
     const d=document.createElement('div');
     d.className='item'; d.dataset.idx=idx; d.textContent=renderItem(val);
-    d.addEventListener('click', ()=> col.scrollTo({top: idx*38, behavior:'smooth'}));
+    d.addEventListener('click',()=> col.scrollTo({top:idx*38,behavior:'smooth'}));
     col.appendChild(d);
   });
-  col.appendChild(pB);
+  col.appendChild(padB);
   col.scrollTop = selectedIdx*38;
   let timer=null;
   function onScroll(){
     clearTimeout(timer);
-    timer = setTimeout(()=>{
-      const idx = Math.round(col.scrollTop/38);
-      const clamped = Math.max(0, Math.min(items.length-1, idx));
-      if(Math.abs(col.scrollTop - clamped*38) > 1){
-        col.scrollTo({top: clamped*38, behavior:'smooth'});
+    timer=setTimeout(()=>{
+      const idx=Math.round(col.scrollTop/38);
+      const clamped=Math.max(0,Math.min(items.length-1,idx));
+      if(Math.abs(col.scrollTop-clamped*38)>1){
+        col.scrollTo({top:clamped*38,behavior:'smooth'});
       }
       col.querySelectorAll('.item').forEach((el,i)=>{
-        el.classList.toggle('sel', i===clamped);
-        el.classList.toggle('dim', i!==clamped);
+        el.classList.toggle('sel',i===clamped);
+        el.classList.toggle('dim',i!==clamped);
       });
-      onChange(clamped, items[clamped]);
-      state.dtEdited = true;
-      refreshDtLabels();
-    }, 90);
+      onChange(clamped,items[clamped]);
+    },90);
   }
-  col.addEventListener('scroll', onScroll, {passive:true});
-  setTimeout(onScroll, 50);
+  col.addEventListener('scroll',onScroll,{passive:true});
+  setTimeout(onScroll,50);
 }
+function buildDateTimePicker(){
+  if(dtBuilt) return;
+  const now=new Date();
+  const days=Array.from({length:31},(_,i)=>i+1);
+  const months=MESES_CORTOS.map((m,i)=>({idx:i,label:m}));
+  const years=Array.from({length:15},(_,i)=>now.getFullYear()-5+i);
+  const hours=Array.from({length:24},(_,i)=>i);
+  const mins=Array.from({length:60},(_,i)=>i);
 
-function initDateTimePicker(){
-  const now = new Date();
-  const days   = Array.from({length:31},(_,i)=>i+1);
-  const months = MESES_CORTOS.map((m,i)=>({idx:i, label:m}));
-  const years  = Array.from({length:15},(_,i)=> now.getFullYear()-5+i);
-  const hours  = Array.from({length:24},(_,i)=>i);
-  const mins   = Array.from({length:60},(_,i)=>i);
-
-  // Solo si no están seteados o se fuerza refresh
-  state.fecha.day   = now.getDate();
-  state.fecha.month = now.getMonth();
-  state.fecha.year  = now.getFullYear();
-  state.hora.hour   = now.getHours();
-  state.hora.min    = now.getMinutes();
-
-  // Limpiamos columnas para reconstruir
-  const cont = $('dateTimePicker');
-  cont.querySelectorAll('.picker-col').forEach(c=> c.innerHTML='');
-
-  buildPickerCol(cont,'day',   days,   v=>v,       state.fecha.day-1,  i=> state.fecha.day = days[i]);
-  buildPickerCol(cont,'month', months, v=>v.label, state.fecha.month,  i=> state.fecha.month = months[i].idx);
-  buildPickerCol(cont,'year',  years,  v=>v,       years.indexOf(now.getFullYear()), i=> state.fecha.year = years[i]);
-  buildPickerCol(cont,'hour',  hours,  v=>pad(v),  state.hora.hour,    i=> state.hora.hour = hours[i]);
-  buildPickerCol(cont,'min',   mins,   v=>pad(v),  state.hora.min,     i=> state.hora.min = mins[i]);
-
-  refreshDtLabels();
+  buildPickerCol($('dateTimePicker'),'day',days,v=>v,state.fecha.day-1,i=>state.fecha.day=days[i]);
+  buildPickerCol($('dateTimePicker'),'month',months,v=>v.label,state.fecha.month,i=>state.fecha.month=months[i].idx);
+  buildPickerCol($('dateTimePicker'),'year',years,v=>v,years.indexOf(state.fecha.year),i=>state.fecha.year=years[i]);
+  buildPickerCol($('dateTimePicker'),'hour',hours,v=>pad(v),state.hora.hour,i=>state.hora.hour=hours[i]);
+  buildPickerCol($('dateTimePicker'),'min',mins,v=>pad(v),state.hora.min,i=>state.hora.min=mins[i]);
+  dtBuilt = true;
 }
-
-function refreshDtLabels(){
-  const f = state.fecha, h = state.hora;
-  $('dtFechaLabel').textContent = `${pad(f.day)} ${MESES_CORTOS[f.month]} ${f.year}`;
-  $('dtHoraLabel').textContent  = `${pad(h.hour)}:${pad(h.min)}`;
+function openDTEditor(){
+  state.fechaBackup = { ...state.fecha };
+  state.horaBackup  = { ...state.hora };
+  setDTNow();
+  buildDateTimePicker();
+  // Refrescar los pickers con los valores actuales
+  const wrap=$('dateTimePicker');
+  const cols = {
+    day: state.fecha.day-1,
+    month: state.fecha.month,
+    year: state.fecha.year - (new Date().getFullYear()-5),
+    hour: state.hora.hour,
+    min: state.hora.min
+  };
+  Object.entries(cols).forEach(([k,v])=>{
+    const col = wrap.querySelector(`[data-col="${k}"]`);
+    if(col) col.scrollTo({top:v*38, behavior:'auto'});
+  });
+  $('dtEditor').classList.add('open');
+  $('btnEditDT').style.display='none';
 }
-function getFechaISO(){
-  const f = state.fecha;
-  return `${f.year}-${pad(f.month+1)}-${pad(f.day)}`;
+function closeDTEditor(apply){
+  if(!apply){
+    if(state.fechaBackup) state.fecha={...state.fechaBackup};
+    if(state.horaBackup)  state.hora={...state.horaBackup};
+  }
+  refreshDTSummary();
+  $('dtEditor').classList.remove('open');
+  $('btnEditDT').style.display='';
 }
-function getHoraHHMM(){ return `${pad(state.hora.hour)}:${pad(state.hora.min)}`; }
-
-$('btnToggleDt').addEventListener('click', ()=>{
-  const ed = $('dtEditor');
-  ed.classList.toggle('open');
-  $('btnToggleDt').textContent = ed.classList.contains('open') ? '✔ Listo' : '✏️ Editar';
-});
 
 /* ============================================================
-   Precarga OCR (worker compartido)
+   Precarga OCR
    ============================================================ */
 async function preloadOCR(){
-  if(state.ocrReady || state.ocrLoading) return;
-  state.ocrLoading = true;
+  if(state.ocrReady||state.ocrLoading) return;
+  state.ocrLoading=true;
   try{
-    state.ocrWorker = await Tesseract.createWorker('spa', 1, {logger:()=>{}});
-    // Ajustes por defecto del worker; el modo Lens cambiará psm por trabajo
-    await state.ocrWorker.setParameters({
-      preserve_interword_spaces:'1',
-      user_defined_dpi:'300'
-    });
-    state.ocrReady = true;
-  }catch(e){ console.warn('[OCR]', e); }
-  finally{ state.ocrLoading = false; }
+    state.ocrWorker=await Tesseract.createWorker('spa',1,{logger:()=>{}});
+    await state.ocrWorker.setParameters({tessedit_pageseg_mode:'6',preserve_interword_spaces:'1'});
+    state.ocrReady=true;
+  }catch(e){console.warn('[OCR]',e);}
+  finally{state.ocrLoading=false;}
 }
 
 /* ============================================================
    CÁMARA
    ============================================================ */
-async function openCamera(target=null){
-  state.currentTarget = target;
-  $('camTitle').textContent = target==='cite'
-    ? 'Encuadra el CITE'
-    : target==='contenido'
-      ? 'Encuadra el detalle'
-      : 'Captura el documento completo';
+async function openCamera(mode,target=null){
+  state.currentMode=mode; state.currentTarget=target;
+  $('camTitle').textContent = mode==='double'
+    ? 'Captura el documento completo'
+    : (target==='cite'?'Encuadra el CITE':'Encuadra el detalle');
   try{
-    state.stream = await navigator.mediaDevices.getUserMedia({
-      video:{ facingMode:{ideal:state.facingMode}, width:{ideal:1280}, height:{ideal:720}, frameRate:{ideal:30,max:30} },
+    state.stream=await navigator.mediaDevices.getUserMedia({
+      video:{facingMode:{ideal:state.facingMode},width:{ideal:1280},height:{ideal:720},frameRate:{ideal:30,max:30}},
       audio:false
     });
     const v=$('video'); v.srcObject=state.stream; await v.play();
@@ -668,7 +705,7 @@ async function openCamera(target=null){
     preloadOCR();
   }catch(err){
     console.error(err);
-    toast('No se pudo abrir la cámara: ' + err.name, 4000);
+    toast('No se pudo abrir la cámara: '+err.name,4000);
   }
 }
 function closeCamera(){
@@ -679,7 +716,7 @@ function closeCamera(){
 async function switchCamera(){
   state.facingMode = state.facingMode==='environment'?'user':'environment';
   closeCamera();
-  await openCamera(state.currentTarget);
+  await openCamera(state.currentMode,state.currentTarget);
 }
 function capturePhoto(){
   const v=$('video');
@@ -688,28 +725,26 @@ function capturePhoto(){
   c.width=v.videoWidth; c.height=v.videoHeight;
   c.getContext('2d').drawImage(v,0,0);
   const dataUrl=c.toDataURL('image/jpeg',0.92);
-  const target = state.currentTarget;
+  const mode=state.currentMode;
   closeCamera();
-  if(target) openCropper(dataUrl);
-  else openLens(dataUrl);
+  if(mode==='double') openMulti(dataUrl);
+  else openCropper(dataUrl);
 }
 
 /* ============================================================
-   CROPPER simple (una zona, respaldo manual)
+   CROPPER simple
    ============================================================ */
 function openCropper(dataUrl){
   $('cropTargetLabel').textContent = state.currentTarget==='cite'
-    ? '✂️ Recortando para → CITE'
-    : '✂️ Recortando para → CONTENIDO';
-  const img = $('cropperImage');
-  img.src = dataUrl;
+    ? '✂️ Recortando para → CITE' : '✂️ Recortando para → CONTENIDO';
+  const img=$('cropperImage'); img.src=dataUrl;
   $('cropperWrap').classList.add('active');
-  img.onload = ()=>{
+  img.onload=()=>{
     if(state.cropper) state.cropper.destroy();
-    state.cropper = new Cropper(img, {
-      viewMode:1, autoCropArea:0.7, movable:true, zoomable:true,
-      scalable:false, responsive:true, background:false, guides:true,
-      cropBoxMovable:true, cropBoxResizable:true
+    state.cropper=new Cropper(img,{
+      viewMode:1,autoCropArea:0.7,movable:true,zoomable:true,
+      scalable:false,responsive:true,background:false,guides:true,
+      cropBoxMovable:true,cropBoxResizable:true
     });
   };
 }
@@ -719,18 +754,417 @@ function closeCropper(){
 }
 async function applyCropAndOCR(){
   if(!state.cropper) return;
-  const canvas = state.cropper.getCroppedCanvas({maxWidth:1400,maxHeight:1400,fillColor:'#fff'});
-  const processed = preprocessForOCR(canvas);
-  const dataUrl = processed.toDataURL('image/jpeg',0.92);
-  $('preview').src = dataUrl;
-  $('preview').style.display='block';
-  const target = state.currentTarget;
+  const canvas=state.cropper.getCroppedCanvas({maxWidth:1400,maxHeight:1400,fillColor:'#fff'});
+  const dataUrl=preprocessForOCR(canvas).toDataURL('image/jpeg',0.92);
+  $('preview').src=dataUrl; $('preview').style.display='block';
+  const target=state.currentTarget;
   closeCropper();
-  await runOCRSingle(dataUrl, target);
+  await runOCR(dataUrl,target);
 }
 
 /* ============================================================
-   PREPROCESADO adaptativo (mejor que umbral fijo)
+   MODO SELECCIÓN LIBRE — trazo + zoom pinch
+   ============================================================ */
+const multi = {
+  img:null,
+  wrap:null,
+  stage:null,
+  zoom:1, panX:0, panY:0,
+  // selecciones en coordenadas NATURALES de la imagen (no pantalla)
+  sel: { cite:null, detalle:null },   // {x,y,w,h} en px de la imagen natural
+  activeTab: 'cite',
+  gesture: null   // {type:'trace'|'resize'|'pan', ...}
+};
+
+function openMulti(dataUrl){
+  const img=$('multiImage');
+  img.src=dataUrl;
+  $('multiWrap').classList.add('active');
+  multi.stage=$('multiStage');
+  multi.wrap=$('multiCanvasWrap');
+  multi.zoom=1; multi.panX=0; multi.panY=0;
+  multi.sel={cite:null,detalle:null};
+  multi.activeTab='cite';
+  updateMultiTabs();
+  hideSels();
+  $('multiHint').style.display='';
+
+  img.onload=()=>{
+    multi.img=img;
+    // Ajustar el tamaño para que la imagen quepa en el stage
+    requestAnimationFrame(()=>{
+      const stageRect=multi.stage.getBoundingClientRect();
+      const nW=img.naturalWidth, nH=img.naturalHeight;
+      const scale=Math.min(stageRect.width/nW, stageRect.height/nH);
+      const w=Math.round(nW*scale), h=Math.round(nH*scale);
+      img.style.width = w+'px';
+      img.style.height= h+'px';
+      multi.wrap.style.width = w+'px';
+      multi.wrap.style.height= h+'px';
+      // Centrar
+      multi.panX = (stageRect.width - w)/2;
+      multi.panY = (stageRect.height - h)/2;
+      applyTransform();
+    });
+  };
+}
+
+function applyTransform(){
+  multi.wrap.style.transform = `translate(${multi.panX}px, ${multi.panY}px) scale(${multi.zoom})`;
+}
+
+function updateMultiTabs(){
+  document.querySelectorAll('.multi-tab').forEach(t=>{
+    t.classList.toggle('active', t.dataset.tipo===multi.activeTab);
+  });
+  $('traceRect').dataset.tipo = multi.activeTab;
+  // Mostrar/ocultar cajas según existan
+  const sc=$('selCite'), sd=$('selDetalle');
+  if(multi.sel.cite){ sc.style.display='block'; renderSel('cite'); } else { sc.style.display='none'; }
+  if(multi.sel.detalle){ sd.style.display='block'; renderSel('detalle'); } else { sd.style.display='none'; }
+  // Puntos "listo" en las pestañas
+  $('dotCite').classList.toggle('done', !!multi.sel.cite);
+  $('dotDetalle').classList.toggle('done', !!multi.sel.detalle);
+}
+function hideSels(){
+  $('selCite').style.display='none';
+  $('selDetalle').style.display='none';
+}
+function renderSel(key){
+  const s = multi.sel[key]; if(!s) return;
+  const img = multi.img;
+  const nW = img.naturalWidth, nH = img.naturalHeight;
+  const dispW = img.clientWidth, dispH = img.clientHeight;
+  const sx = dispW/nW, sy = dispH/nH;
+  const el = key==='cite' ? $('selCite') : $('selDetalle');
+  el.style.left   = (s.x*sx)+'px';
+  el.style.top    = (s.y*sy)+'px';
+  el.style.width  = (s.w*sx)+'px';
+  el.style.height = (s.h*sy)+'px';
+}
+
+/* Conversión pantalla → coordenadas naturales de la imagen */
+function screenToImage(clientX, clientY){
+  const wrapRect = multi.wrap.getBoundingClientRect();
+  // Restar el offset del wrap (que ya incluye pan+zoom)
+  const localX = (clientX - wrapRect.left) / multi.zoom;
+  const localY = (clientY - wrapRect.top)  / multi.zoom;
+  // localX está en "píxeles mostrados" de la imagen
+  const imgW = multi.img.clientWidth, imgH = multi.img.clientHeight;
+  const nW = multi.img.naturalWidth, nH = multi.img.naturalHeight;
+  const sx = nW/imgW, sy = nH/imgH;
+  return { x: localX*sx, y: localY*sy, dispX: localX, dispY: localY };
+}
+
+/* Convierte coordenadas naturales → pantalla (para dibujar sel-box) */
+function imageToScreen(nx, ny){
+  const imgW = multi.img.clientWidth, imgH = multi.img.clientHeight;
+  const nW = multi.img.naturalWidth, nH = multi.img.naturalHeight;
+  const sx = imgW/nW, sy = imgH/nH;
+  return { x: nx*sx, y: ny*sy };
+}
+
+/* ---- Gestos: 1 dedo = trazar/resize, 2 dedos = zoom/pan ---- */
+let activePointers = new Map();
+let lastPinch = null;
+
+multiStage && 0; // placeholder
+
+function bindStageGestures(){
+  const stage = $('multiStage');
+  // Touch + Mouse unificados
+  stage.addEventListener('touchstart', onPointerStart, {passive:false});
+  stage.addEventListener('touchmove',  onPointerMove,  {passive:false});
+  stage.addEventListener('touchend',   onPointerEnd,   {passive:false});
+  stage.addEventListener('touchcancel',onPointerEnd,   {passive:false});
+
+  stage.addEventListener('mousedown', onMouseStart);
+  window.addEventListener('mousemove', onMouseMove);
+  window.addEventListener('mouseup',   onMouseEnd);
+}
+
+/* ======== TOUCH ======== */
+function onPointerStart(e){
+  for(const t of e.changedTouches){ activePointers.set(t.identifier, {x:t.clientX, y:t.clientY}); }
+
+  if(activePointers.size===2){
+    // Inicio pinch
+    const pts = [...activePointers.values()];
+    lastPinch = {
+      dist: Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y),
+      cx:   (pts[0].x+pts[1].x)/2,
+      cy:   (pts[0].y+pts[1].y)/2,
+      zoom: multi.zoom, panX: multi.panX, panY: multi.panY
+    };
+    // Cancelar cualquier trazo en curso
+    multi.gesture=null;
+    $('traceRect').style.display='none';
+    return;
+  }
+
+  if(activePointers.size!==1) return;
+  const t = e.changedTouches[0];
+  handleStart(t.clientX, t.clientY, e);
+}
+
+function onPointerMove(e){
+  for(const t of e.changedTouches){ if(activePointers.has(t.identifier)) activePointers.set(t.identifier,{x:t.clientX,y:t.clientY}); }
+
+  if(activePointers.size===2 && lastPinch){
+    e.preventDefault();
+    const pts=[...activePointers.values()];
+    const dist=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);
+    const cx=(pts[0].x+pts[1].x)/2, cy=(pts[0].y+pts[1].y)/2;
+    const ratio=dist/lastPinch.dist;
+    let newZoom=Math.max(1, Math.min(5, lastPinch.zoom*ratio));
+    // Punto del stage que debe quedarse fijo
+    const stageRect=multi.stage.getBoundingClientRect();
+    const px=cx-stageRect.left, py=cy-stageRect.top;
+    // Ajuste pan para mantener el foco
+    multi.panX = lastPinch.panX - (px - lastPinch.panX) * (newZoom/lastPinch.zoom - 1)
+                 + (cx - lastPinch.cx);
+    multi.panY = lastPinch.panY - (py - lastPinch.panY) * (newZoom/lastPinch.zoom - 1)
+                 + (cy - lastPinch.cy);
+    multi.zoom=newZoom;
+    applyTransform();
+    return;
+  }
+
+  if(activePointers.size===1 && multi.gesture){
+    e.preventDefault();
+    const t=e.changedTouches[0];
+    handleMove(t.clientX, t.clientY);
+  }
+}
+
+function onPointerEnd(e){
+  for(const t of e.changedTouches){ activePointers.delete(t.identifier); }
+
+  if(activePointers.size===0){
+    if(multi.gesture) handleEnd();
+    lastPinch=null;
+  }
+}
+
+/* ======== MOUSE ======== */
+function onMouseStart(e){
+  if(activePointers.size>0) return;
+  handleStart(e.clientX, e.clientY, e);
+}
+function onMouseMove(e){
+  if(multi.gesture) handleMove(e.clientX, e.clientY);
+}
+function onMouseEnd(){
+  if(multi.gesture) handleEnd();
+}
+
+/* ======== LÓGICA COMÚN DE TRAZO Y RESIZE ======== */
+function handleStart(clientX, clientY, ev){
+  const stage=$('multiStage');
+  const stageRect=stage.getBoundingClientRect();
+  // Si toca un handle de una selección → resize
+  const handleEl = ev.target.closest('.handle');
+  if(handleEl){
+    ev.preventDefault();
+    const boxEl = handleEl.closest('.sel-box');
+    const key = boxEl.dataset.tipo;
+    const s = multi.sel[key]; if(!s) return;
+    multi.gesture = {
+      type:'resize', key, handle: handleEl.dataset.h,
+      startClientX: clientX, startClientY: clientY,
+      orig: { ...s }
+    };
+    return;
+  }
+  // Si toca dentro de una selección existente → mover? No, preferimos permitir re-trazar.
+  // (Para re-trazar solo el usuario hace nueva selección.)
+  // Trazo nuevo:
+  ev.preventDefault();
+  const p = screenToImage(clientX, clientY);
+  multi.gesture = {
+    type:'trace', key: multi.activeTab,
+    startX: p.x, startY: p.y,
+    startClientX: clientX, startClientY: clientY,
+    stageRect
+  };
+  // Previsualización
+  const tr=$('traceRect');
+  tr.dataset.tipo = multi.activeTab;
+  tr.style.display='block';
+  tr.style.left = (clientX - stageRect.left) + 'px';
+  tr.style.top  = (clientY - stageRect.top)  + 'px';
+  tr.style.width='0px'; tr.style.height='0px';
+  $('multiHint').style.display='none';
+}
+
+function handleMove(clientX, clientY){
+  const g = multi.gesture; if(!g) return;
+  if(g.type==='trace'){
+    const stageRect = multi.stage.getBoundingClientRect();
+    const x1 = Math.min(g.startClientX, clientX) - stageRect.left;
+    const y1 = Math.min(g.startClientY, clientY) - stageRect.top;
+    const w  = Math.abs(clientX - g.startClientX);
+    const h  = Math.abs(clientY - g.startClientY);
+    const tr=$('traceRect');
+    tr.style.left = x1+'px'; tr.style.top=y1+'px';
+    tr.style.width=w+'px'; tr.style.height=h+'px';
+  } else if(g.type==='resize'){
+    const s=multi.sel[g.key]; if(!s) return;
+    // dx,dy en pantalla → convertir a coordenadas de imagen
+    const nW=multi.img.naturalWidth, nH=multi.img.naturalHeight;
+    const dispW=multi.img.clientWidth, dispH=multi.img.clientHeight;
+    const sx=nW/dispW, sy=nH/dispH;
+    const dxRaw=(clientX-g.startClientX)/multi.zoom;
+    const dyRaw=(clientY-g.startClientY)/multi.zoom;
+    const dx=dxRaw*sx, dy=dyRaw*sy;
+    const o=g.orig;
+    let nb={...o};
+    const MIN=8;
+    const h=g.handle;
+    if(h.includes('l')){ nb.x=o.x+dx; nb.w=o.w-dx; }
+    if(h.includes('r')){ nb.w=o.w+dx; }
+    if(h.includes('t')){ nb.y=o.y+dy; nb.h=o.h-dy; }
+    if(h.includes('b')){ nb.h=o.h+dy; }
+    if(nb.w<MIN) nb.w=MIN;
+    if(nb.h<MIN) nb.h=MIN;
+    // Limitar dentro de la imagen
+    if(nb.x<0){ nb.w+=nb.x; nb.x=0; }
+    if(nb.y<0){ nb.h+=nb.y; nb.y=0; }
+    if(nb.x+nb.w>nW) nb.w=nW-nb.x;
+    if(nb.y+nb.h>nH) nb.h=nH-nb.y;
+    multi.sel[g.key]=nb;
+    renderSel(g.key);
+  }
+}
+
+function handleEnd(){
+  const g=multi.gesture; if(!g) return;
+  if(g.type==='trace'){
+    const tr=$('traceRect');
+    const rect=tr.getBoundingClientRect();
+    tr.style.display='none';
+    if(rect.width<8 || rect.height<8){
+      multi.gesture=null;
+      // Mostrar hint de nuevo si no hay selección
+      if(!multi.sel.cite && !multi.sel.detalle) $('multiHint').style.display='';
+      return;
+    }
+    // Convertir rect de pantalla a coordenadas naturales
+    const stageRect=multi.stage.getBoundingClientRect();
+    const wrapRect=multi.wrap.getBoundingClientRect();
+    // El rect está en coordenadas de pantalla; pasamos a coordenadas del wrap (aplicando zoom)
+    const localX1=(rect.left - wrapRect.left)/multi.zoom;
+    const localY1=(rect.top  - wrapRect.top )/multi.zoom;
+    const localX2=(rect.right - wrapRect.left)/multi.zoom;
+    const localY2=(rect.bottom- wrapRect.top )/multi.zoom;
+
+    const nW=multi.img.naturalWidth, nH=multi.img.naturalHeight;
+    const dispW=multi.img.clientWidth, dispH=multi.img.clientHeight;
+    const sx=nW/dispW, sy=nH/dispH;
+
+    const nx1=localX1*sx, ny1=localY1*sy;
+    const nx2=localX2*sx, ny2=localY2*sy;
+
+    multi.sel[g.key] = {
+      x: Math.max(0,nx1), y: Math.max(0,ny1),
+      w: Math.min(nW,nx2)-Math.max(0,nx1),
+      h: Math.min(nH,ny2)-Math.max(0,ny1)
+    };
+    updateMultiTabs();
+    // Auto-cambiar a la otra pestaña si aún falta
+    if(g.key==='cite' && !multi.sel.detalle){ multi.activeTab='detalle'; updateMultiTabs(); }
+    else if(g.key==='detalle' && !multi.sel.cite){ multi.activeTab='cite'; updateMultiTabs(); }
+  }
+  multi.gesture=null;
+}
+
+/* ============================================================
+   Zoom con rueda (desktop)
+   ============================================================ */
+$('multiStage').addEventListener('wheel', e=>{
+  if(!multi.img) return;
+  e.preventDefault();
+  const rect=multi.stage.getBoundingClientRect();
+  const px=e.clientX-rect.left, py=e.clientY-rect.top;
+  const factor = e.deltaY<0 ? 1.15 : 1/1.15;
+  const newZoom = Math.max(1, Math.min(5, multi.zoom*factor));
+  multi.panX = multi.panX - (px - multi.panX)*(newZoom/multi.zoom - 1);
+  multi.panY = multi.panY - (py - multi.panY)*(newZoom/multi.zoom - 1);
+  multi.zoom=newZoom;
+  applyTransform();
+}, {passive:false});
+
+/* Botones flotantes del modo multi */
+$('btnZoomReset').addEventListener('click', ()=>{
+  multi.zoom=1;
+  const stageRect=multi.stage.getBoundingClientRect();
+  const w=multi.img.clientWidth, h=multi.img.clientHeight;
+  multi.panX=(stageRect.width-w)/2;
+  multi.panY=(stageRect.height-h)/2;
+  applyTransform();
+});
+$('btnClearSel').addEventListener('click', ()=>{
+  multi.sel[multi.activeTab]=null;
+  updateMultiTabs();
+  $('multiHint').style.display = '';
+});
+
+/* Cambio de pestaña CITE/DETALLE */
+document.querySelectorAll('.multi-tab').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    multi.activeTab=t.dataset.tipo;
+    updateMultiTabs();
+  });
+});
+
+/* ============================================================
+   Recorte desde imagen natural
+   ============================================================ */
+function cropFromImageNatural(imgEl, box){
+  const c=document.createElement('canvas');
+  c.width=Math.max(1,Math.round(box.w));
+  c.height=Math.max(1,Math.round(box.h));
+  const ctx=c.getContext('2d');
+  ctx.drawImage(imgEl, Math.round(box.x), Math.round(box.y), Math.round(box.w), Math.round(box.h), 0,0, c.width, c.height);
+  return c;
+}
+
+function closeMulti(){
+  $('multiWrap').classList.remove('active');
+  $('multiImage').src='';
+  multi.img=null;
+  multi.sel={cite:null,detalle:null};
+}
+
+async function applyMultiAndOCR(){
+  if(!multi.img) return;
+  if(!multi.sel.cite && !multi.sel.detalle){
+    toast('Dibuja al menos una selección'); return;
+  }
+  const jobs = [];
+  if(multi.sel.cite)    jobs.push({ target:'cite',      box: multi.sel.cite });
+  if(multi.sel.detalle) jobs.push({ target:'contenido', box: multi.sel.detalle });
+
+  // Capturar datos antes de cerrar
+  const imgEl = multi.img;
+  const prepared = jobs.map(j=>{
+    const canvas = cropFromImageNatural(imgEl, j.box);
+    const dataUrl = preprocessForOCR(canvas).toDataURL('image/jpeg',0.92);
+    return { target:j.target, dataUrl };
+  });
+
+  $('preview').src = prepared[prepared.length-1].dataUrl;
+  $('preview').style.display='block';
+
+  closeMulti();
+
+  for(const p of prepared){
+    await runOCR(p.dataUrl, p.target);
+  }
+}
+
+/* ============================================================
+   Preprocesado y OCR
    ============================================================ */
 function preprocessForOCR(sourceCanvas){
   const c=document.createElement('canvas');
@@ -739,659 +1173,56 @@ function preprocessForOCR(sourceCanvas){
   ctx.drawImage(sourceCanvas,0,0);
   const img=ctx.getImageData(0,0,c.width,c.height);
   const d=img.data;
-
-  // 1. Escala de grises
-  const gray = new Uint8ClampedArray(d.length/4);
-  for(let i=0,j=0;i<d.length;i+=4,j++){
-    gray[j] = d[i]*0.299 + d[i+1]*0.587 + d[i+2]*0.114;
-  }
-  // 2. Umbral global medio (rápido y suficiente)
-  let sum=0;
-  for(let i=0;i<gray.length;i++) sum+=gray[i];
-  const mean = sum/gray.length;
-  const threshold = mean * 0.88; // ligeramente por debajo de la media → conserva trazos
-  for(let i=0,j=0;i<d.length;i+=4,j++){
-    const v = gray[j] < threshold ? 0 : 255;
+  for(let i=0;i<d.length;i+=4){
+    const g=d[i]*0.299+d[i+1]*0.587+d[i+2]*0.114;
+    const v=g<110?0:g>160?255:g;
     d[i]=d[i+1]=d[i+2]=v;
   }
   ctx.putImageData(img,0,0);
   return c;
 }
-
-/* ============================================================
-   OCR simple (para cropper)
-   ============================================================ */
-async function runOCRSingle(imageDataUrl, target){
+async function runOCR(imageDataUrl,target){
   if(!state.ocrReady){
-    setStatus('Cargando motor OCR (primera vez)...', true);
+    setStatus('Cargando motor OCR (primera vez)...',true);
     await preloadOCR();
     if(!state.ocrReady){ setStatus('❌ No se pudo cargar OCR'); return; }
   }
-  setStatus('Reconociendo texto...', true);
+  setStatus('Reconociendo texto...',true);
   try{
-    await state.ocrWorker.setParameters({tessedit_pageseg_mode:'6'});
-    const { data:{ text } } = await state.ocrWorker.recognize(imageDataUrl);
-    const limpio = text.trim().replace(/\n{3,}/g,'\n\n');
-    if(!limpio){ setStatus('⚠️ No se detectó texto'); toast('No se detectó texto'); return; }
-
+    const {data:{text}}=await state.ocrWorker.recognize(imageDataUrl);
+    const limpio=text.trim().replace(/\n{3,}/g,'\n\n');
+    if(!limpio){ setStatus('⚠️ No se detectó texto'); toast('No se detectó texto en la región'); return; }
     if(target==='cite'){
-      const primera = limpio.split(/\n/)[0].trim();
-      $('cite').value = primera;
-      updateBadge('cite', primera);
+      const primera=limpio.split(/\n/)[0].trim();
+      $('cite').value=primera; updateBadge('cite',primera);
     } else {
       const ta=$('detalle');
-      ta.value = ta.value ? ta.value + '\n' + limpio : limpio;
-      updateBadge('contenido', ta.value);
+      ta.value = ta.value ? ta.value+'\n'+limpio : limpio;
+      updateBadge('contenido',ta.value);
     }
     setStatus(`✅ Texto extraído (${limpio.length} caracteres)`);
     toast('Texto reconocido');
   }catch(err){
     console.error(err);
     setStatus('❌ Error al reconocer texto');
-    toast('Error OCR: ' + err.message, 4000);
+    toast('Error OCR: '+err.message,4000);
   }
 }
 
 /* ============================================================
-   ============  MODO LENS  ===================================
-   ============================================================ */
-const lens = {
-  naturalW: 0, naturalH: 0,
-  baseW: 0, baseH: 0,     // tamaño base mostrado (antes del zoom)
-  scale: 1, tx: 0, ty: 0, // transform actual
-  words: [],              // {text, bbox:{x0,y0,x1,y1}, conf, group:'cite'|'detalle'|null, lineId}
-  currentMode: 'cite',
-  history: [],            // snapshots de grupos
-  // Gestos
-  gesture: null,
-  // Cache canvas
-  canvasCtx: null,
-  // Config
-  minConf: 30,
-  zoomMin: 1, zoomMax: 5
-};
-
-function openLens(dataUrl){
-  $('lensWrap').classList.add('active');
-  $('lensLoading').style.display = 'flex';
-  $('lensMsg').textContent = 'Analizando documento…';
-  lens.words = [];
-  lens.history = [];
-  lens.currentMode = 'cite';
-  document.querySelectorAll('.mode-switch button').forEach(b=>{
-    b.classList.toggle('active', b.dataset.mode==='cite');
-  });
-
-  const img = $('lensImg');
-  img.onload = async () => {
-    lens.naturalW = img.naturalWidth;
-    lens.naturalH = img.naturalHeight;
-
-    // Escalar base para que quepa en el stage
-    const stage = $('lensStage');
-    const stageW = stage.clientWidth, stageH = stage.clientHeight;
-    const fit = Math.min(stageW/lens.naturalW, stageH/lens.naturalH);
-    lens.baseW = lens.naturalW * fit;
-    lens.baseH = lens.naturalH * fit;
-    lens.scale = 1; lens.tx = 0; lens.ty = 0;
-
-    // Centrar
-    lens.tx = (stageW - lens.baseW)/2;
-    lens.ty = (stageH - lens.baseH)/2;
-
-    img.style.width = lens.baseW + 'px';
-    img.style.height = lens.baseH + 'px';
-
-    const canvas = $('lensCanvas');
-    canvas.width = lens.baseW;
-    canvas.height = lens.baseH;
-    lens.canvasCtx = canvas.getContext('2d');
-
-    applyLensTransform();
-    drawCanvas();
-
-    // OCR
-    try {
-      await runOCRLens(dataUrl);
-    } catch(e){
-      console.error(e);
-      $('lensMsg').textContent = '❌ Error del OCR. Usa Modo manual.';
-      return;
-    }
-    $('lensLoading').style.display = 'none';
-    drawCanvas();
-  };
-  img.src = dataUrl;
-}
-
-function closeLens(){
-  $('lensWrap').classList.remove('active');
-  $('lensImg').src = '';
-  lens.words = [];
-  lens.history = [];
-}
-
-/* ---------- OCR reforzado en modo Lens ---------- */
-async function runOCRLens(dataUrl){
-  if(!state.ocrReady){
-    $('lensMsg').textContent = 'Cargando motor OCR…';
-    await preloadOCR();
-    if(!state.ocrReady) throw new Error('OCR no disponible');
-  }
-
-  // 1) Escalar imagen si es muy grande
-  const { dataUrl: prepared, scaleX, scaleY } = await downscaleImage(dataUrl, 1600);
-
-  // 2) Preprocesar
-  const preparedCanvas = await loadImageToCanvas(prepared);
-  const processedCanvas = preprocessForOCR(preparedCanvas);
-  const processedUrl = processedCanvas.toDataURL('image/jpeg', 0.92);
-
-  // 3) OCR con psm 11 (sparse text)
-  $('lensMsg').textContent = 'Detectando texto…';
-  await state.ocrWorker.setParameters({
-    tessedit_pageseg_mode: '11',
-    preserve_interword_spaces: '1',
-    user_defined_dpi: '300'
-  });
-  let result = await state.ocrWorker.recognize(processedUrl);
-  let words = extractWordsFromResult(result, scaleX, scaleY);
-
-  // 4) Retry si detectó poco
-  if(words.length < 5){
-    $('lensMsg').textContent = 'Reforzando detección…';
-    const boost = boostContrast(preparedCanvas);
-    const boostUrl = boost.toDataURL('image/jpeg', 0.92);
-    await state.ocrWorker.setParameters({
-      tessedit_pageseg_mode: '6',
-      preserve_interword_spaces: '1'
-    });
-    result = await state.ocrWorker.recognize(boostUrl);
-    words = extractWordsFromResult(result, scaleX, scaleY);
-  }
-
-  // 5) Filtrar y agrupar por línea
-  words = words.filter(w => w.conf >= lens.minConf && w.text.trim().length > 0);
-  assignLineIds(words);
-
-  lens.words = words;
-  if(!words.length){
-    $('lensMsg').textContent = '⚠️ No se detectó texto legible. Usa Modo manual.';
-    toast('No se detectó texto legible');
-  }
-}
-
-/* Redimensiona dataURL si excede maxWidth */
-function downscaleImage(dataUrl, maxWidth){
-  return new Promise((resolve)=>{
-    const img = new Image();
-    img.onload = ()=>{
-      if(img.naturalWidth <= maxWidth){
-        resolve({ dataUrl, scaleX:1, scaleY:1 });
-        return;
-      }
-      const ratio = maxWidth / img.naturalWidth;
-      const w = Math.round(img.naturalWidth * ratio);
-      const h = Math.round(img.naturalHeight * ratio);
-      const c = document.createElement('canvas');
-      c.width=w; c.height=h;
-      c.getContext('2d').drawImage(img,0,0,w,h);
-      resolve({
-        dataUrl: c.toDataURL('image/jpeg',0.92),
-        scaleX: img.naturalWidth/w,
-        scaleY: img.naturalHeight/h
-      });
-    };
-    img.src = dataUrl;
-  });
-}
-function loadImageToCanvas(dataUrl){
-  return new Promise((resolve)=>{
-    const img = new Image();
-    img.onload = ()=>{
-      const c=document.createElement('canvas');
-      c.width=img.naturalWidth; c.height=img.naturalHeight;
-      c.getContext('2d').drawImage(img,0,0);
-      resolve(c);
-    };
-    img.src=dataUrl;
-  });
-}
-/* Contraste reforzado para retry */
-function boostContrast(sourceCanvas){
-  const c=document.createElement('canvas');
-  c.width=sourceCanvas.width; c.height=sourceCanvas.height;
-  const ctx=c.getContext('2d',{willReadFrequently:true});
-  ctx.drawImage(sourceCanvas,0,0);
-  const img=ctx.getImageData(0,0,c.width,c.height);
-  const d=img.data;
-  for(let i=0;i<d.length;i+=4){
-    // Contraste agresivo
-    const g = d[i]*0.299 + d[i+1]*0.587 + d[i+2]*0.114;
-    const v = g < 140 ? 0 : 255;
-    d[i]=d[i+1]=d[i+2]=v;
-  }
-  ctx.putImageData(img,0,0);
-  return c;
-}
-
-/* Extrae palabras desde el resultado de Tesseract v5 */
-function extractWordsFromResult(result, scaleX, scaleY){
-  const out = [];
-  const data = result.data;
-  // Tesseract v5 devuelve data.words (array con {text, confidence, bbox})
-  if(data.words && Array.isArray(data.words)){
-    for(const w of data.words){
-      if(!w.text || !w.text.trim()) continue;
-      out.push({
-        text: w.text.trim(),
-        conf: w.confidence ?? 0,
-        bbox: {
-          x0: w.bbox.x0 * scaleX, y0: w.bbox.y0 * scaleY,
-          x1: w.bbox.x1 * scaleX, y1: w.bbox.y1 * scaleY
-        },
-        group: null,
-        lineId: -1
-      });
-    }
-    return out;
-  }
-  // Fallback: recorrer data.lines
-  if(data.lines){
-    for(const ln of data.lines){
-      if(!ln.words) continue;
-      for(const w of ln.words){
-        if(!w.text || !w.text.trim()) continue;
-        out.push({
-          text: w.text.trim(),
-          conf: w.confidence ?? 0,
-          bbox:{
-            x0: w.bbox.x0*scaleX, y0: w.bbox.y0*scaleY,
-            x1: w.bbox.x1*scaleX, y1: w.bbox.y1*scaleY
-          },
-          group:null, lineId:-1
-        });
-      }
-    }
-  }
-  return out;
-}
-
-/* Agrupa palabras en líneas (tolerancia vertical) */
-function assignLineIds(words){
-  if(!words.length) return;
-  const sorted = [...words].sort((a,b)=> (a.bbox.y0 - b.bbox.y0) || (a.bbox.x0 - b.bbox.x0));
-  let curLine = 0;
-  let curY = sorted[0].bbox.y0;
-  const TOL = 8;
-  for(const w of sorted){
-    if(Math.abs(w.bbox.y0 - curY) > TOL){ curLine++; curY = w.bbox.y0; }
-    w.lineId = curLine;
-  }
-}
-
-/* ---------- Transform / zoom ---------- */
-function applyLensTransform(){
-  const img = $('lensImg');
-  const canvas = $('lensCanvas');
-  const t = `translate(${lens.tx}px, ${lens.ty}px) scale(${lens.scale})`;
-  img.style.transform = t;
-  canvas.style.transform = t;
-}
-
-/* Coordenadas: pasar de cliente a coords de imagen natural */
-function clientToImage(clientX, clientY){
-  const stage = $('lensStage');
-  const rect = stage.getBoundingClientRect();
-  // Posición relativa al stage
-  const relX = clientX - rect.left;
-  const relY = clientY - rect.top;
-  // Revertir transform (tx,ty,scale)
-  const x = (relX - lens.tx) / lens.scale;
-  const y = (relY - lens.ty) / lens.scale;
-  // x,y están en "base" (baseW). Convertir a natural.
-  const nx = x * (lens.naturalW / lens.baseW);
-  const ny = y * (lens.naturalH / lens.baseH);
-  return { nx, ny };
-}
-
-/* Hit-test sobre palabras con margen táctil */
-function hitTestWord(nx, ny, margin=6){
-  let best = null;
-  let bestArea = Infinity;
-  for(const w of lens.words){
-    const b = w.bbox;
-    if(nx >= b.x0-margin && nx <= b.x1+margin && ny >= b.y0-margin && ny <= b.y1+margin){
-      const area = (b.x1-b.x0)*(b.y1-b.y0);
-      if(area < bestArea){ bestArea = area; best = w; }
-    }
-  }
-  return best;
-}
-
-/* ---------- Dibujo del canvas (resaltado) ---------- */
-function drawCanvas(){
-  const ctx = lens.canvasCtx;
-  if(!ctx) return;
-  ctx.clearRect(0,0,lens.baseW, lens.baseH);
-
-  // Escala bbox (coords naturales) → coords base
-  const sx = lens.baseW / lens.naturalW;
-  const sy = lens.baseH / lens.naturalH;
-
-  for(const w of lens.words){
-    const b = w.bbox;
-    const x = b.x0 * sx, y = b.y0 * sy;
-    const ww = (b.x1 - b.x0) * sx, hh = (b.y1 - b.y0) * sy;
-
-    if(!w.group){
-      // Contorno gris suave
-      ctx.fillStyle = 'rgba(160,160,160,0.10)';
-      ctx.fillRect(x,y,ww,hh);
-      ctx.strokeStyle = 'rgba(220,220,220,0.45)';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(x,y,ww,hh);
-    } else if(w.group==='cite'){
-      ctx.fillStyle = 'rgba(251,191,36,0.35)';
-      ctx.fillRect(x,y,ww,hh);
-      ctx.strokeStyle = 'rgba(251,191,36,0.9)';
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(x,y,ww,hh);
-    } else if(w.group==='detalle'){
-      ctx.fillStyle = 'rgba(56,189,248,0.35)';
-      ctx.fillRect(x,y,ww,hh);
-      ctx.strokeStyle = 'rgba(56,189,248,0.9)';
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(x,y,ww,hh);
-    }
-  }
-}
-
-/* ---------- Asignación / deshacer ---------- */
-function snapshot(){
-  lens.history.push(lens.words.map(w=> w.group));
-  if(lens.history.length > 30) lens.history.shift();
-}
-function undo(){
-  if(!lens.history.length){ toast('Nada que deshacer'); return; }
-  const snap = lens.history.pop();
-  lens.words.forEach((w,i)=> w.group = snap[i] ?? null);
-  drawCanvas();
-}
-
-function setWordGroup(w, mode){
-  w.group = (w.group === mode) ? null : mode;
-}
-function setLineGroup(lineId, mode){
-  lens.words.forEach(w=>{ if(w.lineId===lineId) w.group = mode; });
-}
-
-/* ---------- Extracción ordenada ---------- */
-function extractGroup(group){
-  const list = lens.words.filter(w=> w.group===group);
-  if(!list.length) return '';
-  // Orden de lectura: por línea (y0) y luego por x0
-  const sorted = [...list].sort((a,b)=>{
-    const dy = a.bbox.y0 - b.bbox.y0;
-    if(Math.abs(dy) > 8) return dy;
-    return a.bbox.x0 - b.bbox.x0;
-  });
-  // Reconstruir líneas: insertar '\n' cuando cambia lineId
-  let text = '';
-  let prevLine = -999;
-  for(const w of sorted){
-    if(w.lineId !== prevLine){
-      if(text) text += '\n';
-      prevLine = w.lineId;
-    } else {
-      text += ' ';
-    }
-    text += w.text;
-  }
-  return text.trim();
-}
-
-/* ---------- Eventos de gestos en el stage ---------- */
-(function bindLensGestures(){
-  const stage = $('lensStage');
-  let startTime = 0;
-  let startX = 0, startY = 0;
-  let lastX = 0, lastY = 0;
-  let moved = false;
-  let draggingSel = false;
-  let longPressTimer = null;
-  let pinchStartDist = 0;
-  let pinchStartScale = 1;
-  let pinchStartMid = {x:0,y:0};
-  let pinchStartTx = 0, pinchStartTy = 0;
-  let tappedWord = null;
-  let doubleTapTimer = null;
-  let lastTapTime = 0;
-
-  function pt(ev){
-    if(ev.touches && ev.touches.length){
-      const t = ev.touches[0];
-      return {x:t.clientX, y:t.clientY, touches: ev.touches};
-    }
-    return {x:ev.clientX, y:ev.clientY, touches:null};
-  }
-
-  function onStart(ev){
-    if($('lensLoading').style.display !== 'none') return;
-    const touches = ev.touches;
-    // Pinch (2 dedos)
-    if(touches && touches.length === 2){
-      const t1=touches[0], t2=touches[1];
-      pinchStartDist = Math.hypot(t2.clientX-t1.clientX, t2.clientY-t1.clientY);
-      pinchStartScale = lens.scale;
-      const rect = stage.getBoundingClientRect();
-      pinchStartMid.x = (t1.clientX + t2.clientX)/2 - rect.left;
-      pinchStartMid.y = (t1.clientY + t2.clientY)/2 - rect.top;
-      pinchStartTx = lens.tx; pinchStartTy = lens.ty;
-      lens.gesture = 'pinch';
-      ev.preventDefault();
-      return;
-    }
-    const p = pt(ev);
-    startTime = Date.now();
-    startX = lastX = p.x;
-    startY = lastY = p.y;
-    moved = false;
-    draggingSel = false;
-    tappedWord = null;
-
-    // Detectar doble toque
-    const now = Date.now();
-    const isDoubleTap = (now - lastTapTime) < 280;
-    lastTapTime = now;
-
-    const { nx, ny } = clientToImage(p.x, p.y);
-    const word = hitTestWord(nx, ny);
-
-    if(isDoubleTap && word){
-      // Doble toque sobre una palabra → toda la línea
-      snapshot();
-      setLineGroup(word.lineId, lens.currentMode);
-      drawCanvas();
-      clearTimeout(doubleTapTimer);
-      lens.gesture = 'done';
-      return;
-    }
-
-    // Timer para long-press → iniciar selección por arrastre
-    longPressTimer = setTimeout(()=>{
-      if(!moved && word){
-        // Entrar en modo arrastre de selección
-        draggingSel = true;
-        snapshot();
-        setWordGroup(word, lens.currentMode);
-        drawCanvas();
-      }
-    }, 150);
-
-    lens.gesture = 'pending';
-  }
-
-  function onMove(ev){
-    const touches = ev.touches;
-    if(lens.gesture === 'pinch' && touches && touches.length === 2){
-      const t1=touches[0], t2=touches[1];
-      const dist = Math.hypot(t2.clientX-t1.clientX, t2.clientY-t1.clientY);
-      let newScale = pinchStartScale * (dist / pinchStartDist);
-      newScale = Math.max(lens.zoomMin, Math.min(lens.zoomMax, newScale));
-      // Zoom anclado al punto medio
-      lens.scale = newScale;
-      // Ajustar tx,ty para que el punto medio quede fijo
-      lens.tx = pinchStartMid.x - (pinchStartMid.x - pinchStartTx) * (newScale / pinchStartScale);
-      lens.ty = pinchStartMid.y - (pinchStartMid.y - pinchStartTy) * (newScale / pinchStartScale);
-      applyLensTransform();
-      ev.preventDefault();
-      return;
-    }
-    if(lens.gesture === 'done') return;
-
-    const p = pt(ev);
-    const dx = p.x - lastX;
-    const dy = p.y - lastY;
-    lastX = p.x; lastY = p.y;
-
-    const totalDist = Math.hypot(p.x - startX, p.y - startY);
-    if(totalDist > 6) moved = true;
-
-    if(draggingSel){
-      // Selección por arrastre
-      const { nx, ny } = clientToImage(p.x, p.y);
-      const w = hitTestWord(nx, ny, 8);
-      if(w && w.group !== lens.currentMode){
-        setWordGroup(w, lens.currentMode);
-        drawCanvas();
-      }
-      ev.preventDefault();
-      return;
-    }
-
-    // Paneo si ya está en zoom
-    if(moved && lens.scale > 1.02){
-      clearTimeout(longPressTimer);
-      lens.tx += dx;
-      lens.ty += dy;
-      applyLensTransform();
-      ev.preventDefault();
-    }
-  }
-
-  function onEnd(ev){
-    clearTimeout(longPressTimer);
-    if(lens.gesture === 'pinch'){ lens.gesture = null; return; }
-    if(lens.gesture === 'done'){ lens.gesture = null; return; }
-
-    if(!moved && !draggingSel){
-      // Fue un toque sin arrastre → seleccionar la palabra tocada
-      const { nx, ny } = clientToImage(startX, startY);
-      const w = hitTestWord(nx, ny);
-      if(w){
-        snapshot();
-        setWordGroup(w, lens.currentMode);
-        drawCanvas();
-      }
-    } else if(draggingSel){
-      // Terminar selección por arrastre
-    }
-    draggingSel = false;
-    lens.gesture = null;
-  }
-
-  // Touch
-  stage.addEventListener('touchstart', onStart, {passive:false});
-  stage.addEventListener('touchmove', onMove, {passive:false});
-  stage.addEventListener('touchend', onEnd);
-  stage.addEventListener('touchcancel', onEnd);
-
-  // Mouse
-  stage.addEventListener('mousedown', onStart);
-  window.addEventListener('mousemove', (ev)=>{
-    if(!lens.gesture) return;
-    // Simulamos touches para mouse
-    onMove({clientX: ev.clientX, clientY: ev.clientY, preventDefault: ()=>ev.preventDefault()});
-  });
-  window.addEventListener('mouseup', (ev)=>{
-    if(!lens.gesture) return;
-    onEnd(ev);
-  });
-})();
-
-/* ---------- Modos CITE / DETALLE ---------- */
-document.querySelectorAll('.mode-switch button').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    lens.currentMode = btn.dataset.mode;
-    document.querySelectorAll('.mode-switch button').forEach(b=>{
-      b.classList.toggle('active', b.dataset.mode === lens.currentMode);
-    });
-  });
-});
-
-/* ---------- Extraer ---------- */
-$('btnExtractLens').addEventListener('click', ()=>{
-  const citeText = extractGroup('cite');
-  const detalleText = extractGroup('detalle');
-  if(!citeText && !detalleText){
-    toast('No has seleccionado texto');
-    return;
-  }
-  if(citeText){
-    $('cite').value = citeText;
-    updateBadge('cite', citeText);
-  }
-  if(detalleText){
-    const ta = $('detalle');
-    ta.value = ta.value ? ta.value + '\n' + detalleText : detalleText;
-    updateBadge('contenido', ta.value);
-  }
-  closeLens();
-  toast('Texto extraído');
-});
-
-/* ---------- Undo / Reset ---------- */
-$('btnUndoLens').addEventListener('click', undo);
-$('btnResetSelLens').addEventListener('click', ()=>{
-  snapshot();
-  lens.words.forEach(w=> w.group = null);
-  drawCanvas();
-});
-
-/* ---------- Reset zoom ---------- */
-$('btnResetZoom').addEventListener('click', ()=>{
-  const stage = $('lensStage');
-  const stageW = stage.clientWidth, stageH = stage.clientHeight;
-  lens.scale = 1;
-  lens.tx = (stageW - lens.baseW)/2;
-  lens.ty = (stageH - lens.baseH)/2;
-  applyLensTransform();
-});
-
-/* ---------- Cerrar / Modo manual ---------- */
-$('btnCloseLens').addEventListener('click', closeLens);
-$('btnManualLens').addEventListener('click', ()=>{
-  const dataUrl = $('lensImg').src;
-  closeLens();
-  state.currentTarget = 'contenido';
-  openCropper(dataUrl);
-});
-
-/* ============================================================
-   Galería (una zona)
+   Galería
    ============================================================ */
 $('btnGallery').addEventListener('click', ()=>{
-  const t = prompt('¿Para qué campo es esta imagen? Escribe "cite" o "contenido":', 'contenido');
+  const t=prompt('¿Para qué campo es esta imagen? "cite" o "contenido":','contenido');
   if(!t) return;
-  state.currentTarget = t.trim().toLowerCase().startsWith('c') ? 'cite' : 'contenido';
+  state.currentTarget=t.trim().toLowerCase().startsWith('c')?'cite':'contenido';
   $('fileInput').click();
 });
-$('fileInput').addEventListener('change', (e)=>{
-  const f = e.target.files?.[0]; if(!f) return;
-  const reader = new FileReader();
-  reader.onload = ev => openCropper(ev.target.result);
-  reader.readAsDataURL(f);
+$('fileInput').addEventListener('change', e=>{
+  const f=e.target.files?.[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>openCropper(ev.target.result);
+  r.readAsDataURL(f);
   e.target.value='';
 });
 
@@ -1404,18 +1235,17 @@ function guardar(){
   const cite          = $('cite').value.trim();
   const detalle       = $('detalle').value.trim();
   const medidas       = $('medidas').value.trim();
-  const fecha         = getFechaISO();
-  const hora          = getHoraHHMM();
+  const fecha = `${state.fecha.year}-${pad(state.fecha.month+1)}-${pad(state.fecha.day)}`;
+  const hora  = `${pad(state.hora.hour)}:${pad(state.hora.min)}`;
 
-  if(!tipo || !entradaSalida){ toast('Complete Tipo y Entrada/Salida'); return; }
-  if(!cite && !detalle){ toast('Debe registrar al menos CITE o Detalle'); return; }
+  if(!tipo||!entradaSalida){ toast('Complete Tipo y Entrada/Salida'); return; }
+  if(!cite&&!detalle){ toast('Debe registrar al menos CITE o Detalle'); return; }
 
   state.registros.push({
-    id: Date.now(),
-    tipo, cite, detalle, entradaSalida, fecha, hora, medidas,
-    creadoEn: new Date().toISOString()
+    id:Date.now(), tipo, cite, detalle, entradaSalida, fecha, hora, medidas,
+    creadoEn:new Date().toISOString()
   });
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.registros));
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(state.registros));
   updateCount();
   toast('✅ Registro guardado');
 
@@ -1424,34 +1254,43 @@ function guardar(){
   $('preview').style.display='none';
   updateBadge('cite',''); updateBadge('contenido','');
   setStatus('');
-
   // Refrescar fecha/hora a la actual
-  initDateTimePicker();
-  state.dtEdited = false;
+  setDTNow();
+  refreshDTSummary();
+  // Si el editor está abierto, sincronizar
+  if($('dtEditor').classList.contains('open')){
+    const wrap=$('dateTimePicker');
+    const now=new Date();
+    wrap.querySelector('[data-col="day"]').scrollTo({top:(now.getDate()-1)*38, behavior:'auto'});
+    wrap.querySelector('[data-col="month"]').scrollTo({top:now.getMonth()*38, behavior:'auto'});
+    wrap.querySelector('[data-col="year"]').scrollTo({top:(now.getFullYear()-(now.getFullYear()-5))*38, behavior:'auto'});
+    wrap.querySelector('[data-col="hour"]').scrollTo({top:now.getHours()*38, behavior:'auto'});
+    wrap.querySelector('[data-col="min"]').scrollTo({top:now.getMinutes()*38, behavior:'auto'});
+  }
 }
 
 /* ============================================================
-   Registros (Excel)
+   Modal registros
    ============================================================ */
 function openList(){ renderTabla(''); $('listModal').classList.add('active'); setTimeout(()=>$('searchInput').focus(),100); }
 function closeList(){ $('listModal').classList.remove('active'); }
+
 function normalizar(s){
-  return String(s ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  return String(s??'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 }
 function renderTabla(filtro){
-  const q = normalizar(filtro.trim());
-  const todos = [...state.registros].reverse();
-  const filtrados = !q ? todos : todos.filter(r=>{
-    const bolsa = [r.tipo, r.cite, r.detalle, r.entradaSalida, r.fecha, r.hora, r.medidas]
+  const q=normalizar(filtro.trim());
+  const todos=[...state.registros].reverse();
+  const filtrados=!q?todos:todos.filter(r=>{
+    const bolsa=[r.tipo,r.cite,r.detalle,r.entradaSalida,r.hora,r.fecha,r.medidas]
       .map(normalizar).join(' | ');
     return bolsa.includes(q);
   });
-  $('countFiltered').textContent = `${filtrados.length} registro${filtrados.length===1?'':'s'}` +
-    (q ? ` (de ${todos.length})` : '');
-  const tbody = $('xlsBody'), empty = $('emptyList');
+  $('countFiltered').textContent=`${filtrados.length} registro${filtrados.length===1?'':'s'}`+(q?` (de ${todos.length})`:'');
+  const tbody=$('xlsBody'); const empty=$('emptyList');
   if(!filtrados.length){ tbody.innerHTML=''; empty.style.display='block'; return; }
   empty.style.display='none';
-  tbody.innerHTML = filtrados.map((r,i)=>`
+  tbody.innerHTML=filtrados.map((r,i)=>`
     <tr>
       <td>${i+1}</td>
       <td>${escapeHtml(r.tipo)}</td>
@@ -1466,60 +1305,69 @@ function renderTabla(filtro){
   `).join('');
   tbody.querySelectorAll('.del-btn').forEach(btn=>{
     btn.addEventListener('click', e=>{
-      const id = Number(e.target.dataset.id);
+      const id=Number(e.target.dataset.id);
       if(!confirm('¿Eliminar este registro?')) return;
-      state.registros = state.registros.filter(x=>x.id!==id);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.registros));
+      state.registros=state.registros.filter(x=>x.id!==id);
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(state.registros));
       updateCount();
       renderTabla($('searchInput').value);
     });
   });
 }
+function escapeHtml(s){
+  return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 $('searchInput').addEventListener('input', e=> renderTabla(e.target.value));
 
 /* ============================================================
-   Excel export
+   Excel
    ============================================================ */
 function exportarExcel(){
   if(!state.registros.length){ toast('No hay registros para exportar'); return; }
-  const datos = state.registros.map(r=>({
-    'Tipo de documento': r.tipo,
-    'CITE': r.cite,
-    'Detalle': r.detalle,
-    'Entrada/Salida': r.entradaSalida,
-    'Fecha': r.fecha,
-    'Hora': r.hora,
-    'Medidas tomadas': r.medidas
+  const datos=state.registros.map(r=>({
+    'Tipo de documento':r.tipo,
+    'CITE':r.cite,
+    'Detalle':r.detalle,
+    'Entrada/Salida':r.entradaSalida,
+    'Fecha':r.fecha,
+    'Hora':r.hora,
+    'Medidas tomadas':r.medidas
   }));
-  const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.json_to_sheet(datos);
-  ws['!cols'] = [{wch:18},{wch:20},{wch:40},{wch:14},{wch:12},{wch:8},{wch:24}];
-  XLSX.utils.book_append_sheet(wb, ws, 'Registros');
-  XLSX.writeFile(wb, `registros_${new Date().toISOString().slice(0,10)}.xlsx`);
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.json_to_sheet(datos);
+  ws['!cols']=[{wch:18},{wch:20},{wch:40},{wch:14},{wch:12},{wch:8},{wch:24}];
+  XLSX.utils.book_append_sheet(wb,ws,'Registros');
+  XLSX.writeFile(wb,`registros_${new Date().toISOString().slice(0,10)}.xlsx`);
   toast('📊 Excel generado');
 }
 
 /* ============================================================
-   Eventos globales
+   Eventos
    ============================================================ */
-$('btnScanLens').addEventListener('click', ()=> openCamera(null));
+$('btnScanDouble').addEventListener('click',()=>openCamera('double'));
 document.querySelectorAll('.dest-picker button').forEach(btn=>{
-  btn.addEventListener('click', ()=> openCamera(btn.dataset.target));
+  btn.addEventListener('click',()=>openCamera('single',btn.dataset.target));
 });
-$('btnCancelCam').addEventListener('click', closeCamera);
-$('btnShutter').addEventListener('click', capturePhoto);
-$('btnSwitchCam').addEventListener('click', switchCamera);
-$('btnCancelCrop').addEventListener('click', closeCropper);
-$('btnApplyCrop').addEventListener('click', applyCropAndOCR);
-$('btnGuardar').addEventListener('click', guardar);
-$('btnVerRegistros').addEventListener('click', openList);
-$('btnCloseList').addEventListener('click', closeList);
-$('btnExportar').addEventListener('click', exportarExcel);
+$('btnCancelCam').addEventListener('click',closeCamera);
+$('btnShutter').addEventListener('click',capturePhoto);
+$('btnSwitchCam').addEventListener('click',switchCamera);
+$('btnCancelCrop').addEventListener('click',closeCropper);
+$('btnApplyCrop').addEventListener('click',applyCropAndOCR);
+$('btnCancelMulti').addEventListener('click',closeMulti);
+$('btnApplyMulti').addEventListener('click',applyMultiAndOCR);
+$('btnGuardar').addEventListener('click',guardar);
+$('btnVerRegistros').addEventListener('click',openList);
+$('btnCloseList').addEventListener('click',closeList);
+$('btnExportar').addEventListener('click',exportarExcel);
 
-$('cite').addEventListener('input', e=> updateBadge('cite', e.target.value));
-$('detalle').addEventListener('input', e=> updateBadge('contenido', e.target.value));
+$('cite').addEventListener('input',e=>updateBadge('cite',e.target.value));
+$('detalle').addEventListener('input',e=>updateBadge('contenido',e.target.value));
 
-window.addEventListener('beforeunload', ()=>{
+$('btnEditDT').addEventListener('click',openDTEditor);
+$('btnCancelDT').addEventListener('click',()=>closeDTEditor(false));
+$('btnApplyDT').addEventListener('click',()=>closeDTEditor(true));
+
+window.addEventListener('beforeunload',()=>{
   if(state.stream) state.stream.getTracks().forEach(t=>t.stop());
 });
 
@@ -1530,9 +1378,12 @@ window.addEventListener('beforeunload', ()=>{
   loadTipos();
   updateCount();
   updateBadge('cite',''); updateBadge('contenido','');
-  initDateTimePicker();
-  if('requestIdleCallback' in window) requestIdleCallback(preloadOCR, {timeout:3000});
-  else setTimeout(preloadOCR, 1500);
+  setDTNow();
+  refreshDTSummary();
+  bindStageGestures();
+
+  if('requestIdleCallback' in window) requestIdleCallback(preloadOCR,{timeout:3000});
+  else setTimeout(preloadOCR,1500);
 })();
 </script>
 </body>
