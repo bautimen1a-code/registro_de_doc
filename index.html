@@ -57,17 +57,41 @@
   .btn-group{display:flex;gap:10px;}
   .btn-group button{flex:1;}
 
-  /* Etiqueta de estado del OCR por zona */
-  .ocr-row{
-    display:flex;gap:8px;align-items:center;justify-content:space-between;
-    margin-bottom:8px;
-  }
+  .ocr-row{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px;}
   .ocr-row .tag{
-    font-size:.75rem;font-weight:700;padding:4px 10px;border-radius:99px;
+    font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:99px;
     background:#e0e7ff;color:#3730a3;
   }
   .ocr-row .tag.ok{background:#dcfce7;color:#166534;}
   .ocr-row .tag.empty{background:#f1f5f9;color:#64748b;}
+
+  /* ========= PICKER DE FECHA Y HORA (ruleta deslizable) ========= */
+  .picker{
+    display:flex;gap:0;background:#f8fafc;border:1px solid var(--border);
+    border-radius:10px;overflow:hidden;height:150px;position:relative;
+  }
+  .picker::before, .picker::after{
+    content:"";position:absolute;left:0;right:0;height:50px;pointer-events:none;z-index:2;
+  }
+  .picker::before{top:0;background:linear-gradient(to bottom,#f8fafc, rgba(248,250,252,0));}
+  .picker::after{bottom:0;background:linear-gradient(to top,#f8fafc, rgba(248,250,252,0));}
+  .picker-highlight{
+    position:absolute;left:8px;right:8px;top:50px;height:50px;
+    background:rgba(37,99,235,.08);border-top:1px solid rgba(37,99,235,.35);
+    border-bottom:1px solid rgba(37,99,235,.35);pointer-events:none;z-index:1;
+  }
+  .picker-col{
+    flex:1;height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;position:relative;z-index:3;
+  }
+  .picker-col::-webkit-scrollbar{display:none;}
+  .picker-col .item{
+    height:50px;line-height:50px;text-align:center;font-size:1.05rem;
+    scroll-snap-align:center;color:var(--text);font-variant-numeric:tabular-nums;
+    transition:opacity .12s, transform .12s;
+  }
+  .picker-col .item.dim{color:#94a3b8;}
+  .picker-col .item.sel{font-weight:700;color:var(--primary);}
 
   /* Cámara */
   #cameraWrap{display:none;position:fixed;inset:0;background:#000;z-index:1000;}
@@ -104,10 +128,7 @@
     box-shadow:0 0 0 3px #000 inset;
   }
 
-  /* Selector de destino del OCR (aparece antes de abrir cámara) */
-  .dest-picker{
-    display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;
-  }
+  .dest-picker{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
   .dest-picker button{flex-direction:column;padding:16px;line-height:1.2;font-size:.95rem;}
   .dest-picker button small{font-weight:400;font-size:.72rem;opacity:.85;margin-top:4px;}
 
@@ -124,17 +145,14 @@
   .crop-bar .actions{display:flex;gap:10px;}
   .crop-bar .actions button{flex:1;}
 
-  /* Preview */
   #preview{max-width:100%;border-radius:8px;display:none;margin-top:6px;}
 
-  /* Spinner */
   .spinner{
     display:inline-block;width:18px;height:18px;border:3px solid #fff3;
     border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;
   }
   @keyframes spin{to{transform:rotate(360deg);}}
 
-  /* Toast */
   .toast{
     position:fixed;bottom:calc(20px + var(--safe-bottom));left:50%;
     transform:translateX(-50%) translateY(120%);
@@ -144,59 +162,89 @@
   }
   .toast.show{transform:translateX(-50%) translateY(0);}
 
-  /* Lista de registros (modal fullscreen) */
+  /* ========= MODAL REGISTROS TIPO EXCEL ========= */
   #listModal{
     display:none;position:fixed;inset:0;background:var(--bg);z-index:1500;
     flex-direction:column;
   }
   #listModal.active{display:flex;}
-  #listModal .list-header{
-    padding:calc(var(--safe-top) + 14px) 16px 14px;
+  .list-header{
+    padding:calc(var(--safe-top) + 12px) 14px 12px;
     background:#fff;border-bottom:1px solid var(--border);
+    display:flex;flex-direction:column;gap:10px;
+  }
+  .list-header .title-row{
     display:flex;justify-content:space-between;align-items:center;gap:10px;
   }
-  #listModal .list-header h2{font-size:1.1rem;margin:0;}
-  #listModal .list-body{
-    flex:1;overflow-y:auto;padding:12px;padding-bottom:calc(20px + var(--safe-bottom));
+  .list-header h2{font-size:1.1rem;margin:0;}
+  .list-header .search-row{display:flex;gap:8px;align-items:center;}
+  .list-header .search-row input{
+    flex:1;padding:10px 12px;font-size:.92rem;
+    border-radius:8px;border:1px solid var(--border);background:#f8fafc;
   }
-  .sheet-tools{padding:12px;background:#fff;border-bottom:1px solid var(--border)}
-  .sheet-wrap{flex:1;overflow:auto;background:#fff}.sheet{border-collapse:collapse;min-width:1250px;width:100%;font-size:.83rem}
-  .sheet th,.sheet td{border:1px solid #dbe3ed;padding:9px 10px;text-align:left;vertical-align:top;white-space:pre-wrap}
-  .sheet th{position:sticky;top:0;background:#eaf1fb;z-index:1;white-space:nowrap}.sheet tr:nth-child(even){background:#f8fafc}
-  .sheet .del-btn{padding:6px 9px;font-size:.8rem;width:auto;border-radius:7px}
-  .digital-picker{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:10px}
-  .digital-picker output{display:block;text-align:center;font-size:1.35rem;font-weight:700;letter-spacing:.08em;color:var(--primary);margin-bottom:6px}
-  .slider-pair{display:grid;grid-template-columns:46px 1fr 36px;align-items:center;gap:6px;margin:3px 0}
-  .slider-pair label{font-size:.68rem;margin:0}.slider-pair input[type=range]{padding:0;accent-color:var(--primary)}.slider-pair span{text-align:right;font-variant-numeric:tabular-nums;font-size:.8rem}
+  .list-header .count{
+    font-size:.78rem;color:var(--muted);text-align:right;
+    padding:0 2px;
+  }
 
+  /* Tabla estilo Excel */
+  .xls-wrap{
+    flex:1;overflow:auto;-webkit-overflow-scrolling:touch;
+    background:#fff;
+  }
+  table.xls{
+    border-collapse:collapse;width:max-content;min-width:100%;
+    font-size:.78rem;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  }
+  table.xls th, table.xls td{
+    border:1px solid #cbd5e1;
+    padding:6px 8px;text-align:left;vertical-align:top;
+    white-space:nowrap;max-width:220px;overflow:hidden;text-overflow:ellipsis;
+  }
+  table.xls td.wrap{
+    white-space:normal;word-break:break-word;
+    min-width:180px;max-width:260px;
+  }
+  table.xls thead th{
+    position:sticky;top:0;background:#e2e8f0;color:#0f172a;
+    font-weight:700;z-index:2;text-transform:uppercase;letter-spacing:.02em;
+    font-size:.72rem;
+  }
+  table.xls tbody tr:nth-child(even){background:#f8fafc;}
+  table.xls tbody tr:active{background:#e0e7ff;}
+  table.xls td .del-btn{
+    background:none;border:none;color:var(--danger);font-size:1rem;
+    padding:0;width:auto;cursor:pointer;
+  }
   .empty-state{text-align:center;color:var(--muted);padding:40px 20px;font-size:.9rem;}
 
   .hint{font-size:.78rem;color:var(--muted);margin-top:4px;}
+
+  /* Ajuste picker embebido */
+  .picker-note{font-size:.72rem;color:var(--muted);text-align:center;margin-top:4px;}
 </style>
 </head>
 <body>
 
 <h1>📋 Registro de Documentación</h1>
 
-<!-- ================== FORMULARIO ================== -->
 <div class="card">
 
-  <!-- Tipo de documento + Nro documento -->
+  <!-- Tipo + Nro -->
   <div class="row">
     <div class="field">
       <label for="tipo">Tipo de documento *</label>
-      <select id="tipo"><option value="">Selecciona un tipo</option></select>
+      <select id="tipo">
+        <option value="">— Seleccionar —</option>
+      </select>
     </div>
     <div class="field">
       <label for="nroDoc">Nro. de documento *</label>
       <input id="nroDoc" type="text" placeholder="Ej: 0001" autocomplete="off">
     </div>
   </div>
-  <p class="hint" style="margin-top:-8px;margin-bottom:14px;">
-    💡 Para administrar tipos y que queden guardados: <a href="#" id="btnManageTypes">gestionar tipos</a>
-  </p>
 
-  <!-- CITE / CONTENIDO: doble OCR -->
+  <!-- CITE con OCR -->
   <div class="field">
     <div class="ocr-row">
       <label style="margin:0;">CITE extraído por OCR</label>
@@ -205,7 +253,7 @@
     <input id="cite" type="text" placeholder="Ej: CITE-2024-001" autocomplete="off">
   </div>
 
-  <!-- Detalle (extracto del contenido) -->
+  <!-- Detalle con OCR -->
   <div class="field">
     <div class="ocr-row">
       <label style="margin:0;">Detalle / contenido</label>
@@ -214,13 +262,13 @@
     <textarea id="detalle" rows="5" placeholder="El texto reconocido aparecerá aquí..."></textarea>
   </div>
 
-  <!-- Escaneo: dos zonas independientes -->
+  <!-- OCR dos zonas -->
   <div class="field">
     <label>Escanear con cámara</label>
     <div class="dest-picker">
       <button class="btn-primary" data-target="cite">
         🎯 CITE
-        <small>recorta solo el nro. de CITE</small>
+        <small>recorta el nro. de CITE</small>
       </button>
       <button class="btn-primary" data-target="contenido">
         📝 CONTENIDO
@@ -228,16 +276,37 @@
       </button>
     </div>
     <div class="btn-group" style="margin-top:8px;">
-      <button id="btnGallery" class="btn-ghost" style="flex:1;">
-        🖼️ Galería
-      </button>
+      <button id="btnGallery" class="btn-ghost" style="flex:1;">🖼️ Galería</button>
     </div>
     <input id="fileInput" type="file" accept="image/*" style="display:none">
     <img id="preview" alt="Última captura">
     <div class="status" id="status" style="font-size:.85rem;color:var(--muted);margin-top:8px;text-align:center;min-height:18px;"></div>
   </div>
 
-  <!-- Entrada/salida + Hora -->
+  <!-- Fecha con ruleta -->
+  <div class="field">
+    <label>Fecha *</label>
+    <div class="picker" id="datePicker">
+      <div class="picker-highlight"></div>
+      <div class="picker-col" data-col="day"></div>
+      <div class="picker-col" data-col="month"></div>
+      <div class="picker-col" data-col="year"></div>
+    </div>
+    <div class="picker-note">Desliza hacia arriba o abajo para elegir</div>
+  </div>
+
+  <!-- Hora con ruleta -->
+  <div class="field">
+    <label>Hora *</label>
+    <div class="picker" id="timePicker">
+      <div class="picker-highlight"></div>
+      <div class="picker-col" data-col="hour"></div>
+      <div class="picker-col" data-col="min"></div>
+    </div>
+    <div class="picker-note">Desliza hacia arriba o abajo para elegir</div>
+  </div>
+
+  <!-- Entrada/salida + medidas -->
   <div class="row">
     <div class="field">
       <label for="entradaSalida">Entrada / Salida *</label>
@@ -248,18 +317,6 @@
       </select>
     </div>
     <div class="field">
-      <label for="hora">Hora *</label>
-      <div class="digital-picker"><output id="horaVista">00:00</output><div class="slider-pair"><label>Hora</label><input id="horaSlider" type="range" min="0" max="1439"><span id="horaLabel">00:00</span></div></div><input id="hora" type="hidden">
-    </div>
-  </div>
-
-  <!-- Fecha (ruleta nativa del móvil) + Medidas -->
-  <div class="row">
-    <div class="field">
-      <label for="fecha">Fecha *</label>
-      <div class="digital-picker"><output id="fechaVista">—</output><div class="slider-pair"><label>Día</label><input id="fechaSlider" type="range" min="1" max="31"><span id="fechaLabel">1</span></div><div class="slider-pair"><label>Mes</label><input id="mesSlider" type="range" min="1" max="12"><span id="mesLabel">1</span></div><div class="slider-pair"><label>Año</label><input id="anioSlider" type="range" min="2000" max="2100"><span id="anioLabel"></span></div></div><input id="fecha" type="hidden">
-    </div>
-    <div class="field">
       <label for="medidas">Medidas tomadas</label>
       <input id="medidas" type="text" placeholder="Ej: 3 folios, 2 anexos">
     </div>
@@ -268,18 +325,17 @@
   <button id="btnGuardar" class="btn-success">💾 Guardar registro</button>
 </div>
 
-<!-- ================== ACCIONES ================== -->
 <div class="card">
   <div class="btn-group">
     <button id="btnVerRegistros" class="btn-outline">📚 Ver registros</button>
     <button id="btnExportar" class="btn-warn">📊 Exportar Excel</button>
   </div>
   <p class="hint" style="text-align:center;margin-top:10px;">
-    Registros guardados localmente: <strong id="countRegistros">0</strong>
+    Registros guardados: <strong id="countRegistros">0</strong>
   </p>
 </div>
 
-<!-- ================== CÁMARA ================== -->
+<!-- ============ CÁMARA ============ -->
 <div id="cameraWrap">
   <video id="video" autoplay playsinline muted></video>
   <div id="frameGuide"></div>
@@ -295,7 +351,7 @@
   </div>
 </div>
 
-<!-- ================== CROPPER ================== -->
+<!-- ============ CROPPER ============ -->
 <div id="cropperWrap">
   <div class="cropper-container-wrap">
     <img id="cropperImage" alt="Recorte">
@@ -309,15 +365,40 @@
   </div>
 </div>
 
-<!-- ================== LISTA DE REGISTROS ================== -->
+<!-- ============ MODAL REGISTROS TIPO EXCEL ============ -->
 <div id="listModal">
   <div class="list-header">
-    <h2>Registros</h2>
-    <div style="display:flex;gap:8px;">
-      <button class="btn-ghost btn-sm" id="btnCloseList">✕</button>
+    <div class="title-row">
+      <h2>📊 Registros</h2>
+      <button class="btn-ghost btn-sm" id="btnCloseList">✕ Cerrar</button>
+    </div>
+    <div class="search-row">
+      <input id="searchInput" type="search" placeholder="🔍 Buscar por Nro., CITE, detalle, fecha…">
+    </div>
+    <div class="count" id="countFiltered">0 registros</div>
+  </div>
+  <div class="xls-wrap">
+    <table class="xls" id="xlsTable">
+      <thead>
+        <tr>
+          <th style="width:44px;">#</th>
+          <th>Tipo</th>
+          <th>Nro.</th>
+          <th>CITE</th>
+          <th>Detalle</th>
+          <th>E/S</th>
+          <th>Hora</th>
+          <th>Fecha</th>
+          <th>Medidas</th>
+          <th style="width:52px;">Acción</th>
+        </tr>
+      </thead>
+      <tbody id="xlsBody"></tbody>
+    </table>
+    <div class="empty-state" id="emptyList" style="display:none;">
+      📭 No hay registros que coincidan.
     </div>
   </div>
-  <div class="sheet-tools"><input id="buscarRegistros" type="search" placeholder="Buscar por número, texto, fecha, tipo, CITE…"><div class="hint" id="resultadoBusqueda"></div></div><div class="sheet-wrap" id="listBody"></div>
 </div>
 
 <div id="toast" class="toast"></div>
@@ -326,8 +407,8 @@
 /* ============================================================
    Estado
    ============================================================ */
-const STORAGE_KEY = 'registros_docs_v2';
-const TYPES_KEY   = 'tipos_documento';
+const STORAGE_KEY = 'registros_docs_v3';
+const TYPES_KEY   = 'tipos_documento_v3';
 
 const state = {
   stream: null,
@@ -336,15 +417,17 @@ const state = {
   ocrWorker: null,
   ocrReady: false,
   ocrLoading: false,
-  currentTarget: null,          // 'cite' | 'contenido'
-  sourceImage: null,            // dataURL capturada o cargada
+  currentTarget: null,
   registros: JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'),
-  tipos: JSON.parse(localStorage.getItem(TYPES_KEY) || 'null')
+  tipos: JSON.parse(localStorage.getItem(TYPES_KEY) || 'null'),
+  // valores actuales de los pickers
+  fecha: null,   // { day, month, year }
+  hora: null     // { hour, min }
 };
 const $ = (id) => document.getElementById(id);
 
 /* ============================================================
-   UI helpers
+   Helpers
    ============================================================ */
 function toast(msg, ms = 2800) {
   const t = $('toast'); t.textContent = msg;
@@ -363,40 +446,130 @@ function updateBadge(target, val) {
 function updateCount() {
   $('countRegistros').textContent = state.registros.length;
 }
-function pad(n) { return String(n).padStart(2, '0'); }
-function todayISO() {
-  const d = new Date();
-  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-}
-function nowHHMM() {
-  const d = new Date();
-  return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
+const pad = n => String(n).padStart(2, '0');
+const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
 /* ============================================================
-   Gestión de tipos de documento (módulo aparte)
+   TIPOS DE DOCUMENTO (select con opción "agregar")
    ============================================================ */
+const TIPOS_DEFAULT = ['Oficio','Memorándum','Carta','Informe','Solicitud','Resolución','Circular','Nota','Otro'];
 function loadTipos() {
-  const select=$('tipo'), defaults=['Oficio','Memorándum','Carta','Informe','Solicitud','Resolución','Circular','Nota','Otro'];
-  select.innerHTML='<option value="">Selecciona un tipo</option>';
-  (state.tipos||defaults).forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;select.appendChild(o);});
+  const sel = $('tipo');
+  const tipos = state.tipos || TIPOS_DEFAULT;
+  sel.innerHTML = '<option value="">— Seleccionar —</option>';
+  tipos.forEach(t => {
+    const o = document.createElement('option'); o.value = t; o.textContent = t;
+    sel.appendChild(o);
+  });
+  const optAdd = document.createElement('option');
+  optAdd.value = '__ADD__'; optAdd.textContent = '➕ Agregar tipo…';
+  sel.appendChild(optAdd);
 }
-$('btnManageTypes').addEventListener('click', (e) => {
-  e.preventDefault();
-  const defaults = ['Oficio','Memorándum','Carta','Informe','Solicitud','Resolución','Circular','Nota','Otro'];
-  const actual = (state.tipos || defaults).join(', ');
-  const input = prompt('Tipos de documento (separados por coma):', actual);
-  if (input === null) return;
-  const nuevos = input.split(',').map(s => s.trim()).filter(Boolean);
-  if (!nuevos.length) { toast('Debe haber al menos un tipo'); return; }
-  state.tipos = nuevos;
-  localStorage.setItem(TYPES_KEY, JSON.stringify(nuevos));
+$('tipo').addEventListener('change', (e) => {
+  if (e.target.value !== '__ADD__') return;
+  const nuevo = prompt('Nombre del nuevo tipo de documento:');
+  if (!nuevo || !nuevo.trim()) { e.target.value = ''; return; }
+  const tipos = (state.tipos || TIPOS_DEFAULT).slice();
+  const limpio = nuevo.trim();
+  if (!tipos.includes(limpio)) tipos.push(limpio);
+  state.tipos = tipos;
+  localStorage.setItem(TYPES_KEY, JSON.stringify(tipos));
   loadTipos();
-  toast('Tipos actualizados');
+  $('tipo').value = limpio;
+  toast('Tipo agregado');
 });
 
 /* ============================================================
-   Precarga del OCR
+   PICKER RULETA (fecha/hora)
+   ============================================================ */
+function buildPicker(containerEl, colKey, items, renderItem, selectedIdx, onChange) {
+  const col = containerEl.querySelector(`[data-col="${colKey}"]`);
+  col.innerHTML = '';
+  // Relleno superior/inferior para centrar el primer/último valor
+  const padTop = document.createElement('div'); padTop.style.height = '50px';
+  const padBottom = document.createElement('div'); padBottom.style.height = '50px';
+  col.appendChild(padTop);
+
+  items.forEach((val, idx) => {
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.dataset.idx = idx;
+    div.textContent = renderItem(val);
+    div.addEventListener('click', () => {
+      col.scrollTo({ top: idx * 50, behavior: 'smooth' });
+    });
+    col.appendChild(div);
+  });
+  col.appendChild(padBottom);
+
+  // Posición inicial
+  col.scrollTop = selectedIdx * 50;
+
+  // Detecta el índice activo según scroll
+  let scrollTimer = null;
+  function onScroll() {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      const idx = Math.round(col.scrollTop / 50);
+      const clamped = Math.max(0, Math.min(items.length - 1, idx));
+      // Si no está exacto, corregir
+      if (Math.abs(col.scrollTop - clamped * 50) > 1) {
+        col.scrollTo({ top: clamped * 50, behavior: 'smooth' });
+      }
+      // Actualizar selección visual
+      col.querySelectorAll('.item').forEach((el, i) => {
+        el.classList.toggle('sel', i === clamped);
+        el.classList.toggle('dim', i !== clamped);
+      });
+      onChange(clamped, items[clamped]);
+    }, 90);
+  }
+  col.addEventListener('scroll', onScroll, { passive: true });
+  // Disparo inicial para marcar el seleccionado
+  setTimeout(() => onScroll(), 50);
+
+  return {
+    get index() { return Math.round(col.scrollTop / 50); },
+    set index(i) { col.scrollTo({ top: i * 50, behavior: 'smooth' }); }
+  };
+}
+
+function initDatePicker() {
+  const now = new Date();
+  const days    = Array.from({ length: 31 }, (_, i) => i + 1);
+  const months  = MESES.map((m, i) => ({ idx: i, label: m }));
+  const years   = Array.from({ length: 15 }, (_, i) => now.getFullYear() - 5 + i);
+
+  state.fecha = { day: now.getDate(), month: now.getMonth(), year: now.getFullYear() };
+  const cDay   = buildPicker($('datePicker'), 'day',   days,   v => v, state.fecha.day - 1, (i) => state.fecha.day = days[i]);
+  const cMonth = buildPicker($('datePicker'), 'month', months, v => v.label, state.fecha.month, (i) => state.fecha.month = months[i].idx);
+  const cYear  = buildPicker($('datePicker'), 'year',  years,  v => v, years.indexOf(now.getFullYear()), (i) => state.fecha.year = years[i]);
+
+  state.fecha._pickers = { cDay, cMonth, cYear, years };
+}
+
+function initTimePicker() {
+  const now = new Date();
+  const hours   = Array.from({ length: 24 }, (_, i) => i);
+  const minutes = Array.from({ length: 60 }, (_, i) => i);
+
+  state.hora = { hour: now.getHours(), min: now.getMinutes() };
+  const cHour = buildPicker($('timePicker'), 'hour', hours,   v => pad(v), now.getHours(), (i) => state.hora.hour = hours[i]);
+  const cMin  = buildPicker($('timePicker'), 'min',  minutes, v => pad(v), now.getMinutes(), (i) => state.hora.min = minutes[i]);
+
+  state.hora._pickers = { cHour, cMin };
+}
+
+function getFechaISO() {
+  const f = state.fecha;
+  return `${f.year}-${pad(f.month + 1)}-${pad(f.day)}`;
+}
+function getHoraHHMM() {
+  return `${pad(state.hora.hour)}:${pad(state.hora.min)}`;
+}
+
+/* ============================================================
+   Precarga OCR
    ============================================================ */
 async function preloadOCR() {
   if (state.ocrReady || state.ocrLoading) return;
@@ -408,12 +581,8 @@ async function preloadOCR() {
       preserve_interword_spaces: '1'
     });
     state.ocrReady = true;
-    console.log('[OCR] listo');
-  } catch (e) {
-    console.warn('[OCR] fallo precarga', e);
-  } finally {
-    state.ocrLoading = false;
-  }
+  } catch (e) { console.warn('[OCR]', e); }
+  finally { state.ocrLoading = false; }
 }
 
 /* ============================================================
@@ -424,20 +593,15 @@ async function openCamera(target) {
   $('camTitle').textContent = target === 'cite'
     ? 'Encuadra el número de CITE'
     : 'Encuadra el contenido / detalle';
-
   try {
     state.stream = await navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: { ideal: state.facingMode },
-        width:  { ideal: 1280 },
-        height: { ideal: 720 },
+        width: { ideal: 1280 }, height: { ideal: 720 },
         frameRate: { ideal: 30, max: 30 }
-      },
-      audio: false
+      }, audio: false
     });
-    const v = $('video');
-    v.srcObject = state.stream;
-    await v.play();
+    const v = $('video'); v.srcObject = state.stream; await v.play();
     $('cameraWrap').classList.add('active', 'guide');
     preloadOCR();
   } catch (err) {
@@ -445,19 +609,16 @@ async function openCamera(target) {
     toast('No se pudo abrir la cámara: ' + err.name, 4000);
   }
 }
-
 function closeCamera() {
   if (state.stream) { state.stream.getTracks().forEach(t => t.stop()); state.stream = null; }
   $('video').srcObject = null;
   $('cameraWrap').classList.remove('active');
 }
-
 async function switchCamera() {
   state.facingMode = state.facingMode === 'environment' ? 'user' : 'environment';
   closeCamera();
   await openCamera(state.currentTarget);
 }
-
 function capturePhoto() {
   const v = $('video');
   if (!v.videoWidth) { toast('La cámara aún no está lista'); return; }
@@ -473,15 +634,12 @@ function capturePhoto() {
    CROPPER
    ============================================================ */
 function openCropper(dataUrl) {
-  state.sourceImage = dataUrl;
   $('cropTargetLabel').textContent = state.currentTarget === 'cite'
     ? '✂️ Recortando para → CITE'
     : '✂️ Recortando para → CONTENIDO';
-
   const img = $('cropperImage');
   img.src = dataUrl;
   $('cropperWrap').classList.add('active');
-
   img.onload = () => {
     if (state.cropper) state.cropper.destroy();
     state.cropper = new Cropper(img, {
@@ -491,12 +649,10 @@ function openCropper(dataUrl) {
     });
   };
 }
-
 function closeCropper() {
   $('cropperWrap').classList.remove('active');
   if (state.cropper) { state.cropper.destroy(); state.cropper = null; }
 }
-
 async function applyCropAndOCR() {
   if (!state.cropper) return;
   const canvas = state.cropper.getCroppedCanvas({
@@ -504,16 +660,12 @@ async function applyCropAndOCR() {
   });
   const processed = preprocessForOCR(canvas);
   const dataUrl = processed.toDataURL('image/jpeg', 0.92);
-
   $('preview').src = dataUrl;
   $('preview').style.display = 'block';
-
   const target = state.currentTarget;
   closeCropper();
   await runOCR(dataUrl, target);
 }
-
-/* Preprocesado: escala de grises + umbral suave */
 function preprocessForOCR(sourceCanvas) {
   const c = document.createElement('canvas');
   c.width = sourceCanvas.width; c.height = sourceCanvas.height;
@@ -542,11 +694,10 @@ async function runOCR(imageDataUrl, target) {
   setStatus('Reconociendo texto...', true);
   try {
     const { data: { text } } = await state.ocrWorker.recognize(imageDataUrl);
-    let limpio = text.trim().replace(/\n{3,}/g, '\n\n');
+    const limpio = text.trim().replace(/\n{3,}/g, '\n\n');
     if (!limpio) { setStatus('⚠️ No se detectó texto'); toast('No se detectó texto en la región'); return; }
 
     if (target === 'cite') {
-      // El CITE normalmente es una línea con formato XXX-YYYY-NNNN
       const primera = limpio.split(/\n/)[0].trim();
       $('cite').value = primera;
       updateBadge('cite', primera);
@@ -568,16 +719,13 @@ async function runOCR(imageDataUrl, target) {
    Galería
    ============================================================ */
 $('btnGallery').addEventListener('click', () => {
-  // Preguntamos al usuario para qué zona es la imagen
   const t = prompt('¿Para qué campo es esta imagen? Escribe "cite" o "contenido":', 'contenido');
   if (!t) return;
-  const target = t.trim().toLowerCase().startsWith('c') ? 'cite' : 'contenido';
-  state.currentTarget = target;
+  state.currentTarget = t.trim().toLowerCase().startsWith('c') ? 'cite' : 'contenido';
   $('fileInput').click();
 });
 $('fileInput').addEventListener('change', (e) => {
-  const f = e.target.files?.[0];
-  if (!f) return;
+  const f = e.target.files?.[0]; if (!f) return;
   const reader = new FileReader();
   reader.onload = (ev) => openCropper(ev.target.result);
   reader.readAsDataURL(f);
@@ -585,25 +733,24 @@ $('fileInput').addEventListener('change', (e) => {
 });
 
 /* ============================================================
-   Guardar registro
+   Guardar
    ============================================================ */
 function guardar() {
-  const tipo         = $('tipo').value.trim();
-  const nroDoc       = $('nroDoc').value.trim();
-  const cite         = $('cite').value.trim();
-  const detalle      = $('detalle').value.trim();
-  const entradaSalida= $('entradaSalida').value;
-  const hora         = $('hora').value;
-  const fecha        = $('fecha').value;
-  const medidas      = $('medidas').value.trim();
+  const tipo          = $('tipo').value.trim();
+  const nroDoc        = $('nroDoc').value.trim();
+  const cite          = $('cite').value.trim();
+  const detalle       = $('detalle').value.trim();
+  const entradaSalida = $('entradaSalida').value;
+  const medidas       = $('medidas').value.trim();
 
-  if (!tipo || !nroDoc || !entradaSalida || !hora || !fecha) {
-    toast('Complete todos los campos obligatorios (*)');
-    return;
+  const hora  = getHoraHHMM();
+  const fecha = getFechaISO();
+
+  if (!tipo || !nroDoc || !entradaSalida) {
+    toast('Complete Tipo, Nro. y Entrada/Salida'); return;
   }
   if (!cite && !detalle) {
-    toast('Debe registrar al menos CITE o Detalle');
-    return;
+    toast('Debe registrar al menos CITE o Detalle'); return;
   }
 
   const reg = {
@@ -616,44 +763,92 @@ function guardar() {
   updateCount();
   toast('✅ Registro guardado');
 
-  // Limpieza
-  ['nroDoc','cite','detalle','hora','medidas'].forEach(id => $(id).value = '');
+  // Limpieza (fecha/hora se conservan por comodidad)
+  ['nroDoc','cite','detalle','medidas'].forEach(id => $(id).value = '');
   $('tipo').value = '';
   $('entradaSalida').value = '';
   $('preview').style.display = 'none';
   updateBadge('cite', ''); updateBadge('contenido', '');
   setStatus('');
-  // Dejamos la fecha de hoy por defecto por conveniencia
-  $('fecha').value = todayISO();
 }
 
 /* ============================================================
-   Lista de registros
+   Modal REGISTROS estilo Excel
    ============================================================ */
-function openList(){renderList();$('listModal').classList.add('active');$('buscarRegistros').focus()}
-function closeList(){$('listModal').classList.remove('active')}
-function renderList(){
- const body=$('listBody'),q=$('buscarRegistros').value.trim().toLocaleLowerCase('es');
- const rows=[...state.registros].reverse().filter(r=>!q||Object.values(r).some(v=>String(v??'').toLocaleLowerCase('es').includes(q)));
- $('resultadoBusqueda').textContent=`${rows.length} de ${state.registros.length} registros`;
- if(!rows.length){body.innerHTML=`<div class="empty-state">${state.registros.length?'No hay coincidencias.':'📭 Aún no hay registros guardados.'}</div>`;return}
- const cols=['Tipo','Nro. documento','CITE','Detalle / contenido','Entrada / Salida','Fecha','Hora','Medidas','Acción'];
- body.innerHTML=`<table class="sheet"><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr data-id="${Number(r.id)}"><td>${escapeHtml(r.tipo)}</td><td>${escapeHtml(r.nroDoc)}</td><td>${escapeHtml(r.cite||'')}</td><td>${escapeHtml(r.detalle||'')}</td><td>${escapeHtml(r.entradaSalida)}</td><td>${escapeHtml(r.fecha)}</td><td>${escapeHtml(r.hora)}</td><td>${escapeHtml(r.medidas||'')}</td><td><button class="btn-danger del-btn" data-act="del">Eliminar</button></td></tr>`).join('')}</tbody></table>`;
- body.querySelectorAll('[data-act="del"]').forEach(btn=>btn.addEventListener('click',e=>{const id=Number(e.target.closest('tr').dataset.id);if(!confirm('¿Eliminar este registro?'))return;state.registros=state.registros.filter(x=>Number(x.id)!==id);localStorage.setItem(STORAGE_KEY,JSON.stringify(state.registros));updateCount();renderList()}));
+function openList() {
+  renderTabla('');
+  $('listModal').classList.add('active');
+  setTimeout(() => $('searchInput').focus(), 100);
+}
+function closeList() { $('listModal').classList.remove('active'); }
+
+function normalizar(s) {
+  return String(s ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function renderTabla(filtro) {
+  const q = normalizar(filtro.trim());
+  const todos = [...state.registros].reverse();
+  const filtrados = !q ? todos : todos.filter(r => {
+    const bolsa = [
+      r.tipo, r.nroDoc, r.cite, r.detalle, r.entradaSalida,
+      r.hora, r.fecha, r.medidas
+    ].map(normalizar).join(' | ');
+    return bolsa.includes(q);
+  });
+
+  const tbody = $('xlsBody');
+  const empty = $('emptyList');
+  $('countFiltered').textContent = `${filtrados.length} registro${filtrados.length === 1 ? '' : 's'}` +
+    (q ? ` (de ${todos.length})` : '');
+
+  if (!filtrados.length) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  tbody.innerHTML = filtrados.map((r, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${escapeHtml(r.tipo)}</td>
+      <td>${escapeHtml(r.nroDoc)}</td>
+      <td>${escapeHtml(r.cite)}</td>
+      <td class="wrap">${escapeHtml(r.detalle)}</td>
+      <td>${r.entradaSalida === 'Entrada' ? '⬇️' : '⬆️'} ${escapeHtml(r.entradaSalida)}</td>
+      <td>${escapeHtml(r.hora)}</td>
+      <td>${escapeHtml(r.fecha)}</td>
+      <td>${escapeHtml(r.medidas)}</td>
+      <td><button class="del-btn" data-id="${r.id}" title="Eliminar">🗑️</button></td>
+    </tr>
+  `).join('');
+
+  tbody.querySelectorAll('.del-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const id = Number(e.target.dataset.id);
+      if (!confirm('¿Eliminar este registro?')) return;
+      state.registros = state.registros.filter(x => x.id !== id);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.registros));
+      updateCount();
+      renderTabla($('searchInput').value);
+    });
+  });
 }
 
 function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({
+  return String(s ?? '').replace(/[&<>"']/g, c => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }[c]));
 }
 
+$('searchInput').addEventListener('input', (e) => renderTabla(e.target.value));
+
 /* ============================================================
-   Exportar a Excel
+   Exportar Excel
    ============================================================ */
 function exportarExcel() {
   if (!state.registros.length) { toast('No hay registros para exportar'); return; }
-
   const datos = state.registros.map(r => ({
     'Tipo de documento': r.tipo,
     'Nro. de documento': r.nroDoc,
@@ -664,16 +859,13 @@ function exportarExcel() {
     'Fecha': r.fecha,
     'Medidas tomadas': r.medidas
   }));
-
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.json_to_sheet(datos);
-  // Anchos de columna cómodos
   ws['!cols'] = [
     { wch: 18 }, { wch: 16 }, { wch: 20 }, { wch: 40 },
     { wch: 14 }, { wch: 8 },  { wch: 12 }, { wch: 24 }
   ];
   XLSX.utils.book_append_sheet(wb, ws, 'Registros');
-
   const nombre = `registros_${new Date().toISOString().slice(0,10)}.xlsx`;
   XLSX.writeFile(wb, nombre);
   toast('📊 Excel generado');
@@ -693,22 +885,14 @@ $('btnApplyCrop').addEventListener('click', applyCropAndOCR);
 $('btnGuardar').addEventListener('click', guardar);
 $('btnVerRegistros').addEventListener('click', openList);
 $('btnCloseList').addEventListener('click', closeList);
-$('buscarRegistros').addEventListener('input',renderList);
-['fechaSlider','mesSlider','anioSlider'].forEach(id=>$(id).addEventListener('input',syncDateSliders));
-$('horaSlider').addEventListener('input',syncTimeSlider);
 $('btnExportar').addEventListener('click', exportarExcel);
 
-// Mantener sincronizado el badge cuando se edita a mano
 $('cite').addEventListener('input', e => updateBadge('cite', e.target.value));
 $('detalle').addEventListener('input', e => updateBadge('contenido', e.target.value));
 
-// Detener stream si se cierra
 window.addEventListener('beforeunload', () => {
   if (state.stream) state.stream.getTracks().forEach(t => t.stop());
 });
-
-function syncDateSliders(){const y=+$('anioSlider').value,m=+$('mesSlider').value,max=new Date(y,m,0).getDate();$('fechaSlider').max=max;if(+$('fechaSlider').value>max)$('fechaSlider').value=max;const d=+$('fechaSlider').value;$('fecha').value=`${y}-${pad(m)}-${pad(d)}`;$('fechaLabel').textContent=d;$('mesLabel').textContent=pad(m);$('anioLabel').textContent=y;$('fechaVista').textContent=`${pad(d)}/${pad(m)}/${y}`}
-function syncTimeSlider(){const v=+$('horaSlider').value,h=Math.floor(v/60),m=v%60,t=`${pad(h)}:${pad(m)}`;$('hora').value=t;$('horaVista').textContent=t;$('horaLabel').textContent=t}
 
 /* ============================================================
    Init
@@ -718,8 +902,8 @@ function syncTimeSlider(){const v=+$('horaSlider').value,h=Math.floor(v/60),m=v%
   updateCount();
   updateBadge('cite', '');
   updateBadge('contenido', '');
-  const [y,m,d]=todayISO().split('-').map(Number); $('anioSlider').value=y; $('mesSlider').value=m; $('fechaSlider').value=d; syncDateSliders();
-  const [hh,mm]=nowHHMM().split(':').map(Number); $('horaSlider').value=hh*60+mm; syncTimeSlider();
+  initDatePicker();
+  initTimePicker();
 
   if ('requestIdleCallback' in window) requestIdleCallback(preloadOCR, { timeout: 3000 });
   else setTimeout(preloadOCR, 1500);
