@@ -24,25 +24,27 @@
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     background:var(--bg);color:var(--text);
-    padding:16px;padding-bottom:calc(80px + var(--safe-bottom));
-    max-width:640px;margin-inline:auto;overflow-x:hidden;
+    padding:12px;padding-bottom:calc(80px + var(--safe-bottom));
+    max-width:560px;margin-inline:auto;overflow-x:hidden;
+    font-size:14px;
   }
-  h1{font-size:1.3rem;margin:0 0 14px;text-align:center;}
-  .card{background:var(--card);border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);}
-  label{display:block;font-size:.82rem;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.02em;}
+  h1{font-size:1.15rem;margin:0 0 10px;text-align:center;}
+  .card{background:var(--card);border-radius:10px;padding:12px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);}
+  label{display:block;font-size:.7rem;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.03em;}
   input,select,textarea{
-    width:100%;padding:12px;font-size:1rem;border:1px solid var(--border);
-    border-radius:8px;background:#f8fafc;color:var(--text);outline:none;
-    font-family:inherit;
+    width:100%;padding:8px 10px;font-size:.92rem;border:1px solid var(--border);
+    border-radius:7px;background:#f8fafc;color:var(--text);outline:none;
+    font-family:inherit;line-height:1.35;
   }
   input:focus,select:focus,textarea:focus{border-color:var(--primary);background:#fff;}
-  .field{margin-bottom:14px;}
-  .row{display:flex;gap:12px;}
+  textarea{resize:vertical;min-height:64px;}
+  .field{margin-bottom:10px;}
+  .row{display:flex;gap:8px;}
   .row>.field{flex:1;min-width:0;}
   button{
-    font-family:inherit;font-size:1rem;font-weight:600;cursor:pointer;
-    border:none;border-radius:10px;padding:14px;width:100%;
-    display:flex;align-items:center;justify-content:center;gap:8px;
+    font-family:inherit;font-size:.92rem;font-weight:600;cursor:pointer;
+    border:none;border-radius:8px;padding:10px;width:100%;
+    display:flex;align-items:center;justify-content:center;gap:6px;
     transition:transform .1s,background .15s;
   }
   button:active{transform:scale(.98);}
@@ -53,45 +55,42 @@
   .btn-warn{background:var(--warn);color:#fff;}
   .btn-outline{background:#fff;color:var(--primary);border:2px solid var(--primary);}
   .btn-ghost{background:#f1f5f9;color:var(--text);}
-  .btn-sm{padding:9px 12px;font-size:.85rem;width:auto;}
-  .btn-group{display:flex;gap:10px;}
+  .btn-sm{padding:7px 10px;font-size:.78rem;width:auto;}
+  .btn-group{display:flex;gap:8px;}
   .btn-group button{flex:1;}
 
-  .ocr-row{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px;}
-  .ocr-row .tag{
-    font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:99px;
-    background:#e0e7ff;color:#3730a3;
-  }
+  .ocr-row{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:4px;}
+  .ocr-row .tag{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:99px;background:#e0e7ff;color:#3730a3;}
   .ocr-row .tag.ok{background:#dcfce7;color:#166534;}
   .ocr-row .tag.empty{background:#f1f5f9;color:#64748b;}
 
-  /* ========= PICKER DE FECHA Y HORA (ruleta deslizable) ========= */
+  /* ========= PICKER compacto ========= */
   .picker{
-    display:flex;gap:0;background:#f8fafc;border:1px solid var(--border);
-    border-radius:10px;overflow:hidden;height:150px;position:relative;
+    display:flex;background:#f8fafc;border:1px solid var(--border);
+    border-radius:8px;overflow:hidden;height:112px;position:relative;
   }
-  .picker::before, .picker::after{
-    content:"";position:absolute;left:0;right:0;height:50px;pointer-events:none;z-index:2;
-  }
-  .picker::before{top:0;background:linear-gradient(to bottom,#f8fafc, rgba(248,250,252,0));}
-  .picker::after{bottom:0;background:linear-gradient(to top,#f8fafc, rgba(248,250,252,0));}
+  .picker::before,.picker::after{content:"";position:absolute;left:0;right:0;height:37px;pointer-events:none;z-index:2;}
+  .picker::before{top:0;background:linear-gradient(to bottom,#f8fafc,rgba(248,250,252,0));}
+  .picker::after{bottom:0;background:linear-gradient(to top,#f8fafc,rgba(248,250,252,0));}
   .picker-highlight{
-    position:absolute;left:8px;right:8px;top:50px;height:50px;
-    background:rgba(37,99,235,.08);border-top:1px solid rgba(37,99,235,.35);
+    position:absolute;left:6px;right:6px;top:37px;height:38px;
+    background:rgba(37,99,235,.10);border-top:1px solid rgba(37,99,235,.35);
     border-bottom:1px solid rgba(37,99,235,.35);pointer-events:none;z-index:1;
   }
   .picker-col{
     flex:1;height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;
     -webkit-overflow-scrolling:touch;scrollbar-width:none;position:relative;z-index:3;
+    border-right:1px solid #e2e8f0;
   }
+  .picker-col:last-child{border-right:none;}
   .picker-col::-webkit-scrollbar{display:none;}
   .picker-col .item{
-    height:50px;line-height:50px;text-align:center;font-size:1.05rem;
+    height:38px;line-height:38px;text-align:center;font-size:.92rem;
     scroll-snap-align:center;color:var(--text);font-variant-numeric:tabular-nums;
-    transition:opacity .12s, transform .12s;
+    transition:opacity .12s;
   }
-  .picker-col .item.dim{color:#94a3b8;}
   .picker-col .item.sel{font-weight:700;color:var(--primary);}
+  .picker-col .item.dim{color:#94a3b8;}
 
   /* Cámara */
   #cameraWrap{display:none;position:fixed;inset:0;background:#000;z-index:1000;}
@@ -128,100 +127,118 @@
     box-shadow:0 0 0 3px #000 inset;
   }
 
-  .dest-picker{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
-  .dest-picker button{flex-direction:column;padding:16px;line-height:1.2;font-size:.95rem;}
-  .dest-picker button small{font-weight:400;font-size:.72rem;opacity:.85;margin-top:4px;}
+  .dest-picker{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+  .dest-picker button{flex-direction:column;padding:12px;line-height:1.2;font-size:.85rem;}
+  .dest-picker button small{font-weight:400;font-size:.68rem;opacity:.85;margin-top:2px;}
 
-  /* Cropper */
+  /* ========= Cropper simple (una zona) ========= */
   #cropperWrap{display:none;position:fixed;inset:0;background:#000;z-index:1001;flex-direction:column;}
   #cropperWrap.active{display:flex;}
   #cropperWrap .cropper-container-wrap{flex:1;min-height:0;overflow:hidden;position:relative;}
   #cropperImage{max-width:100%;max-height:100%;display:block;}
-  .crop-bar{padding:14px 14px calc(var(--safe-bottom) + 14px);background:#111;display:flex;gap:10px;flex-direction:column;}
-  .crop-bar .target-label{
-    color:#fbbf24;font-size:.8rem;font-weight:700;text-align:center;
-    padding-bottom:6px;text-transform:uppercase;letter-spacing:.05em;
-  }
-  .crop-bar .actions{display:flex;gap:10px;}
+  .crop-bar{padding:12px 12px calc(var(--safe-bottom) + 12px);background:#111;display:flex;gap:8px;flex-direction:column;}
+  .crop-bar .target-label{color:#fbbf24;font-size:.78rem;font-weight:700;text-align:center;padding-bottom:4px;text-transform:uppercase;letter-spacing:.05em;}
+  .crop-bar .actions{display:flex;gap:8px;}
   .crop-bar .actions button{flex:1;}
 
-  #preview{max-width:100%;border-radius:8px;display:none;margin-top:6px;}
-
-  .spinner{
-    display:inline-block;width:18px;height:18px;border:3px solid #fff3;
-    border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;
+  /* ========= MODO MULTI-RECORTE (doble zona) ========= */
+  #multiWrap{display:none;position:fixed;inset:0;background:#000;z-index:1002;flex-direction:column;}
+  #multiWrap.active{display:flex;}
+  #multiStage{
+    flex:1;min-height:0;position:relative;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+    touch-action:none;
   }
+  #multiImage{
+    max-width:100%;max-height:100%;display:block;
+    user-select:none;-webkit-user-drag:none;
+  }
+  /* Cajas dibujables */
+  .crop-box{
+    position:absolute;border:2px solid;box-sizing:border-box;
+    box-shadow:0 0 0 9999px rgba(0,0,0,.45);
+    touch-action:none;
+  }
+  .crop-box[data-tipo="cite"]{border-color:#fbbf24;--c:#fbbf24;}
+  .crop-box[data-tipo="detalle"]{border-color:#38bdf8;--c:#38bdf8;}
+  .crop-box .box-label{
+    position:absolute;top:-22px;left:0;padding:2px 8px;
+    background:var(--c);color:#000;font-size:.7rem;font-weight:800;
+    border-radius:4px;white-space:nowrap;
+  }
+  .crop-box .handle{
+    position:absolute;width:22px;height:22px;background:var(--c);
+    border:2px solid #000;border-radius:50%;
+  }
+  .crop-box .handle.br{right:-11px;bottom:-11px;cursor:nwse-resize;}
+  .crop-box .handle.tr{right:-11px;top:-11px;cursor:nesw-resize;}
+  .crop-box .handle.bl{left:-11px;bottom:-11px;cursor:nesw-resize;}
+  .crop-box .handle.tl{left:-11px;top:-11px;cursor:nwse-resize;}
+  .crop-box .handle.move{
+    left:50%;top:50%;margin-left:-11px;margin-top:-11px;
+    cursor:move;background:var(--c);opacity:.75;
+  }
+
+  .multi-bar{
+    background:#111;padding:12px 12px calc(var(--safe-bottom) + 12px);
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .multi-bar .hint-bar{
+    color:#cbd5e1;font-size:.72rem;text-align:center;padding:2px 0;
+  }
+  .multi-bar .actions{display:flex;gap:8px;}
+  .multi-bar .actions button{flex:1;}
+
+  #preview{max-width:100%;border-radius:6px;display:none;margin-top:6px;}
+
+  .spinner{display:inline-block;width:16px;height:16px;border:3px solid #fff3;border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg);}}
 
   .toast{
     position:fixed;bottom:calc(20px + var(--safe-bottom));left:50%;
     transform:translateX(-50%) translateY(120%);
-    background:var(--text);color:#fff;padding:12px 22px;border-radius:10px;
-    font-size:.9rem;transition:transform .3s;z-index:2000;max-width:90%;
+    background:var(--text);color:#fff;padding:10px 18px;border-radius:8px;
+    font-size:.85rem;transition:transform .3s;z-index:2000;max-width:90%;
     text-align:center;
   }
   .toast.show{transform:translateX(-50%) translateY(0);}
 
-  /* ========= MODAL REGISTROS TIPO EXCEL ========= */
-  #listModal{
-    display:none;position:fixed;inset:0;background:var(--bg);z-index:1500;
-    flex-direction:column;
-  }
+  /* ========= Modal Registros tipo Excel ========= */
+  #listModal{display:none;position:fixed;inset:0;background:var(--bg);z-index:1500;flex-direction:column;}
   #listModal.active{display:flex;}
   .list-header{
-    padding:calc(var(--safe-top) + 12px) 14px 12px;
+    padding:calc(var(--safe-top) + 10px) 12px 10px;
     background:#fff;border-bottom:1px solid var(--border);
-    display:flex;flex-direction:column;gap:10px;
+    display:flex;flex-direction:column;gap:8px;
   }
-  .list-header .title-row{
-    display:flex;justify-content:space-between;align-items:center;gap:10px;
-  }
-  .list-header h2{font-size:1.1rem;margin:0;}
-  .list-header .search-row{display:flex;gap:8px;align-items:center;}
+  .list-header .title-row{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .list-header h2{font-size:1rem;margin:0;}
   .list-header .search-row input{
-    flex:1;padding:10px 12px;font-size:.92rem;
-    border-radius:8px;border:1px solid var(--border);background:#f8fafc;
+    padding:8px 10px;font-size:.85rem;border-radius:7px;
+    border:1px solid var(--border);background:#f8fafc;width:100%;
   }
-  .list-header .count{
-    font-size:.78rem;color:var(--muted);text-align:right;
-    padding:0 2px;
-  }
+  .list-header .count{font-size:.72rem;color:var(--muted);text-align:right;}
 
-  /* Tabla estilo Excel */
-  .xls-wrap{
-    flex:1;overflow:auto;-webkit-overflow-scrolling:touch;
-    background:#fff;
-  }
+  .xls-wrap{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;background:#fff;}
   table.xls{
     border-collapse:collapse;width:max-content;min-width:100%;
-    font-size:.78rem;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    font-size:.72rem;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   }
-  table.xls th, table.xls td{
-    border:1px solid #cbd5e1;
-    padding:6px 8px;text-align:left;vertical-align:top;
-    white-space:nowrap;max-width:220px;overflow:hidden;text-overflow:ellipsis;
+  table.xls th,table.xls td{
+    border:1px solid #cbd5e1;padding:5px 7px;text-align:left;vertical-align:top;
+    white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis;
   }
-  table.xls td.wrap{
-    white-space:normal;word-break:break-word;
-    min-width:180px;max-width:260px;
-  }
+  table.xls td.wrap{white-space:normal;word-break:break-word;min-width:160px;max-width:240px;}
   table.xls thead th{
-    position:sticky;top:0;background:#e2e8f0;color:#0f172a;
-    font-weight:700;z-index:2;text-transform:uppercase;letter-spacing:.02em;
-    font-size:.72rem;
+    position:sticky;top:0;background:#e2e8f0;color:#0f172a;font-weight:700;z-index:2;
+    text-transform:uppercase;letter-spacing:.02em;font-size:.68rem;
   }
   table.xls tbody tr:nth-child(even){background:#f8fafc;}
-  table.xls tbody tr:active{background:#e0e7ff;}
-  table.xls td .del-btn{
-    background:none;border:none;color:var(--danger);font-size:1rem;
-    padding:0;width:auto;cursor:pointer;
-  }
-  .empty-state{text-align:center;color:var(--muted);padding:40px 20px;font-size:.9rem;}
+  table.xls td .del-btn{background:none;border:none;color:var(--danger);font-size:.95rem;padding:0;width:auto;cursor:pointer;}
+  .empty-state{text-align:center;color:var(--muted);padding:36px 20px;font-size:.85rem;}
 
-  .hint{font-size:.78rem;color:var(--muted);margin-top:4px;}
-
-  /* Ajuste picker embebido */
-  .picker-note{font-size:.72rem;color:var(--muted);text-align:center;margin-top:4px;}
+  .hint{font-size:.72rem;color:var(--muted);margin-top:2px;}
+  .picker-note{font-size:.65rem;color:var(--muted);text-align:center;margin-top:3px;}
 </style>
 </head>
 <body>
@@ -230,7 +247,7 @@
 
 <div class="card">
 
-  <!-- Tipo + Nro -->
+  <!-- Tipo + Entrada/Salida -->
   <div class="row">
     <div class="field">
       <label for="tipo">Tipo de documento *</label>
@@ -239,76 +256,6 @@
       </select>
     </div>
     <div class="field">
-      <label for="nroDoc">Nro. de documento *</label>
-      <input id="nroDoc" type="text" placeholder="Ej: 0001" autocomplete="off">
-    </div>
-  </div>
-
-  <!-- CITE con OCR -->
-  <div class="field">
-    <div class="ocr-row">
-      <label style="margin:0;">CITE extraído por OCR</label>
-      <span class="tag empty" id="tagCite">vacío</span>
-    </div>
-    <input id="cite" type="text" placeholder="Ej: CITE-2024-001" autocomplete="off">
-  </div>
-
-  <!-- Detalle con OCR -->
-  <div class="field">
-    <div class="ocr-row">
-      <label style="margin:0;">Detalle / contenido</label>
-      <span class="tag empty" id="tagContenido">vacío</span>
-    </div>
-    <textarea id="detalle" rows="5" placeholder="El texto reconocido aparecerá aquí..."></textarea>
-  </div>
-
-  <!-- OCR dos zonas -->
-  <div class="field">
-    <label>Escanear con cámara</label>
-    <div class="dest-picker">
-      <button class="btn-primary" data-target="cite">
-        🎯 CITE
-        <small>recorta el nro. de CITE</small>
-      </button>
-      <button class="btn-primary" data-target="contenido">
-        📝 CONTENIDO
-        <small>recorta el párrafo de detalle</small>
-      </button>
-    </div>
-    <div class="btn-group" style="margin-top:8px;">
-      <button id="btnGallery" class="btn-ghost" style="flex:1;">🖼️ Galería</button>
-    </div>
-    <input id="fileInput" type="file" accept="image/*" style="display:none">
-    <img id="preview" alt="Última captura">
-    <div class="status" id="status" style="font-size:.85rem;color:var(--muted);margin-top:8px;text-align:center;min-height:18px;"></div>
-  </div>
-
-  <!-- Fecha con ruleta -->
-  <div class="field">
-    <label>Fecha *</label>
-    <div class="picker" id="datePicker">
-      <div class="picker-highlight"></div>
-      <div class="picker-col" data-col="day"></div>
-      <div class="picker-col" data-col="month"></div>
-      <div class="picker-col" data-col="year"></div>
-    </div>
-    <div class="picker-note">Desliza hacia arriba o abajo para elegir</div>
-  </div>
-
-  <!-- Hora con ruleta -->
-  <div class="field">
-    <label>Hora *</label>
-    <div class="picker" id="timePicker">
-      <div class="picker-highlight"></div>
-      <div class="picker-col" data-col="hour"></div>
-      <div class="picker-col" data-col="min"></div>
-    </div>
-    <div class="picker-note">Desliza hacia arriba o abajo para elegir</div>
-  </div>
-
-  <!-- Entrada/salida + medidas -->
-  <div class="row">
-    <div class="field">
       <label for="entradaSalida">Entrada / Salida *</label>
       <select id="entradaSalida">
         <option value="">—</option>
@@ -316,10 +263,68 @@
         <option value="Salida">Salida</option>
       </select>
     </div>
-    <div class="field">
-      <label for="medidas">Medidas tomadas</label>
-      <input id="medidas" type="text" placeholder="Ej: 3 folios, 2 anexos">
+  </div>
+
+  <!-- CITE -->
+  <div class="field">
+    <div class="ocr-row">
+      <label style="margin:0;">CITE (OCR)</label>
+      <span class="tag empty" id="tagCite">vacío</span>
     </div>
+    <input id="cite" type="text" placeholder="Ej: CITE-2024-001" autocomplete="off">
+  </div>
+
+  <!-- Detalle -->
+  <div class="field">
+    <div class="ocr-row">
+      <label style="margin:0;">Detalle / contenido (OCR)</label>
+      <span class="tag empty" id="tagContenido">vacío</span>
+    </div>
+    <textarea id="detalle" rows="3" placeholder="Texto reconocido del documento…"></textarea>
+  </div>
+
+  <!-- Escaneo: ahora con MODO DOBLE en una sola captura -->
+  <div class="field">
+    <label>Escanear con cámara</label>
+    <button id="btnScanDouble" class="btn-primary" style="margin-bottom:8px;">
+      📸 Escanear CITE + DETALLE en una sola foto
+    </button>
+    <div class="dest-picker">
+      <button class="btn-ghost" data-target="cite">
+        🎯 Solo CITE
+        <small>una sola zona</small>
+      </button>
+      <button class="btn-ghost" data-target="contenido">
+        📝 Solo DETALLE
+        <small>una sola zona</small>
+      </button>
+    </div>
+    <div class="btn-group">
+      <button id="btnGallery" class="btn-ghost" style="flex:1;">🖼️ Galería (una zona)</button>
+    </div>
+    <input id="fileInput" type="file" accept="image/*" style="display:none">
+    <img id="preview" alt="Última captura">
+    <div class="status" id="status" style="font-size:.78rem;color:var(--muted);margin-top:6px;text-align:center;min-height:16px;"></div>
+  </div>
+
+  <!-- FECHA + HORA EN UNA FILA -->
+  <div class="field">
+    <label>Fecha y hora *</label>
+    <div class="picker" id="dateTimePicker">
+      <div class="picker-highlight"></div>
+      <div class="picker-col" data-col="day"></div>
+      <div class="picker-col" data-col="month" style="flex:1.3;"></div>
+      <div class="picker-col" data-col="year"></div>
+      <div class="picker-col" data-col="hour"></div>
+      <div class="picker-col" data-col="min"></div>
+    </div>
+    <div class="picker-note">Desliza cada columna · por defecto fecha y hora actuales</div>
+  </div>
+
+  <!-- Medidas -->
+  <div class="field">
+    <label for="medidas">Medidas tomadas</label>
+    <input id="medidas" type="text" placeholder="Ej: 3 folios, 2 anexos">
   </div>
 
   <button id="btnGuardar" class="btn-success">💾 Guardar registro</button>
@@ -330,7 +335,7 @@
     <button id="btnVerRegistros" class="btn-outline">📚 Ver registros</button>
     <button id="btnExportar" class="btn-warn">📊 Exportar Excel</button>
   </div>
-  <p class="hint" style="text-align:center;margin-top:10px;">
+  <p class="hint" style="text-align:center;margin-top:6px;">
     Registros guardados: <strong id="countRegistros">0</strong>
   </p>
 </div>
@@ -341,7 +346,7 @@
   <div id="frameGuide"></div>
   <div class="cam-top">
     <button class="icon-btn" id="btnCancelCam" aria-label="Cerrar">✕</button>
-    <span class="cam-title" id="camTitle">Encuadra el CITE</span>
+    <span class="cam-title" id="camTitle">Encuadra el documento</span>
     <button class="icon-btn" id="btnSwitchCam" aria-label="Cambiar cámara">🔄</button>
   </div>
   <div class="cam-bottom">
@@ -351,7 +356,7 @@
   </div>
 </div>
 
-<!-- ============ CROPPER ============ -->
+<!-- ============ CROPPER (una zona) ============ -->
 <div id="cropperWrap">
   <div class="cropper-container-wrap">
     <img id="cropperImage" alt="Recorte">
@@ -365,7 +370,37 @@
   </div>
 </div>
 
-<!-- ============ MODAL REGISTROS TIPO EXCEL ============ -->
+<!-- ============ MODO MULTI-RECORTE (doble zona) ============ -->
+<div id="multiWrap">
+  <div id="multiStage">
+    <img id="multiImage" alt="Documento">
+    <div class="crop-box" id="boxCite" data-tipo="cite">
+      <span class="box-label">CITE</span>
+      <div class="handle tl" data-h="tl"></div>
+      <div class="handle tr" data-h="tr"></div>
+      <div class="handle bl" data-h="bl"></div>
+      <div class="handle br" data-h="br"></div>
+      <div class="handle move" data-h="move"></div>
+    </div>
+    <div class="crop-box" id="boxDetalle" data-tipo="detalle">
+      <span class="box-label">DETALLE</span>
+      <div class="handle tl" data-h="tl"></div>
+      <div class="handle tr" data-h="tr"></div>
+      <div class="handle bl" data-h="bl"></div>
+      <div class="handle br" data-h="br"></div>
+      <div class="handle move" data-h="move"></div>
+    </div>
+  </div>
+  <div class="multi-bar">
+    <div class="hint-bar">Arrastra las cajas · mueve desde el centro · redimensiona desde las esquinas</div>
+    <div class="actions">
+      <button class="btn-danger" id="btnCancelMulti">Cancelar</button>
+      <button class="btn-success" id="btnApplyMulti">✂️ Extraer ambos textos</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL REGISTROS ============ -->
 <div id="listModal">
   <div class="list-header">
     <div class="title-row">
@@ -373,7 +408,7 @@
       <button class="btn-ghost btn-sm" id="btnCloseList">✕ Cerrar</button>
     </div>
     <div class="search-row">
-      <input id="searchInput" type="search" placeholder="🔍 Buscar por Nro., CITE, detalle, fecha…">
+      <input id="searchInput" type="search" placeholder="🔍 Buscar en cualquier columna…">
     </div>
     <div class="count" id="countFiltered">0 registros</div>
   </div>
@@ -381,23 +416,20 @@
     <table class="xls" id="xlsTable">
       <thead>
         <tr>
-          <th style="width:44px;">#</th>
+          <th style="width:36px;">#</th>
           <th>Tipo</th>
-          <th>Nro.</th>
           <th>CITE</th>
           <th>Detalle</th>
           <th>E/S</th>
-          <th>Hora</th>
           <th>Fecha</th>
+          <th>Hora</th>
           <th>Medidas</th>
-          <th style="width:52px;">Acción</th>
+          <th style="width:48px;">Acción</th>
         </tr>
       </thead>
       <tbody id="xlsBody"></tbody>
     </table>
-    <div class="empty-state" id="emptyList" style="display:none;">
-      📭 No hay registros que coincidan.
-    </div>
+    <div class="empty-state" id="emptyList" style="display:none;">📭 No hay registros que coincidan.</div>
   </div>
 </div>
 
@@ -407,8 +439,8 @@
 /* ============================================================
    Estado
    ============================================================ */
-const STORAGE_KEY = 'registros_docs_v3';
-const TYPES_KEY   = 'tipos_documento_v3';
+const STORAGE_KEY = 'registros_docs_v4';
+const TYPES_KEY   = 'tipos_documento_v4';
 
 const state = {
   stream: null,
@@ -418,286 +450,426 @@ const state = {
   ocrReady: false,
   ocrLoading: false,
   currentTarget: null,
+  currentMode: null,      // 'single' | 'double'
+  sourceImage: null,
   registros: JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'),
   tipos: JSON.parse(localStorage.getItem(TYPES_KEY) || 'null'),
-  // valores actuales de los pickers
-  fecha: null,   // { day, month, year }
-  hora: null     // { hour, min }
+  fecha: { day:1, month:0, year:new Date().getFullYear() },
+  hora:  { hour:0, min:0 }
 };
 const $ = (id) => document.getElementById(id);
+const pad = n => String(n).padStart(2, '0');
+const MESES_CORTOS = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
 
 /* ============================================================
-   Helpers
+   Utilidades UI
    ============================================================ */
-function toast(msg, ms = 2800) {
-  const t = $('toast'); t.textContent = msg;
-  t.classList.add('show'); clearTimeout(t._t);
-  t._t = setTimeout(() => t.classList.remove('show'), ms);
+function toast(msg, ms=2800){
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('show'), ms);
 }
-function setStatus(msg, loading = false) {
+function setStatus(msg, loading=false){
   $('status').innerHTML = loading ? `<span class="spinner"></span> ${msg}` : msg;
 }
-function updateBadge(target, val) {
-  const tag = target === 'cite' ? $('tagCite') : $('tagContenido');
-  if (!tag) return;
-  if (val && val.trim()) { tag.textContent = 'listo'; tag.className = 'tag ok'; }
-  else { tag.textContent = 'vacío'; tag.className = 'tag empty'; }
+function updateBadge(target, val){
+  const tag = target==='cite' ? $('tagCite') : $('tagContenido');
+  if(!tag) return;
+  if(val && val.trim()){ tag.textContent='listo'; tag.className='tag ok'; }
+  else{ tag.textContent='vacío'; tag.className='tag empty'; }
 }
-function updateCount() {
-  $('countRegistros').textContent = state.registros.length;
-}
-const pad = n => String(n).padStart(2, '0');
-const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+function updateCount(){ $('countRegistros').textContent = state.registros.length; }
 
 /* ============================================================
-   TIPOS DE DOCUMENTO (select con opción "agregar")
+   TIPOS DE DOCUMENTO
    ============================================================ */
 const TIPOS_DEFAULT = ['Oficio','Memorándum','Carta','Informe','Solicitud','Resolución','Circular','Nota','Otro'];
-function loadTipos() {
+function loadTipos(){
   const sel = $('tipo');
   const tipos = state.tipos || TIPOS_DEFAULT;
   sel.innerHTML = '<option value="">— Seleccionar —</option>';
   tipos.forEach(t => {
-    const o = document.createElement('option'); o.value = t; o.textContent = t;
-    sel.appendChild(o);
+    const o = document.createElement('option'); o.value=t; o.textContent=t; sel.appendChild(o);
   });
-  const optAdd = document.createElement('option');
-  optAdd.value = '__ADD__'; optAdd.textContent = '➕ Agregar tipo…';
-  sel.appendChild(optAdd);
+  const add = document.createElement('option');
+  add.value='__ADD__'; add.textContent='➕ Agregar tipo…'; sel.appendChild(add);
 }
-$('tipo').addEventListener('change', (e) => {
-  if (e.target.value !== '__ADD__') return;
-  const nuevo = prompt('Nombre del nuevo tipo de documento:');
-  if (!nuevo || !nuevo.trim()) { e.target.value = ''; return; }
+$('tipo').addEventListener('change', (e)=>{
+  if(e.target.value!=='__ADD__') return;
+  const nuevo = prompt('Nombre del nuevo tipo:');
+  if(!nuevo || !nuevo.trim()){ e.target.value=''; return; }
   const tipos = (state.tipos || TIPOS_DEFAULT).slice();
   const limpio = nuevo.trim();
-  if (!tipos.includes(limpio)) tipos.push(limpio);
+  if(!tipos.includes(limpio)) tipos.push(limpio);
   state.tipos = tipos;
   localStorage.setItem(TYPES_KEY, JSON.stringify(tipos));
-  loadTipos();
-  $('tipo').value = limpio;
-  toast('Tipo agregado');
+  loadTipos(); $('tipo').value = limpio; toast('Tipo agregado');
 });
 
 /* ============================================================
-   PICKER RULETA (fecha/hora)
+   PICKER (fecha+hora en una fila)
    ============================================================ */
-function buildPicker(containerEl, colKey, items, renderItem, selectedIdx, onChange) {
+function buildPickerCol(containerEl, colKey, items, renderItem, selectedIdx, onChange){
   const col = containerEl.querySelector(`[data-col="${colKey}"]`);
   col.innerHTML = '';
-  // Relleno superior/inferior para centrar el primer/último valor
-  const padTop = document.createElement('div'); padTop.style.height = '50px';
-  const padBottom = document.createElement('div'); padBottom.style.height = '50px';
+  const padTop = document.createElement('div'); padTop.style.height='37px';
+  const padBottom = document.createElement('div'); padBottom.style.height='37px';
   col.appendChild(padTop);
-
-  items.forEach((val, idx) => {
-    const div = document.createElement('div');
-    div.className = 'item';
-    div.dataset.idx = idx;
-    div.textContent = renderItem(val);
-    div.addEventListener('click', () => {
-      col.scrollTo({ top: idx * 50, behavior: 'smooth' });
-    });
-    col.appendChild(div);
+  items.forEach((val, idx)=>{
+    const d = document.createElement('div');
+    d.className='item'; d.dataset.idx=idx; d.textContent=renderItem(val);
+    d.addEventListener('click', ()=> col.scrollTo({top: idx*38, behavior:'smooth'}));
+    col.appendChild(d);
   });
   col.appendChild(padBottom);
+  col.scrollTop = selectedIdx*38;
 
-  // Posición inicial
-  col.scrollTop = selectedIdx * 50;
-
-  // Detecta el índice activo según scroll
-  let scrollTimer = null;
-  function onScroll() {
-    clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(() => {
-      const idx = Math.round(col.scrollTop / 50);
-      const clamped = Math.max(0, Math.min(items.length - 1, idx));
-      // Si no está exacto, corregir
-      if (Math.abs(col.scrollTop - clamped * 50) > 1) {
-        col.scrollTo({ top: clamped * 50, behavior: 'smooth' });
+  let timer=null;
+  function onScroll(){
+    clearTimeout(timer);
+    timer = setTimeout(()=>{
+      const idx = Math.round(col.scrollTop/38);
+      const clamped = Math.max(0, Math.min(items.length-1, idx));
+      if(Math.abs(col.scrollTop - clamped*38) > 1){
+        col.scrollTo({top: clamped*38, behavior:'smooth'});
       }
-      // Actualizar selección visual
-      col.querySelectorAll('.item').forEach((el, i) => {
-        el.classList.toggle('sel', i === clamped);
-        el.classList.toggle('dim', i !== clamped);
+      col.querySelectorAll('.item').forEach((el,i)=>{
+        el.classList.toggle('sel', i===clamped);
+        el.classList.toggle('dim', i!==clamped);
       });
       onChange(clamped, items[clamped]);
     }, 90);
   }
-  col.addEventListener('scroll', onScroll, { passive: true });
-  // Disparo inicial para marcar el seleccionado
-  setTimeout(() => onScroll(), 50);
-
-  return {
-    get index() { return Math.round(col.scrollTop / 50); },
-    set index(i) { col.scrollTo({ top: i * 50, behavior: 'smooth' }); }
-  };
+  col.addEventListener('scroll', onScroll, {passive:true});
+  setTimeout(onScroll, 50);
 }
 
-function initDatePicker() {
+function initDateTimePicker(){
   const now = new Date();
-  const days    = Array.from({ length: 31 }, (_, i) => i + 1);
-  const months  = MESES.map((m, i) => ({ idx: i, label: m }));
-  const years   = Array.from({ length: 15 }, (_, i) => now.getFullYear() - 5 + i);
+  const days   = Array.from({length:31},(_,i)=>i+1);
+  const months = MESES_CORTOS.map((m,i)=>({idx:i, label:m}));
+  const years  = Array.from({length:15},(_,i)=> now.getFullYear()-5+i);
+  const hours  = Array.from({length:24},(_,i)=>i);
+  const mins   = Array.from({length:60},(_,i)=>i);
 
-  state.fecha = { day: now.getDate(), month: now.getMonth(), year: now.getFullYear() };
-  const cDay   = buildPicker($('datePicker'), 'day',   days,   v => v, state.fecha.day - 1, (i) => state.fecha.day = days[i]);
-  const cMonth = buildPicker($('datePicker'), 'month', months, v => v.label, state.fecha.month, (i) => state.fecha.month = months[i].idx);
-  const cYear  = buildPicker($('datePicker'), 'year',  years,  v => v, years.indexOf(now.getFullYear()), (i) => state.fecha.year = years[i]);
+  state.fecha.day   = now.getDate();
+  state.fecha.month = now.getMonth();
+  state.fecha.year  = now.getFullYear();
+  state.hora.hour   = now.getHours();
+  state.hora.min    = now.getMinutes();
 
-  state.fecha._pickers = { cDay, cMonth, cYear, years };
+  buildPickerCol($('dateTimePicker'), 'day',   days,   v=>v,      state.fecha.day-1,  i=> state.fecha.day = days[i]);
+  buildPickerCol($('dateTimePicker'), 'month', months, v=>v.label, state.fecha.month,  i=> state.fecha.month = months[i].idx);
+  buildPickerCol($('dateTimePicker'), 'year',  years,  v=>v,      years.indexOf(now.getFullYear()), i=> state.fecha.year = years[i]);
+  buildPickerCol($('dateTimePicker'), 'hour',  hours,  v=>pad(v), state.hora.hour,    i=> state.hora.hour = hours[i]);
+  buildPickerCol($('dateTimePicker'), 'min',   mins,   v=>pad(v), state.hora.min,     i=> state.hora.min = mins[i]);
 }
 
-function initTimePicker() {
-  const now = new Date();
-  const hours   = Array.from({ length: 24 }, (_, i) => i);
-  const minutes = Array.from({ length: 60 }, (_, i) => i);
-
-  state.hora = { hour: now.getHours(), min: now.getMinutes() };
-  const cHour = buildPicker($('timePicker'), 'hour', hours,   v => pad(v), now.getHours(), (i) => state.hora.hour = hours[i]);
-  const cMin  = buildPicker($('timePicker'), 'min',  minutes, v => pad(v), now.getMinutes(), (i) => state.hora.min = minutes[i]);
-
-  state.hora._pickers = { cHour, cMin };
-}
-
-function getFechaISO() {
+function getFechaISO(){
   const f = state.fecha;
-  return `${f.year}-${pad(f.month + 1)}-${pad(f.day)}`;
+  return `${f.year}-${pad(f.month+1)}-${pad(f.day)}`;
 }
-function getHoraHHMM() {
+function getHoraHHMM(){
   return `${pad(state.hora.hour)}:${pad(state.hora.min)}`;
+}
+function fechaBonita(){
+  const f = state.fecha;
+  return `${pad(f.day)} ${MESES_CORTOS[f.month]} ${f.year}`;
 }
 
 /* ============================================================
    Precarga OCR
    ============================================================ */
-async function preloadOCR() {
-  if (state.ocrReady || state.ocrLoading) return;
+async function preloadOCR(){
+  if(state.ocrReady || state.ocrLoading) return;
   state.ocrLoading = true;
-  try {
-    state.ocrWorker = await Tesseract.createWorker('spa', 1, { logger: () => {} });
-    await state.ocrWorker.setParameters({
-      tessedit_pageseg_mode: '6',
-      preserve_interword_spaces: '1'
-    });
+  try{
+    state.ocrWorker = await Tesseract.createWorker('spa', 1, {logger:()=>{}});
+    await state.ocrWorker.setParameters({ tessedit_pageseg_mode:'6', preserve_interword_spaces:'1' });
     state.ocrReady = true;
-  } catch (e) { console.warn('[OCR]', e); }
-  finally { state.ocrLoading = false; }
+  }catch(e){ console.warn('[OCR]',e); }
+  finally{ state.ocrLoading = false; }
 }
 
 /* ============================================================
    CÁMARA
    ============================================================ */
-async function openCamera(target) {
+async function openCamera(mode, target=null){
+  state.currentMode = mode;    // 'single' | 'double'
   state.currentTarget = target;
-  $('camTitle').textContent = target === 'cite'
-    ? 'Encuadra el número de CITE'
-    : 'Encuadra el contenido / detalle';
-  try {
+  $('camTitle').textContent = mode==='double'
+    ? 'Captura el documento completo'
+    : (target==='cite' ? 'Encuadra el CITE' : 'Encuadra el detalle');
+  try{
     state.stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: { ideal: state.facingMode },
-        width: { ideal: 1280 }, height: { ideal: 720 },
-        frameRate: { ideal: 30, max: 30 }
-      }, audio: false
+      video:{ facingMode:{ideal:state.facingMode}, width:{ideal:1280}, height:{ideal:720}, frameRate:{ideal:30,max:30} },
+      audio:false
     });
     const v = $('video'); v.srcObject = state.stream; await v.play();
-    $('cameraWrap').classList.add('active', 'guide');
+    $('cameraWrap').classList.add('active','guide');
     preloadOCR();
-  } catch (err) {
+  }catch(err){
     console.error(err);
     toast('No se pudo abrir la cámara: ' + err.name, 4000);
   }
 }
-function closeCamera() {
-  if (state.stream) { state.stream.getTracks().forEach(t => t.stop()); state.stream = null; }
+function closeCamera(){
+  if(state.stream){ state.stream.getTracks().forEach(t=>t.stop()); state.stream=null; }
   $('video').srcObject = null;
   $('cameraWrap').classList.remove('active');
 }
-async function switchCamera() {
-  state.facingMode = state.facingMode === 'environment' ? 'user' : 'environment';
+async function switchCamera(){
+  state.facingMode = state.facingMode==='environment' ? 'user' : 'environment';
   closeCamera();
-  await openCamera(state.currentTarget);
+  await openCamera(state.currentMode, state.currentTarget);
 }
-function capturePhoto() {
+function capturePhoto(){
   const v = $('video');
-  if (!v.videoWidth) { toast('La cámara aún no está lista'); return; }
+  if(!v.videoWidth){ toast('La cámara aún no está lista'); return; }
   const c = document.createElement('canvas');
   c.width = v.videoWidth; c.height = v.videoHeight;
   c.getContext('2d').drawImage(v, 0, 0);
   const dataUrl = c.toDataURL('image/jpeg', 0.92);
+  const mode = state.currentMode;
   closeCamera();
-  openCropper(dataUrl);
+
+  if(mode==='double') openMulti(dataUrl);
+  else openCropper(dataUrl);
 }
 
 /* ============================================================
-   CROPPER
+   CROPPER simple (una zona)
    ============================================================ */
-function openCropper(dataUrl) {
-  $('cropTargetLabel').textContent = state.currentTarget === 'cite'
+function openCropper(dataUrl){
+  $('cropTargetLabel').textContent = state.currentTarget==='cite'
     ? '✂️ Recortando para → CITE'
     : '✂️ Recortando para → CONTENIDO';
   const img = $('cropperImage');
   img.src = dataUrl;
   $('cropperWrap').classList.add('active');
-  img.onload = () => {
-    if (state.cropper) state.cropper.destroy();
+  img.onload = ()=>{
+    if(state.cropper) state.cropper.destroy();
     state.cropper = new Cropper(img, {
-      viewMode: 1, autoCropArea: 0.7, movable: true, zoomable: true,
-      scalable: false, responsive: true, background: false, guides: true,
-      cropBoxMovable: true, cropBoxResizable: true
+      viewMode:1, autoCropArea:0.7, movable:true, zoomable:true,
+      scalable:false, responsive:true, background:false, guides:true,
+      cropBoxMovable:true, cropBoxResizable:true
     });
   };
 }
-function closeCropper() {
+function closeCropper(){
   $('cropperWrap').classList.remove('active');
-  if (state.cropper) { state.cropper.destroy(); state.cropper = null; }
+  if(state.cropper){ state.cropper.destroy(); state.cropper=null; }
 }
-async function applyCropAndOCR() {
-  if (!state.cropper) return;
-  const canvas = state.cropper.getCroppedCanvas({
-    maxWidth: 1400, maxHeight: 1400, fillColor: '#fff'
-  });
+async function applyCropAndOCR(){
+  if(!state.cropper) return;
+  const canvas = state.cropper.getCroppedCanvas({ maxWidth:1400, maxHeight:1400, fillColor:'#fff' });
   const processed = preprocessForOCR(canvas);
   const dataUrl = processed.toDataURL('image/jpeg', 0.92);
   $('preview').src = dataUrl;
-  $('preview').style.display = 'block';
+  $('preview').style.display='block';
   const target = state.currentTarget;
   closeCropper();
   await runOCR(dataUrl, target);
 }
-function preprocessForOCR(sourceCanvas) {
-  const c = document.createElement('canvas');
-  c.width = sourceCanvas.width; c.height = sourceCanvas.height;
-  const ctx = c.getContext('2d', { willReadFrequently: true });
-  ctx.drawImage(sourceCanvas, 0, 0);
-  const img = ctx.getImageData(0, 0, c.width, c.height);
-  const d = img.data;
-  for (let i = 0; i < d.length; i += 4) {
-    const g = d[i]*0.299 + d[i+1]*0.587 + d[i+2]*0.114;
-    const v = g < 110 ? 0 : g > 160 ? 255 : g;
-    d[i] = d[i+1] = d[i+2] = v;
+
+/* ============================================================
+   MODO MULTI — dos cajas en una sola imagen
+   ============================================================ */
+const multi = {
+  img: null,          // HTMLImageElement
+  stage: null,
+  boxes: {},          // { cite: {x,y,w,h}, detalle:{x,y,w,h} }
+  drag: null
+};
+
+function openMulti(dataUrl){
+  state.sourceImage = dataUrl;
+  const img = $('multiImage');
+  img.src = dataUrl;
+  $('multiWrap').classList.add('active');
+
+  img.onload = ()=>{
+    multi.img = img;
+    multi.stage = $('multiStage');
+    // Esperar layout para medir
+    requestAnimationFrame(()=>{
+      const rect = img.getBoundingClientRect();
+      const w = rect.width, h = rect.height;
+      // Cajas por defecto: CITE arriba, DETALLE en el medio
+      multi.boxes.cite    = { x: w*0.10, y: h*0.06, w: w*0.45, h: h*0.08 };
+      multi.boxes.detalle = { x: w*0.08, y: h*0.20, w: w*0.84, h: h*0.30 };
+      applyBoxStyle('cite');
+      applyBoxStyle('detalle');
+    });
+  };
+}
+
+function applyBoxStyle(key){
+  const b = multi.boxes[key];
+  const el = key==='cite' ? $('boxCite') : $('boxDetalle');
+  el.style.left   = b.x + 'px';
+  el.style.top    = b.y + 'px';
+  el.style.width  = b.w + 'px';
+  el.style.height = b.h + 'px';
+}
+
+/* Interacción táctil / mouse */
+(function bindMulti(){
+  function getPoint(ev){
+    const t = ev.touches ? ev.touches[0] : ev;
+    return { x: t.clientX, y: t.clientY };
   }
-  ctx.putImageData(img, 0, 0);
+  function startDrag(ev, key, handle){
+    ev.preventDefault(); ev.stopPropagation();
+    const p = getPoint(ev);
+    multi.drag = {
+      key, handle,
+      startX: p.x, startY: p.y,
+      orig: { ...multi.boxes[key] }
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('touchmove', onMove, {passive:false});
+    document.addEventListener('mouseup', endDrag);
+    document.addEventListener('touchend', endDrag);
+  }
+  function onMove(ev){
+    if(!multi.drag) return;
+    ev.preventDefault();
+    const p = getPoint(ev);
+    const dx = p.x - multi.drag.startX;
+    const dy = p.y - multi.drag.startY;
+    const o = multi.drag.orig;
+    const stageRect = multi.stage.getBoundingClientRect();
+    const imgRect = multi.img.getBoundingClientRect();
+    // Origen de la imagen dentro del stage (centrada)
+    const offX = imgRect.left - stageRect.left;
+    const offY = imgRect.top  - stageRect.top;
+    const maxW = imgRect.width, maxH = imgRect.height;
+
+    let nb = { ...o };
+    const h = multi.drag.handle;
+    const MIN = 30;
+
+    if(h==='move'){
+      nb.x = o.x + dx;
+      nb.y = o.y + dy;
+    } else {
+      if(h.includes('l')){ nb.x = o.x + dx; nb.w = o.w - dx; }
+      if(h.includes('r')){ nb.w = o.w + dx; }
+      if(h.includes('t')){ nb.y = o.y + dy; nb.h = o.h - dy; }
+      if(h.includes('b')){ nb.h = o.h + dy; }
+      if(nb.w < MIN){ nb.w = MIN; }
+      if(nb.h < MIN){ nb.h = MIN; }
+    }
+    // Limitar dentro de la imagen
+    if(nb.x < 0){ nb.x = 0; }
+    if(nb.y < 0){ nb.y = 0; }
+    if(nb.x + nb.w > maxW){ nb.w = maxW - nb.x; }
+    if(nb.y + nb.h > maxH){ nb.h = maxH - nb.y; }
+
+    multi.boxes[multi.drag.key] = nb;
+    applyBoxStyle(multi.drag.key);
+  }
+  function endDrag(){
+    multi.drag = null;
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('touchmove', onMove);
+    document.removeEventListener('mouseup', endDrag);
+    document.removeEventListener('touchend', endDrag);
+  }
+  // Bind en cada handle de cada caja
+  document.querySelectorAll('#multiWrap .crop-box').forEach(box=>{
+    const key = box.id === 'boxCite' ? 'cite' : 'detalle';
+    box.querySelectorAll('.handle').forEach(h=>{
+      h.addEventListener('mousedown', e=> startDrag(e, key, h.dataset.h));
+      h.addEventListener('touchstart', e=> startDrag(e, key, h.dataset.h), {passive:false});
+    });
+    // Tocar el cuerpo de la caja = mover
+    box.addEventListener('mousedown', e=>{
+      if(e.target.classList.contains('handle')) return;
+      startDrag(e, key, 'move');
+    });
+    box.addEventListener('touchstart', e=>{
+      if(e.target.classList.contains('handle')) return;
+      startDrag(e, key, 'move');
+    }, {passive:false});
+  });
+})();
+
+function closeMulti(){
+  $('multiWrap').classList.remove('active');
+  document.getElementById('multiImage').src = '';
+  multi.boxes = {};
+}
+
+/* Recorta un rectángulo del HTMLImageElement y devuelve canvas */
+function cropFromImage(imgEl, box){
+  // Escala: la imagen se muestra a imgRect.w pero su tamaño natural es naturalWidth
+  const rect = imgEl.getBoundingClientRect();
+  const sx = imgEl.naturalWidth  / rect.width;
+  const sy = imgEl.naturalHeight / rect.height;
+  const c = document.createElement('canvas');
+  c.width  = Math.round(box.w * sx);
+  c.height = Math.round(box.h * sy);
+  const ctx = c.getContext('2d');
+  ctx.drawImage(
+    imgEl,
+    Math.round(box.x * sx), Math.round(box.y * sy),
+    Math.round(box.w * sx), Math.round(box.h * sy),
+    0, 0, c.width, c.height
+  );
   return c;
 }
 
+async function applyMultiAndOCR(){
+  if(!multi.img) return;
+  const canvasCite    = cropFromImage(multi.img, multi.boxes.cite);
+  const canvasDetalle = cropFromImage(multi.img, multi.boxes.detalle);
+
+  const dataCite    = preprocessForOCR(canvasCite).toDataURL('image/jpeg', 0.92);
+  const dataDetalle = preprocessForOCR(canvasDetalle).toDataURL('image/jpeg', 0.92);
+
+  $('preview').src = dataDetalle;
+  $('preview').style.display = 'block';
+
+  closeMulti();
+
+  // Procesamos en serie (un solo worker) para no cargar dos OCR a la vez
+  await runOCR(dataCite, 'cite');
+  await runOCR(dataDetalle, 'contenido');
+}
+
 /* ============================================================
-   OCR
+   Preprocesado y OCR
    ============================================================ */
-async function runOCR(imageDataUrl, target) {
-  if (!state.ocrReady) {
+function preprocessForOCR(sourceCanvas){
+  const c = document.createElement('canvas');
+  c.width = sourceCanvas.width; c.height = sourceCanvas.height;
+  const ctx = c.getContext('2d', {willReadFrequently:true});
+  ctx.drawImage(sourceCanvas, 0, 0);
+  const img = ctx.getImageData(0,0,c.width,c.height);
+  const d = img.data;
+  for(let i=0;i<d.length;i+=4){
+    const g = d[i]*0.299 + d[i+1]*0.587 + d[i+2]*0.114;
+    const v = g<110 ? 0 : g>160 ? 255 : g;
+    d[i]=d[i+1]=d[i+2]=v;
+  }
+  ctx.putImageData(img,0,0);
+  return c;
+}
+
+async function runOCR(imageDataUrl, target){
+  if(!state.ocrReady){
     setStatus('Cargando motor OCR (primera vez)...', true);
     await preloadOCR();
-    if (!state.ocrReady) { setStatus('❌ No se pudo cargar OCR'); return; }
+    if(!state.ocrReady){ setStatus('❌ No se pudo cargar OCR'); return; }
   }
   setStatus('Reconociendo texto...', true);
-  try {
-    const { data: { text } } = await state.ocrWorker.recognize(imageDataUrl);
-    const limpio = text.trim().replace(/\n{3,}/g, '\n\n');
-    if (!limpio) { setStatus('⚠️ No se detectó texto'); toast('No se detectó texto en la región'); return; }
+  try{
+    const { data:{ text } } = await state.ocrWorker.recognize(imageDataUrl);
+    const limpio = text.trim().replace(/\n{3,}/g,'\n\n');
+    if(!limpio){ setStatus('⚠️ No se detectó texto'); toast('No se detectó texto en la región'); return; }
 
-    if (target === 'cite') {
+    if(target==='cite'){
       const primera = limpio.split(/\n/)[0].trim();
       $('cite').value = primera;
       updateBadge('cite', primera);
@@ -708,7 +880,7 @@ async function runOCR(imageDataUrl, target) {
     }
     setStatus(`✅ Texto extraído (${limpio.length} caracteres)`);
     toast('Texto reconocido');
-  } catch (err) {
+  }catch(err){
     console.error(err);
     setStatus('❌ Error al reconocer texto');
     toast('Error OCR: ' + err.message, 4000);
@@ -716,18 +888,18 @@ async function runOCR(imageDataUrl, target) {
 }
 
 /* ============================================================
-   Galería
+   Galería (una zona)
    ============================================================ */
-$('btnGallery').addEventListener('click', () => {
+$('btnGallery').addEventListener('click', ()=>{
   const t = prompt('¿Para qué campo es esta imagen? Escribe "cite" o "contenido":', 'contenido');
-  if (!t) return;
+  if(!t) return;
   state.currentTarget = t.trim().toLowerCase().startsWith('c') ? 'cite' : 'contenido';
   $('fileInput').click();
 });
-$('fileInput').addEventListener('change', (e) => {
-  const f = e.target.files?.[0]; if (!f) return;
+$('fileInput').addEventListener('change', (e)=>{
+  const f = e.target.files?.[0]; if(!f) return;
   const reader = new FileReader();
-  reader.onload = (ev) => openCropper(ev.target.result);
+  reader.onload = ev => openCropper(ev.target.result);
   reader.readAsDataURL(f);
   e.target.value = '';
 });
@@ -735,100 +907,87 @@ $('fileInput').addEventListener('change', (e) => {
 /* ============================================================
    Guardar
    ============================================================ */
-function guardar() {
+function guardar(){
   const tipo          = $('tipo').value.trim();
-  const nroDoc        = $('nroDoc').value.trim();
+  const entradaSalida = $('entradaSalida').value;
   const cite          = $('cite').value.trim();
   const detalle       = $('detalle').value.trim();
-  const entradaSalida = $('entradaSalida').value;
   const medidas       = $('medidas').value.trim();
+  const fecha         = getFechaISO();
+  const hora          = getHoraHHMM();
 
-  const hora  = getHoraHHMM();
-  const fecha = getFechaISO();
+  if(!tipo || !entradaSalida){ toast('Complete Tipo y Entrada/Salida'); return; }
+  if(!cite && !detalle){ toast('Debe registrar al menos CITE o Detalle'); return; }
 
-  if (!tipo || !nroDoc || !entradaSalida) {
-    toast('Complete Tipo, Nro. y Entrada/Salida'); return;
-  }
-  if (!cite && !detalle) {
-    toast('Debe registrar al menos CITE o Detalle'); return;
-  }
-
-  const reg = {
+  state.registros.push({
     id: Date.now(),
-    tipo, nroDoc, cite, detalle, entradaSalida, hora, fecha, medidas,
+    tipo, cite, detalle, entradaSalida, fecha, hora, medidas,
     creadoEn: new Date().toISOString()
-  };
-  state.registros.push(reg);
+  });
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state.registros));
   updateCount();
   toast('✅ Registro guardado');
 
-  // Limpieza (fecha/hora se conservan por comodidad)
-  ['nroDoc','cite','detalle','medidas'].forEach(id => $(id).value = '');
-  $('tipo').value = '';
-  $('entradaSalida').value = '';
-  $('preview').style.display = 'none';
-  updateBadge('cite', ''); updateBadge('contenido', '');
+  ['cite','detalle','medidas'].forEach(id=> $(id).value='');
+  $('tipo').value=''; $('entradaSalida').value='';
+  $('preview').style.display='none';
+  updateBadge('cite',''); updateBadge('contenido','');
   setStatus('');
+  // Refrescar a la hora actual
+  const now = new Date();
+  state.hora.hour = now.getHours(); state.hora.min = now.getMinutes();
+  state.fecha.day = now.getDate(); state.fecha.month = now.getMonth(); state.fecha.year = now.getFullYear();
+  initDateTimePicker();
 }
 
 /* ============================================================
-   Modal REGISTROS estilo Excel
+   Modal registros (Excel)
    ============================================================ */
-function openList() {
-  renderTabla('');
-  $('listModal').classList.add('active');
-  setTimeout(() => $('searchInput').focus(), 100);
-}
-function closeList() { $('listModal').classList.remove('active'); }
+function openList(){ renderTabla(''); $('listModal').classList.add('active'); setTimeout(()=>$('searchInput').focus(), 100); }
+function closeList(){ $('listModal').classList.remove('active'); }
 
-function normalizar(s) {
-  return String(s ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+function normalizar(s){
+  return String(s ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 }
 
-function renderTabla(filtro) {
+function renderTabla(filtro){
   const q = normalizar(filtro.trim());
   const todos = [...state.registros].reverse();
-  const filtrados = !q ? todos : todos.filter(r => {
-    const bolsa = [
-      r.tipo, r.nroDoc, r.cite, r.detalle, r.entradaSalida,
-      r.hora, r.fecha, r.medidas
-    ].map(normalizar).join(' | ');
+  const filtrados = !q ? todos : todos.filter(r=>{
+    const bolsa = [r.tipo, r.cite, r.detalle, r.entradaSalida, r.hora, r.fecha, r.medidas]
+      .map(normalizar).join(' | ');
     return bolsa.includes(q);
   });
 
-  const tbody = $('xlsBody');
-  const empty = $('emptyList');
-  $('countFiltered').textContent = `${filtrados.length} registro${filtrados.length === 1 ? '' : 's'}` +
+  $('countFiltered').textContent = `${filtrados.length} registro${filtrados.length===1?'':'s'}` +
     (q ? ` (de ${todos.length})` : '');
 
-  if (!filtrados.length) {
-    tbody.innerHTML = '';
-    empty.style.display = 'block';
-    return;
+  const tbody = $('xlsBody');
+  const empty = $('emptyList');
+  if(!filtrados.length){
+    tbody.innerHTML=''; empty.style.display='block'; return;
   }
-  empty.style.display = 'none';
+  empty.style.display='none';
 
-  tbody.innerHTML = filtrados.map((r, i) => `
+  tbody.innerHTML = filtrados.map((r,i)=>`
     <tr>
-      <td>${i + 1}</td>
+      <td>${i+1}</td>
       <td>${escapeHtml(r.tipo)}</td>
-      <td>${escapeHtml(r.nroDoc)}</td>
       <td>${escapeHtml(r.cite)}</td>
       <td class="wrap">${escapeHtml(r.detalle)}</td>
-      <td>${r.entradaSalida === 'Entrada' ? '⬇️' : '⬆️'} ${escapeHtml(r.entradaSalida)}</td>
-      <td>${escapeHtml(r.hora)}</td>
+      <td>${r.entradaSalida==='Entrada'?'⬇️':'⬆️'} ${escapeHtml(r.entradaSalida)}</td>
       <td>${escapeHtml(r.fecha)}</td>
+      <td>${escapeHtml(r.hora)}</td>
       <td>${escapeHtml(r.medidas)}</td>
       <td><button class="del-btn" data-id="${r.id}" title="Eliminar">🗑️</button></td>
     </tr>
   `).join('');
 
-  tbody.querySelectorAll('.del-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
+  tbody.querySelectorAll('.del-btn').forEach(btn=>{
+    btn.addEventListener('click', e=>{
       const id = Number(e.target.dataset.id);
-      if (!confirm('¿Eliminar este registro?')) return;
-      state.registros = state.registros.filter(x => x.id !== id);
+      if(!confirm('¿Eliminar este registro?')) return;
+      state.registros = state.registros.filter(x=>x.id!==id);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state.registros));
       updateCount();
       renderTabla($('searchInput').value);
@@ -836,76 +995,69 @@ function renderTabla(filtro) {
   });
 }
 
-function escapeHtml(s) {
-  return String(s ?? '').replace(/[&<>"']/g, c => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[c]));
+function escapeHtml(s){
+  return String(s ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-
-$('searchInput').addEventListener('input', (e) => renderTabla(e.target.value));
+$('searchInput').addEventListener('input', e=> renderTabla(e.target.value));
 
 /* ============================================================
-   Exportar Excel
+   Excel
    ============================================================ */
-function exportarExcel() {
-  if (!state.registros.length) { toast('No hay registros para exportar'); return; }
-  const datos = state.registros.map(r => ({
+function exportarExcel(){
+  if(!state.registros.length){ toast('No hay registros para exportar'); return; }
+  const datos = state.registros.map(r=>({
     'Tipo de documento': r.tipo,
-    'Nro. de documento': r.nroDoc,
     'CITE': r.cite,
     'Detalle': r.detalle,
     'Entrada/Salida': r.entradaSalida,
-    'Hora': r.hora,
     'Fecha': r.fecha,
+    'Hora': r.hora,
     'Medidas tomadas': r.medidas
   }));
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.json_to_sheet(datos);
-  ws['!cols'] = [
-    { wch: 18 }, { wch: 16 }, { wch: 20 }, { wch: 40 },
-    { wch: 14 }, { wch: 8 },  { wch: 12 }, { wch: 24 }
-  ];
+  ws['!cols'] = [{wch:18},{wch:20},{wch:40},{wch:14},{wch:12},{wch:8},{wch:24}];
   XLSX.utils.book_append_sheet(wb, ws, 'Registros');
-  const nombre = `registros_${new Date().toISOString().slice(0,10)}.xlsx`;
-  XLSX.writeFile(wb, nombre);
+  XLSX.writeFile(wb, `registros_${new Date().toISOString().slice(0,10)}.xlsx`);
   toast('📊 Excel generado');
 }
 
 /* ============================================================
    Eventos
    ============================================================ */
-document.querySelectorAll('.dest-picker button').forEach(btn => {
-  btn.addEventListener('click', () => openCamera(btn.dataset.target));
+$('btnScanDouble').addEventListener('click', ()=> openCamera('double'));
+document.querySelectorAll('.dest-picker button').forEach(btn=>{
+  btn.addEventListener('click', ()=> openCamera('single', btn.dataset.target));
 });
 $('btnCancelCam').addEventListener('click', closeCamera);
 $('btnShutter').addEventListener('click', capturePhoto);
 $('btnSwitchCam').addEventListener('click', switchCamera);
 $('btnCancelCrop').addEventListener('click', closeCropper);
 $('btnApplyCrop').addEventListener('click', applyCropAndOCR);
+$('btnCancelMulti').addEventListener('click', closeMulti);
+$('btnApplyMulti').addEventListener('click', applyMultiAndOCR);
 $('btnGuardar').addEventListener('click', guardar);
 $('btnVerRegistros').addEventListener('click', openList);
 $('btnCloseList').addEventListener('click', closeList);
 $('btnExportar').addEventListener('click', exportarExcel);
 
-$('cite').addEventListener('input', e => updateBadge('cite', e.target.value));
-$('detalle').addEventListener('input', e => updateBadge('contenido', e.target.value));
+$('cite').addEventListener('input', e=> updateBadge('cite', e.target.value));
+$('detalle').addEventListener('input', e=> updateBadge('contenido', e.target.value));
 
-window.addEventListener('beforeunload', () => {
-  if (state.stream) state.stream.getTracks().forEach(t => t.stop());
+window.addEventListener('beforeunload', ()=>{
+  if(state.stream) state.stream.getTracks().forEach(t=>t.stop());
 });
 
 /* ============================================================
    Init
    ============================================================ */
-(function init() {
+(function init(){
   loadTipos();
   updateCount();
-  updateBadge('cite', '');
-  updateBadge('contenido', '');
-  initDatePicker();
-  initTimePicker();
+  updateBadge('cite',''); updateBadge('contenido','');
+  initDateTimePicker();
 
-  if ('requestIdleCallback' in window) requestIdleCallback(preloadOCR, { timeout: 3000 });
+  if('requestIdleCallback' in window) requestIdleCallback(preloadOCR, {timeout:3000});
   else setTimeout(preloadOCR, 1500);
 })();
 </script>
