@@ -16,6 +16,7 @@
     --primary:#2563eb; --primary-dark:#1e40af; --success:#16a34a; --danger:#dc2626;
     --warn:#f59e0b; --bg:#f1f5f9; --card:#fff; --text:#1e293b; --muted:#64748b;
     --border:#e2e8f0;
+    --cite:#fbbf24; --detalle:#38bdf8;
     --safe-top: env(safe-area-inset-top,0px);
     --safe-bottom: env(safe-area-inset-bottom,0px);
   }
@@ -25,8 +26,7 @@
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     background:var(--bg);color:var(--text);
     padding:12px;padding-bottom:calc(80px + var(--safe-bottom));
-    max-width:560px;margin-inline:auto;overflow-x:hidden;
-    font-size:14px;
+    max-width:560px;margin-inline:auto;overflow-x:hidden;font-size:14px;
   }
   h1{font-size:1.15rem;margin:0 0 10px;text-align:center;}
   .card{background:var(--card);border-radius:10px;padding:12px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);}
@@ -64,7 +64,7 @@
   .ocr-row .tag.ok{background:#dcfce7;color:#166534;}
   .ocr-row .tag.empty{background:#f1f5f9;color:#64748b;}
 
-  /* ========= PICKER compacto ========= */
+  /* Picker fecha+hora */
   .picker{
     display:flex;background:#f8fafc;border:1px solid var(--border);
     border-radius:8px;overflow:hidden;height:112px;position:relative;
@@ -131,7 +131,7 @@
   .dest-picker button{flex-direction:column;padding:12px;line-height:1.2;font-size:.85rem;}
   .dest-picker button small{font-weight:400;font-size:.68rem;opacity:.85;margin-top:2px;}
 
-  /* ========= Cropper simple (una zona) ========= */
+  /* Cropper de respaldo (una zona) */
   #cropperWrap{display:none;position:fixed;inset:0;background:#000;z-index:1001;flex-direction:column;}
   #cropperWrap.active{display:flex;}
   #cropperWrap .cropper-container-wrap{flex:1;min-height:0;overflow:hidden;position:relative;}
@@ -141,54 +141,71 @@
   .crop-bar .actions{display:flex;gap:8px;}
   .crop-bar .actions button{flex:1;}
 
-  /* ========= MODO MULTI-RECORTE (doble zona) ========= */
-  #multiWrap{display:none;position:fixed;inset:0;background:#000;z-index:1002;flex-direction:column;}
-  #multiWrap.active{display:flex;}
-  #multiStage{
-    flex:1;min-height:0;position:relative;overflow:hidden;
-    display:flex;align-items:center;justify-content:center;
-    touch-action:none;
+  /* ================= MODO LENS ================= */
+  #lensWrap{display:none;position:fixed;inset:0;background:#0b0f17;z-index:1002;flex-direction:column;}
+  #lensWrap.active{display:flex;}
+
+  /* Barra superior: modo CITE/DETALLE + acciones */
+  .lens-top{
+    padding:calc(var(--safe-top) + 10px) 10px 10px;
+    background:#0b0f17;display:flex;flex-direction:column;gap:8px;
+    border-bottom:1px solid #1e293b;z-index:3;
   }
-  #multiImage{
-    max-width:100%;max-height:100%;display:block;
+  .lens-top .mode-row{display:flex;gap:6px;align-items:center;}
+  .mode-btn{
+    flex:1;padding:10px 8px;font-size:.85rem;font-weight:700;
+    background:#1e293b;color:#94a3b8;border:2px solid transparent;
+    border-radius:8px;
+  }
+  .mode-btn.active[data-mode="cite"]{background:rgba(251,191,36,.18);color:var(--cite);border-color:var(--cite);}
+  .mode-btn.active[data-mode="detalle"]{background:rgba(56,189,248,.18);color:var(--detalle);border-color:var(--detalle);}
+  .lens-top .actions-row{display:flex;gap:6px;}
+  .lens-top .actions-row button{flex:1;padding:8px;font-size:.78rem;}
+  .lens-status{
+    color:#94a3b8;font-size:.72rem;text-align:center;
+    padding:2px 4px;line-height:1.2;
+  }
+
+  /* Área de la imagen (zoom + pan) */
+  #lensStage{
+    flex:1;min-height:0;position:relative;overflow:hidden;
+    background:#000;touch-action:none;
+  }
+  #lensCanvas{
+    position:absolute;top:0;left:0;
+    transform-origin:0 0;
+    will-change:transform;
     user-select:none;-webkit-user-drag:none;
   }
-  /* Cajas dibujables */
-  .crop-box{
-    position:absolute;border:2px solid;box-sizing:border-box;
-    box-shadow:0 0 0 9999px rgba(0,0,0,.45);
-    touch-action:none;
+
+  /* Spinner overlay mientras corre OCR */
+  #lensLoading{
+    position:absolute;inset:0;background:rgba(0,0,0,.75);
+    display:none;align-items:center;justify-content:center;
+    flex-direction:column;gap:14px;z-index:5;color:#fff;
+    font-size:.9rem;text-align:center;padding:20px;
   }
-  .crop-box[data-tipo="cite"]{border-color:#fbbf24;--c:#fbbf24;}
-  .crop-box[data-tipo="detalle"]{border-color:#38bdf8;--c:#38bdf8;}
-  .crop-box .box-label{
-    position:absolute;top:-22px;left:0;padding:2px 8px;
-    background:var(--c);color:#000;font-size:.7rem;font-weight:800;
-    border-radius:4px;white-space:nowrap;
+  #lensLoading.active{display:flex;}
+  #lensLoading .spinner{width:36px;height:36px;border-width:4px;border-color:#334155;border-top-color:#fff;}
+
+  /* Barra inferior del Lens */
+  .lens-bottom{
+    padding:10px 10px calc(var(--safe-bottom) + 10px);
+    background:#0b0f17;border-top:1px solid #1e293b;
+    display:flex;flex-direction:column;gap:6px;z-index:3;
   }
-  .crop-box .handle{
-    position:absolute;width:22px;height:22px;background:var(--c);
-    border:2px solid #000;border-radius:50%;
-  }
-  .crop-box .handle.br{right:-11px;bottom:-11px;cursor:nwse-resize;}
-  .crop-box .handle.tr{right:-11px;top:-11px;cursor:nesw-resize;}
-  .crop-box .handle.bl{left:-11px;bottom:-11px;cursor:nesw-resize;}
-  .crop-box .handle.tl{left:-11px;top:-11px;cursor:nwse-resize;}
-  .crop-box .handle.move{
-    left:50%;top:50%;margin-left:-11px;margin-top:-11px;
-    cursor:move;background:var(--c);opacity:.75;
+  .lens-bottom .primary-row{display:flex;gap:8px;}
+  .lens-bottom .primary-row button{flex:1;}
+  .lens-bottom .secondary-row{display:flex;gap:6px;}
+  .lens-bottom .secondary-row button{flex:1;padding:8px;font-size:.78rem;}
+
+  /* Contador de selecciones */
+  .sel-count{
+    display:inline-block;background:#1e293b;color:#e2e8f0;
+    padding:1px 6px;border-radius:99px;font-size:.68rem;margin-left:4px;
   }
 
-  .multi-bar{
-    background:#111;padding:12px 12px calc(var(--safe-bottom) + 12px);
-    display:flex;flex-direction:column;gap:8px;
-  }
-  .multi-bar .hint-bar{
-    color:#cbd5e1;font-size:.72rem;text-align:center;padding:2px 0;
-  }
-  .multi-bar .actions{display:flex;gap:8px;}
-  .multi-bar .actions button{flex:1;}
-
+  /* Preview + estado en el form */
   #preview{max-width:100%;border-radius:6px;display:none;margin-top:6px;}
 
   .spinner{display:inline-block;width:16px;height:16px;border:3px solid #fff3;border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
@@ -203,7 +220,7 @@
   }
   .toast.show{transform:translateX(-50%) translateY(0);}
 
-  /* ========= Modal Registros tipo Excel ========= */
+  /* Modal registros tipo Excel */
   #listModal{display:none;position:fixed;inset:0;background:var(--bg);z-index:1500;flex-direction:column;}
   #listModal.active{display:flex;}
   .list-header{
@@ -246,14 +263,10 @@
 <h1>📋 Registro de Documentación</h1>
 
 <div class="card">
-
-  <!-- Tipo + Entrada/Salida -->
   <div class="row">
     <div class="field">
       <label for="tipo">Tipo de documento *</label>
-      <select id="tipo">
-        <option value="">— Seleccionar —</option>
-      </select>
+      <select id="tipo"><option value="">— Seleccionar —</option></select>
     </div>
     <div class="field">
       <label for="entradaSalida">Entrada / Salida *</label>
@@ -265,7 +278,6 @@
     </div>
   </div>
 
-  <!-- CITE -->
   <div class="field">
     <div class="ocr-row">
       <label style="margin:0;">CITE (OCR)</label>
@@ -274,7 +286,6 @@
     <input id="cite" type="text" placeholder="Ej: CITE-2024-001" autocomplete="off">
   </div>
 
-  <!-- Detalle -->
   <div class="field">
     <div class="ocr-row">
       <label style="margin:0;">Detalle / contenido (OCR)</label>
@@ -283,31 +294,29 @@
     <textarea id="detalle" rows="3" placeholder="Texto reconocido del documento…"></textarea>
   </div>
 
-  <!-- Escaneo: ahora con MODO DOBLE en una sola captura -->
   <div class="field">
     <label>Escanear con cámara</label>
-    <button id="btnScanDouble" class="btn-primary" style="margin-bottom:8px;">
-      📸 Escanear CITE + DETALLE en una sola foto
+    <button id="btnScanLens" class="btn-primary" style="margin-bottom:8px;">
+      📸 Escanear documento (seleccionar texto)
     </button>
     <div class="dest-picker">
       <button class="btn-ghost" data-target="cite">
         🎯 Solo CITE
-        <small>una sola zona</small>
+        <small>modo manual con recorte</small>
       </button>
       <button class="btn-ghost" data-target="contenido">
         📝 Solo DETALLE
-        <small>una sola zona</small>
+        <small>modo manual con recorte</small>
       </button>
     </div>
     <div class="btn-group">
-      <button id="btnGallery" class="btn-ghost" style="flex:1;">🖼️ Galería (una zona)</button>
+      <button id="btnGallery" class="btn-ghost" style="flex:1;">🖼️ Galería (modo manual)</button>
     </div>
     <input id="fileInput" type="file" accept="image/*" style="display:none">
     <img id="preview" alt="Última captura">
     <div class="status" id="status" style="font-size:.78rem;color:var(--muted);margin-top:6px;text-align:center;min-height:16px;"></div>
   </div>
 
-  <!-- FECHA + HORA EN UNA FILA -->
   <div class="field">
     <label>Fecha y hora *</label>
     <div class="picker" id="dateTimePicker">
@@ -321,7 +330,6 @@
     <div class="picker-note">Desliza cada columna · por defecto fecha y hora actuales</div>
   </div>
 
-  <!-- Medidas -->
   <div class="field">
     <label for="medidas">Medidas tomadas</label>
     <input id="medidas" type="text" placeholder="Ej: 3 folios, 2 anexos">
@@ -356,7 +364,42 @@
   </div>
 </div>
 
-<!-- ============ CROPPER (una zona) ============ -->
+<!-- ============ MODO LENS ============ -->
+<div id="lensWrap">
+  <div class="lens-top">
+    <div class="mode-row">
+      <button class="mode-btn active" data-mode="cite" id="modeCite">🟡 CITE <span class="sel-count" id="cntCite">0</span></button>
+      <button class="mode-btn" data-mode="detalle" id="modeDetalle">🔵 DETALLE <span class="sel-count" id="cntDetalle">0</span></button>
+    </div>
+    <div class="actions-row">
+      <button class="btn-ghost" id="btnLensUndo">↩ Deshacer</button>
+      <button class="btn-ghost" id="btnLensReset">🔄 Reiniciar</button>
+      <button class="btn-ghost" id="btnLensZoomIn">➕ Zoom</button>
+      <button class="btn-ghost" id="btnLensZoomOut">➖ Zoom</button>
+    </div>
+    <div class="lens-status" id="lensStatus">Toca o arrastra sobre las palabras para seleccionarlas.</div>
+  </div>
+
+  <div id="lensStage">
+    <canvas id="lensCanvas"></canvas>
+    <div id="lensLoading">
+      <div class="spinner"></div>
+      <div>Analizando documento…</div>
+    </div>
+  </div>
+
+  <div class="lens-bottom">
+    <div class="primary-row">
+      <button class="btn-success" id="btnLensExtract">✂️ Extraer selección</button>
+    </div>
+    <div class="secondary-row">
+      <button class="btn-danger" id="btnLensCancel">✕ Cancelar</button>
+      <button class="btn-ghost" id="btnLensManual">❌ Modo manual</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CROPPER (respaldo manual) ============ -->
 <div id="cropperWrap">
   <div class="cropper-container-wrap">
     <img id="cropperImage" alt="Recorte">
@@ -366,36 +409,6 @@
     <div class="actions">
       <button class="btn-danger" id="btnCancelCrop">Cancelar</button>
       <button class="btn-primary" id="btnApplyCrop">✂️ Extraer texto</button>
-    </div>
-  </div>
-</div>
-
-<!-- ============ MODO MULTI-RECORTE (doble zona) ============ -->
-<div id="multiWrap">
-  <div id="multiStage">
-    <img id="multiImage" alt="Documento">
-    <div class="crop-box" id="boxCite" data-tipo="cite">
-      <span class="box-label">CITE</span>
-      <div class="handle tl" data-h="tl"></div>
-      <div class="handle tr" data-h="tr"></div>
-      <div class="handle bl" data-h="bl"></div>
-      <div class="handle br" data-h="br"></div>
-      <div class="handle move" data-h="move"></div>
-    </div>
-    <div class="crop-box" id="boxDetalle" data-tipo="detalle">
-      <span class="box-label">DETALLE</span>
-      <div class="handle tl" data-h="tl"></div>
-      <div class="handle tr" data-h="tr"></div>
-      <div class="handle bl" data-h="bl"></div>
-      <div class="handle br" data-h="br"></div>
-      <div class="handle move" data-h="move"></div>
-    </div>
-  </div>
-  <div class="multi-bar">
-    <div class="hint-bar">Arrastra las cajas · mueve desde el centro · redimensiona desde las esquinas</div>
-    <div class="actions">
-      <button class="btn-danger" id="btnCancelMulti">Cancelar</button>
-      <button class="btn-success" id="btnApplyMulti">✂️ Extraer ambos textos</button>
     </div>
   </div>
 </div>
@@ -437,10 +450,10 @@
 
 <script>
 /* ============================================================
-   Estado
+   Estado global
    ============================================================ */
-const STORAGE_KEY = 'registros_docs_v4';
-const TYPES_KEY   = 'tipos_documento_v4';
+const STORAGE_KEY = 'registros_docs_v5';
+const TYPES_KEY   = 'tipos_documento_v5';
 
 const state = {
   stream: null,
@@ -450,19 +463,18 @@ const state = {
   ocrReady: false,
   ocrLoading: false,
   currentTarget: null,
-  currentMode: null,      // 'single' | 'double'
-  sourceImage: null,
+  currentMode: null,      // 'single' | 'lens'
   registros: JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'),
   tipos: JSON.parse(localStorage.getItem(TYPES_KEY) || 'null'),
   fecha: { day:1, month:0, year:new Date().getFullYear() },
   hora:  { hour:0, min:0 }
 };
 const $ = (id) => document.getElementById(id);
-const pad = n => String(n).padStart(2, '0');
+const pad = n => String(n).padStart(2,'0');
 const MESES_CORTOS = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
 
 /* ============================================================
-   Utilidades UI
+   UI helpers
    ============================================================ */
 function toast(msg, ms=2800){
   const t = $('toast'); t.textContent = msg; t.classList.add('show');
@@ -478,9 +490,12 @@ function updateBadge(target, val){
   else{ tag.textContent='vacío'; tag.className='tag empty'; }
 }
 function updateCount(){ $('countRegistros').textContent = state.registros.length; }
+function escapeHtml(s){
+  return String(s ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 
 /* ============================================================
-   TIPOS DE DOCUMENTO
+   Tipos de documento
    ============================================================ */
 const TIPOS_DEFAULT = ['Oficio','Memorándum','Carta','Informe','Solicitud','Resolución','Circular','Nota','Otro'];
 function loadTipos(){
@@ -506,7 +521,7 @@ $('tipo').addEventListener('change', (e)=>{
 });
 
 /* ============================================================
-   PICKER (fecha+hora en una fila)
+   Picker fecha + hora
    ============================================================ */
 function buildPickerCol(containerEl, colKey, items, renderItem, selectedIdx, onChange){
   const col = containerEl.querySelector(`[data-col="${colKey}"]`);
@@ -557,11 +572,11 @@ function initDateTimePicker(){
   state.hora.hour   = now.getHours();
   state.hora.min    = now.getMinutes();
 
-  buildPickerCol($('dateTimePicker'), 'day',   days,   v=>v,      state.fecha.day-1,  i=> state.fecha.day = days[i]);
-  buildPickerCol($('dateTimePicker'), 'month', months, v=>v.label, state.fecha.month,  i=> state.fecha.month = months[i].idx);
-  buildPickerCol($('dateTimePicker'), 'year',  years,  v=>v,      years.indexOf(now.getFullYear()), i=> state.fecha.year = years[i]);
-  buildPickerCol($('dateTimePicker'), 'hour',  hours,  v=>pad(v), state.hora.hour,    i=> state.hora.hour = hours[i]);
-  buildPickerCol($('dateTimePicker'), 'min',   mins,   v=>pad(v), state.hora.min,     i=> state.hora.min = mins[i]);
+  buildPickerCol($('dateTimePicker'), 'day',   days,   v=>v,       state.fecha.day-1, i=> state.fecha.day = days[i]);
+  buildPickerCol($('dateTimePicker'), 'month', months, v=>v.label, state.fecha.month, i=> state.fecha.month = months[i].idx);
+  buildPickerCol($('dateTimePicker'), 'year',  years,  v=>v,       years.indexOf(now.getFullYear()), i=> state.fecha.year = years[i]);
+  buildPickerCol($('dateTimePicker'), 'hour',  hours,  v=>pad(v),  state.hora.hour,  i=> state.hora.hour = hours[i]);
+  buildPickerCol($('dateTimePicker'), 'min',   mins,   v=>pad(v),  state.hora.min,   i=> state.hora.min = mins[i]);
 }
 
 function getFechaISO(){
@@ -571,32 +586,35 @@ function getFechaISO(){
 function getHoraHHMM(){
   return `${pad(state.hora.hour)}:${pad(state.hora.min)}`;
 }
-function fechaBonita(){
-  const f = state.fecha;
-  return `${pad(f.day)} ${MESES_CORTOS[f.month]} ${f.year}`;
-}
 
 /* ============================================================
-   Precarga OCR
+   OCR worker
    ============================================================ */
 async function preloadOCR(){
   if(state.ocrReady || state.ocrLoading) return;
   state.ocrLoading = true;
   try{
     state.ocrWorker = await Tesseract.createWorker('spa', 1, {logger:()=>{}});
-    await state.ocrWorker.setParameters({ tessedit_pageseg_mode:'6', preserve_interword_spaces:'1' });
     state.ocrReady = true;
   }catch(e){ console.warn('[OCR]',e); }
   finally{ state.ocrLoading = false; }
+}
+
+async function ensureOCR(){
+  if(state.ocrReady) return true;
+  setStatus('Cargando motor OCR (primera vez)...', true);
+  await preloadOCR();
+  if(!state.ocrReady){ setStatus('❌ No se pudo cargar OCR'); return false; }
+  return true;
 }
 
 /* ============================================================
    CÁMARA
    ============================================================ */
 async function openCamera(mode, target=null){
-  state.currentMode = mode;    // 'single' | 'double'
+  state.currentMode = mode;
   state.currentTarget = target;
-  $('camTitle').textContent = mode==='double'
+  $('camTitle').textContent = mode==='lens'
     ? 'Captura el documento completo'
     : (target==='cite' ? 'Encuadra el CITE' : 'Encuadra el detalle');
   try{
@@ -631,13 +649,506 @@ function capturePhoto(){
   const dataUrl = c.toDataURL('image/jpeg', 0.92);
   const mode = state.currentMode;
   closeCamera();
-
-  if(mode==='double') openMulti(dataUrl);
+  if(mode==='lens') openLens(dataUrl);
   else openCropper(dataUrl);
 }
 
 /* ============================================================
-   CROPPER simple (una zona)
+   MODO LENS — estado y render
+   ============================================================ */
+const lens = {
+  img: null,             // HTMLImageElement (original, ya reducida si aplica)
+  imgW: 0, imgH: 0,
+  canvas: null, ctx: null,
+  words: [],             // [{ text, x0,y0,x1,y1, lineId, group:'cite'|'detalle'|null }]
+  // transformación de vista (zoom/pan)
+  scale: 1, minScale: 0.2, maxScale: 8,
+  tx: 0, ty: 0,
+  // gestos
+  pointers: new Map(),
+  pinchStartDist: 0, pinchStartScale: 1, pinchStartMid: {x:0,y:0}, pinchStartTx:0, pinchStartTy:0,
+  panStart: null,
+  // selección con arrastre
+  drag: null,            // { x0,y0,x1,y1, mode:'cite'|'detalle', touched:Set }
+  currentMode: 'cite',
+  history: [],           // snapshots de groups
+  touchMargin: 4         // px extra en coordenadas de imagen
+};
+
+async function openLens(dataUrl){
+  $('lensWrap').classList.add('active');
+  $('lensLoading').classList.add('active');
+  $('lensStatus').textContent = 'Preparando…';
+
+  // Reset estado
+  lens.words = [];
+  lens.history = [];
+  lens.currentMode = 'cite';
+  setLensMode('cite');
+  updateSelCounts();
+
+  // Cargar imagen
+  const img = new Image();
+  img.src = dataUrl;
+  await img.decode();
+
+  // Reducir a 1600 px máx (manteniendo proporción) para velocidad OCR
+  const MAX = 1600;
+  const ratio = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
+  const w = Math.round(img.naturalWidth * ratio);
+  const h = Math.round(img.naturalHeight * ratio);
+
+  const off = document.createElement('canvas');
+  off.width = w; off.height = h;
+  off.getContext('2d').drawImage(img, 0, 0, w, h);
+
+  lens.img = off;
+  lens.imgW = w; lens.imgH = h;
+
+  // Canvas del visor (coordenadas CSS = coordenadas de imagen, se escala con transform)
+  const canvas = $('lensCanvas');
+  canvas.width = w; canvas.height = h;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  lens.canvas = canvas;
+  lens.ctx = canvas.getContext('2d');
+
+  // Ajuste inicial: caber en el stage
+  fitToStage();
+  bindLensGestures();
+  renderLens();
+
+  // OCR completo
+  if(!await ensureOCR()){
+    $('lensLoading').classList.remove('active');
+    return;
+  }
+  $('lensStatus').textContent = 'Analizando palabras…';
+  try {
+    const { data } = await state.ocrWorker.recognize(off, {}, { blocks: true });
+    buildWordsFromOCR(data);
+    $('lensStatus').textContent = lens.words.length
+      ? `${lens.words.length} palabras detectadas · toca o arrastra para seleccionar`
+      : 'No se detectaron palabras. Usa "Modo manual".';
+  } catch(err){
+    console.error(err);
+    $('lensStatus').textContent = '❌ Error al analizar. Usa "Modo manual".';
+  }
+  $('lensLoading').classList.remove('active');
+  renderLens();
+}
+
+function buildWordsFromOCR(data){
+  const words = [];
+  // Tesseract devuelve data.words con bbox si el output incluye esa info
+  // Usamos data.words cuando está disponible (Tesseract v5 lo trae por defecto)
+  const raw = data.words || [];
+  raw.forEach((w, i)=>{
+    if(!w.text || !w.text.trim()) return;
+    const b = w.bbox || {};
+    if(b.x0 == null) return;
+    words.push({
+      text: w.text,
+      x0: b.x0, y0: b.y0, x1: b.x1, y1: b.y1,
+      lineId: inferLineId(w),
+      group: null
+    });
+  });
+  // Inferir línea agrupando por rango de y
+  assignLineIds(words);
+  lens.words = words;
+}
+
+function inferLineId(w){
+  // Aproximación: usamos baseline.y0 si existe, si no el y0
+  return (w.baseline && w.baseline.y0 != null) ? w.baseline.y0 : w.bbox.y0;
+}
+
+function assignLineIds(words){
+  // Agrupa por y0 aproximado con tolerancia
+  const sorted = [...words].sort((a,b)=> a.y0 - b.y0);
+  let currentLine = 0, lastY = -999;
+  const tol = 10;
+  sorted.forEach(w=>{
+    if(Math.abs(w.y0 - lastY) > tol){ currentLine++; lastY = w.y0; }
+    w.lineId = currentLine;
+  });
+}
+
+/* ============================================================
+   Vista: transformación, pan, zoom
+   ============================================================ */
+function fitToStage(){
+  const stage = $('lensStage').getBoundingClientRect();
+  const sw = stage.width, sh = stage.height;
+  const iw = lens.imgW, ih = lens.imgH;
+  const scale = Math.min(sw/iw, sh/ih);
+  lens.minScale = scale * 0.9;
+  lens.scale = scale;
+  lens.tx = (sw - iw*scale)/2;
+  lens.ty = (sh - ih*scale)/2;
+  applyTransform();
+}
+function applyTransform(){
+  const c = lens.canvas;
+  c.style.transform = `translate(${lens.tx}px, ${lens.ty}px) scale(${lens.scale})`;
+}
+
+/* ============================================================
+   Render del canvas: imagen + resaltados
+   ============================================================ */
+function renderLens(){
+  const ctx = lens.ctx;
+  ctx.clearRect(0,0,lens.imgW, lens.imgH);
+  ctx.drawImage(lens.img, 0, 0);
+
+  // Contornos de palabras no asignadas
+  ctx.lineWidth = 1.2;
+  ctx.font = '10px sans-serif';
+  lens.words.forEach(w=>{
+    if(w.group) return;
+    ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+    ctx.strokeRect(w.x0, w.y0, w.x1-w.x0, w.y1-w.y0);
+  });
+  // Palabras asignadas: relleno según grupo
+  lens.words.forEach(w=>{
+    if(!w.group) return;
+    const fill = w.group==='cite' ? 'rgba(251,191,36,0.38)' : 'rgba(56,189,248,0.38)';
+    const stroke = w.group==='cite' ? '#fbbf24' : '#38bdf8';
+    ctx.fillStyle = fill;
+    ctx.fillRect(w.x0, w.y0, w.x1-w.x0, w.y1-w.y0);
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = 1.6;
+    ctx.strokeRect(w.x0, w.y0, w.x1-w.x0, w.y1-w.y0);
+  });
+}
+
+function updateSelCounts(){
+  const c = lens.words.filter(w=>w.group==='cite').length;
+  const d = lens.words.filter(w=>w.group==='detalle').length;
+  $('cntCite').textContent = c;
+  $('cntDetalle').textContent = d;
+}
+
+function setLensMode(mode){
+  lens.currentMode = mode;
+  $('modeCite').classList.toggle('active', mode==='cite');
+  $('modeDetalle').classList.toggle('active', mode==='detalle');
+}
+
+/* ============================================================
+   Coordenadas: pantalla → imagen
+   ============================================================ */
+function screenToImage(clientX, clientY){
+  const stage = $('lensStage').getBoundingClientRect();
+  const x = (clientX - stage.left - lens.tx) / lens.scale;
+  const y = (clientY - stage.top  - lens.ty) / lens.scale;
+  return { x, y };
+}
+
+/* ============================================================
+   Hit-testing y selección
+   ============================================================ */
+function pointInWord(px, py, w, margin){
+  const m = margin || 0;
+  return px >= w.x0 - m && px <= w.x1 + m && py >= w.y0 - m && py <= w.y1 + m;
+}
+
+function wordIndexAt(px, py){
+  for(let i=0;i<lens.words.length;i++){
+    if(pointInWord(px, py, lens.words[i], lens.touchMargin)) return i;
+  }
+  return -1;
+}
+
+function wordIndexesInLine(lineId){
+  const idx = [];
+  lens.words.forEach((w,i)=>{ if(w.lineId===lineId) idx.push(i); });
+  return idx;
+}
+
+function pushHistory(){
+  lens.history.push(lens.words.map(w=>w.group));
+  if(lens.history.length > 30) lens.history.shift();
+}
+
+function assignWords(indexes, mode){
+  if(!indexes.length) return;
+  pushHistory();
+  indexes.forEach(i=>{ lens.words[i].group = mode; });
+  updateSelCounts();
+  renderLens();
+}
+
+function unassignAll(){
+  pushHistory();
+  lens.words.forEach(w=> w.group = null);
+  updateSelCounts();
+  renderLens();
+}
+
+function undo(){
+  const snap = lens.history.pop();
+  if(!snap) return;
+  lens.words.forEach((w,i)=> w.group = snap[i] ?? null);
+  updateSelCounts();
+  renderLens();
+}
+
+/* ============================================================
+   Gestos: pan + pinch + selección
+   ============================================================ */
+function bindLensGestures(){
+  const stage = $('lensStage');
+  // Evitar rebinding
+  if(stage.dataset.bound) return;
+  stage.dataset.bound = '1';
+
+  const getPoint = (ev)=>{
+    const t = ev.touches ? ev.touches[0] : ev;
+    return { x: t.clientX, y: t.clientY };
+  };
+
+  function onStart(ev){
+    // Si hay 2+ dedos: pinch
+    if(ev.touches && ev.touches.length === 2){
+      ev.preventDefault();
+      const [a,b] = ev.touches;
+      lens.pointers.clear();
+      lens.drag = null;
+      lens.pinchStartDist = Math.hypot(a.clientX-b.clientX, a.clientY-b.clientY);
+      lens.pinchStartScale = lens.scale;
+      lens.pinchStartMid = { x:(a.clientX+b.clientX)/2, y:(a.clientY+b.clientY)/2 };
+      lens.pinchStartTx = lens.tx;
+      lens.pinchStartTy = lens.ty;
+      return;
+    }
+    if(ev.touches && ev.touches.length > 2) return;
+
+    // Un dedo: empezar drag de selección
+    const p = getPoint(ev);
+    const imgPt = screenToImage(p.x, p.y);
+    lens.drag = {
+      startScreen: { x:p.x, y:p.y },
+      startImg: imgPt,
+      currentScreen: { x:p.x, y:p.y },
+      currentImg: imgPt,
+      mode: lens.currentMode,
+      moved: false,
+      touched: new Set()
+    };
+    ev.preventDefault();
+  }
+
+  function onMove(ev){
+    // Pinch
+    if(ev.touches && ev.touches.length === 2){
+      ev.preventDefault();
+      const [a,b] = ev.touches;
+      const dist = Math.hypot(a.clientX-b.clientX, a.clientY-b.clientY);
+      const mid  = { x:(a.clientX+b.clientX)/2, y:(a.clientY+b.clientY)/2 };
+      const factor = dist / lens.pinchStartDist;
+      const newScale = Math.max(lens.minScale, Math.min(lens.maxScale, lens.pinchStartScale * factor));
+
+      // Mantener el punto medio fijo
+      const stage = $('lensStage').getBoundingClientRect();
+      const mx = lens.pinchStartMid.x - stage.left;
+      const my = lens.pinchStartMid.y - stage.top;
+      // Punto en coords de imagen bajo el mid original
+      const imgX = (mx - lens.pinchStartTx) / lens.pinchStartScale;
+      const imgY = (my - lens.pinchStartTy) / lens.pinchStartScale;
+
+      lens.scale = newScale;
+      // Re-centrar mid en coords de pantalla según el nuevo zoom, siguiendo el dedo
+      const curMx = mid.x - stage.left;
+      const curMy = mid.y - stage.top;
+      lens.tx = curMx - imgX * newScale;
+      lens.ty = curMy - imgY * newScale;
+      applyTransform();
+      return;
+    }
+
+    if(!lens.drag) return;
+    ev.preventDefault();
+    const p = getPoint(ev);
+    lens.drag.currentScreen = { x:p.x, y:p.y };
+    lens.drag.currentImg = screenToImage(p.x, p.y);
+    const dx = p.x - lens.drag.startScreen.x;
+    const dy = p.y - lens.drag.startScreen.y;
+    if(Math.hypot(dx,dy) > 6) lens.drag.moved = true;
+
+    // Resaltar provisional
+    if(lens.drag.moved){
+      // Recorrer palabras que intersectan el segmento y agregarlas
+      applyDragSelection();
+    }
+  }
+
+  function onEnd(ev){
+    if(ev.touches && ev.touches.length > 0) return; // aún hay dedos
+    const d = lens.drag;
+    lens.drag = null;
+
+    if(!d) return;
+
+    if(!d.moved){
+      // TOQUE simple o DOBLE
+      const now = Date.now();
+      const last = stage._lastTap || 0;
+      const lastPt = stage._lastTapPt || { x:0, y:0 };
+      const near = Math.hypot(d.startScreen.x - lastPt.x, d.startScreen.y - lastPt.y) < 30;
+      if(now - last < 320 && near){
+        // DOBLE TOQUE: seleccionar línea entera
+        const idx = wordIndexAt(d.startImg.x, d.startImg.y);
+        if(idx >= 0){
+          const lineId = lens.words[idx].lineId;
+          const indexes = wordIndexesInLine(lineId);
+          assignWords(indexes, lens.currentMode);
+          stage._lastTap = 0;
+          return;
+        }
+      }
+      // TOQUE simple
+      const idx = wordIndexAt(d.startImg.x, d.startImg.y);
+      if(idx >= 0){
+        assignWords([idx], lens.currentMode);
+      } else {
+        // Toque en zona vacía: si esa palabra ya estaba, no cambia; si tocas el fondo no hace nada
+      }
+      stage._lastTap = now;
+      stage._lastTapPt = d.startScreen;
+    } else {
+      // El drag ya aplicó selecciones
+      updateSelCounts();
+      renderLens();
+    }
+  }
+
+  function onCancel(){
+    lens.drag = null;
+  }
+
+  stage.addEventListener('touchstart', onStart, {passive:false});
+  stage.addEventListener('touchmove', onMove, {passive:false});
+  stage.addEventListener('touchend', onEnd);
+  stage.addEventListener('touchcancel', onCancel);
+
+  stage.addEventListener('mousedown', onStart);
+  stage.addEventListener('mousemove', (ev)=>{
+    // Solo drag con botón presionado
+    if(!lens.drag) return;
+    onMove(ev);
+  });
+  stage.addEventListener('mouseup', onEnd);
+  stage.addEventListener('mouseleave', onCancel);
+
+  // Zoom con Ctrl+rueda (escritorio)
+  stage.addEventListener('wheel', (ev)=>{
+    if(!ev.ctrlKey && !ev.metaKey) return;
+    ev.preventDefault();
+    const factor = ev.deltaY < 0 ? 1.15 : 1/1.15;
+    const newScale = Math.max(lens.minScale, Math.min(lens.maxScale, lens.scale * factor));
+    const stageRect = stage.getBoundingClientRect();
+    const mx = ev.clientX - stageRect.left;
+    const my = ev.clientY - stageRect.top;
+    const imgX = (mx - lens.tx) / lens.scale;
+    const imgY = (my - lens.ty) / lens.scale;
+    lens.scale = newScale;
+    lens.tx = mx - imgX * newScale;
+    lens.ty = my - imgY * newScale;
+    applyTransform();
+  }, {passive:false});
+}
+
+/* Selección por arrastre: palabras cuyo bbox intersecta el segmento */
+function applyDragSelection(){
+  const d = lens.drag;
+  if(!d) return;
+  const a = d.startImg, b = d.currentImg;
+  // Expandir segmento a un "área" (rectángulo entre a y b)
+  const xmin = Math.min(a.x,b.x), xmax = Math.max(a.x,b.x);
+  const ymin = Math.min(a.y,b.y), ymax = Math.max(a.y,b.y);
+
+  let added = false;
+  lens.words.forEach((w,i)=>{
+    if(w.group === d.mode) return;
+    // Intersección de rectángulos
+    const inter = !(w.x1 < xmin || w.x0 > xmax || w.y1 < ymin || w.y0 > ymax);
+    if(inter && !d.touched.has(i)){
+      d.touched.add(i);
+      w.group = d.mode;
+      added = true;
+    }
+  });
+  if(added){
+    updateSelCounts();
+    renderLens();
+  }
+}
+
+/* ============================================================
+   Extraer selección → campos
+   ============================================================ */
+function orderWords(words){
+  // Agrupa por lineId, luego ordena por x0
+  const byLine = new Map();
+  words.forEach(w=>{
+    if(!byLine.has(w.lineId)) byLine.set(w.lineId, []);
+    byLine.get(w.lineId).push(w);
+  });
+  const lines = [...byLine.entries()].sort((a,b)=> a[0]-b[0]);
+  const out = [];
+  lines.forEach(([_, ws])=>{
+    ws.sort((x,y)=> x.x0 - y.x0);
+    out.push(ws);
+  });
+  return out;
+}
+
+function extractSelection(){
+  const citeWords = lens.words.filter(w=>w.group==='cite');
+  const detWords  = lens.words.filter(w=>w.group==='detalle');
+
+  if(!citeWords.length && !detWords.length){
+    toast('No has seleccionado ninguna palabra');
+    return;
+  }
+
+  // CITE: unir todas con espacio (en orden de lectura)
+  if(citeWords.length){
+    const lines = orderWords(citeWords);
+    const txt = lines.map(l => l.map(w=>w.text).join(' ')).join(' ');
+    $('cite').value = txt.trim();
+    updateBadge('cite', txt);
+  }
+  // DETALLE: agregar con salto de línea si ya había algo
+  if(detWords.length){
+    const lines = orderWords(detWords);
+    const txt = lines.map(l => l.map(w=>w.text).join(' ')).join('\n');
+    const ta = $('detalle');
+    ta.value = ta.value ? (ta.value.trimEnd() + '\n' + txt) : txt;
+    updateBadge('contenido', ta.value);
+  }
+
+  $('preview').src = lens.img.toDataURL('image/jpeg', 0.85);
+  $('preview').style.display = 'block';
+  toast(`✅ Extraído: ${citeWords.length} → CITE, ${detWords.length} → DETALLE`);
+  closeLens();
+}
+
+function closeLens(){
+  $('lensWrap').classList.remove('active');
+  $('lensLoading').classList.remove('active');
+  lens.drag = null;
+  lens.pointers.clear();
+  lens.words = [];
+  lens.history = [];
+  lens.canvas = null;
+  lens.ctx = null;
+}
+
+/* ============================================================
+   Cropper manual (respaldo)
    ============================================================ */
 function openCropper(dataUrl){
   $('cropTargetLabel').textContent = state.currentTarget==='cite'
@@ -668,179 +1179,29 @@ async function applyCropAndOCR(){
   $('preview').style.display='block';
   const target = state.currentTarget;
   closeCropper();
-  await runOCR(dataUrl, target);
-}
 
-/* ============================================================
-   MODO MULTI — dos cajas en una sola imagen
-   ============================================================ */
-const multi = {
-  img: null,          // HTMLImageElement
-  stage: null,
-  boxes: {},          // { cite: {x,y,w,h}, detalle:{x,y,w,h} }
-  drag: null
-};
-
-function openMulti(dataUrl){
-  state.sourceImage = dataUrl;
-  const img = $('multiImage');
-  img.src = dataUrl;
-  $('multiWrap').classList.add('active');
-
-  img.onload = ()=>{
-    multi.img = img;
-    multi.stage = $('multiStage');
-    // Esperar layout para medir
-    requestAnimationFrame(()=>{
-      const rect = img.getBoundingClientRect();
-      const w = rect.width, h = rect.height;
-      // Cajas por defecto: CITE arriba, DETALLE en el medio
-      multi.boxes.cite    = { x: w*0.10, y: h*0.06, w: w*0.45, h: h*0.08 };
-      multi.boxes.detalle = { x: w*0.08, y: h*0.20, w: w*0.84, h: h*0.30 };
-      applyBoxStyle('cite');
-      applyBoxStyle('detalle');
-    });
-  };
-}
-
-function applyBoxStyle(key){
-  const b = multi.boxes[key];
-  const el = key==='cite' ? $('boxCite') : $('boxDetalle');
-  el.style.left   = b.x + 'px';
-  el.style.top    = b.y + 'px';
-  el.style.width  = b.w + 'px';
-  el.style.height = b.h + 'px';
-}
-
-/* Interacción táctil / mouse */
-(function bindMulti(){
-  function getPoint(ev){
-    const t = ev.touches ? ev.touches[0] : ev;
-    return { x: t.clientX, y: t.clientY };
-  }
-  function startDrag(ev, key, handle){
-    ev.preventDefault(); ev.stopPropagation();
-    const p = getPoint(ev);
-    multi.drag = {
-      key, handle,
-      startX: p.x, startY: p.y,
-      orig: { ...multi.boxes[key] }
-    };
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('touchmove', onMove, {passive:false});
-    document.addEventListener('mouseup', endDrag);
-    document.addEventListener('touchend', endDrag);
-  }
-  function onMove(ev){
-    if(!multi.drag) return;
-    ev.preventDefault();
-    const p = getPoint(ev);
-    const dx = p.x - multi.drag.startX;
-    const dy = p.y - multi.drag.startY;
-    const o = multi.drag.orig;
-    const stageRect = multi.stage.getBoundingClientRect();
-    const imgRect = multi.img.getBoundingClientRect();
-    // Origen de la imagen dentro del stage (centrada)
-    const offX = imgRect.left - stageRect.left;
-    const offY = imgRect.top  - stageRect.top;
-    const maxW = imgRect.width, maxH = imgRect.height;
-
-    let nb = { ...o };
-    const h = multi.drag.handle;
-    const MIN = 30;
-
-    if(h==='move'){
-      nb.x = o.x + dx;
-      nb.y = o.y + dy;
+  if(!await ensureOCR()) return;
+  setStatus('Reconociendo texto...', true);
+  try{
+    const { data:{ text } } = await state.ocrWorker.recognize(dataUrl);
+    const limpio = text.trim().replace(/\n{3,}/g,'\n\n');
+    if(!limpio){ setStatus('⚠️ No se detectó texto'); toast('No se detectó texto'); return; }
+    if(target==='cite'){
+      const primera = limpio.split(/\n/)[0].trim();
+      $('cite').value = primera; updateBadge('cite', primera);
     } else {
-      if(h.includes('l')){ nb.x = o.x + dx; nb.w = o.w - dx; }
-      if(h.includes('r')){ nb.w = o.w + dx; }
-      if(h.includes('t')){ nb.y = o.y + dy; nb.h = o.h - dy; }
-      if(h.includes('b')){ nb.h = o.h + dy; }
-      if(nb.w < MIN){ nb.w = MIN; }
-      if(nb.h < MIN){ nb.h = MIN; }
+      const ta = $('detalle');
+      ta.value = ta.value ? ta.value + '\n' + limpio : limpio;
+      updateBadge('contenido', ta.value);
     }
-    // Limitar dentro de la imagen
-    if(nb.x < 0){ nb.x = 0; }
-    if(nb.y < 0){ nb.y = 0; }
-    if(nb.x + nb.w > maxW){ nb.w = maxW - nb.x; }
-    if(nb.y + nb.h > maxH){ nb.h = maxH - nb.y; }
-
-    multi.boxes[multi.drag.key] = nb;
-    applyBoxStyle(multi.drag.key);
+    setStatus(`✅ Texto extraído (${limpio.length} caracteres)`);
+    toast('Texto reconocido');
+  }catch(err){
+    console.error(err);
+    setStatus('❌ Error al reconocer texto');
+    toast('Error OCR: ' + err.message, 4000);
   }
-  function endDrag(){
-    multi.drag = null;
-    document.removeEventListener('mousemove', onMove);
-    document.removeEventListener('touchmove', onMove);
-    document.removeEventListener('mouseup', endDrag);
-    document.removeEventListener('touchend', endDrag);
-  }
-  // Bind en cada handle de cada caja
-  document.querySelectorAll('#multiWrap .crop-box').forEach(box=>{
-    const key = box.id === 'boxCite' ? 'cite' : 'detalle';
-    box.querySelectorAll('.handle').forEach(h=>{
-      h.addEventListener('mousedown', e=> startDrag(e, key, h.dataset.h));
-      h.addEventListener('touchstart', e=> startDrag(e, key, h.dataset.h), {passive:false});
-    });
-    // Tocar el cuerpo de la caja = mover
-    box.addEventListener('mousedown', e=>{
-      if(e.target.classList.contains('handle')) return;
-      startDrag(e, key, 'move');
-    });
-    box.addEventListener('touchstart', e=>{
-      if(e.target.classList.contains('handle')) return;
-      startDrag(e, key, 'move');
-    }, {passive:false});
-  });
-})();
-
-function closeMulti(){
-  $('multiWrap').classList.remove('active');
-  document.getElementById('multiImage').src = '';
-  multi.boxes = {};
 }
-
-/* Recorta un rectángulo del HTMLImageElement y devuelve canvas */
-function cropFromImage(imgEl, box){
-  // Escala: la imagen se muestra a imgRect.w pero su tamaño natural es naturalWidth
-  const rect = imgEl.getBoundingClientRect();
-  const sx = imgEl.naturalWidth  / rect.width;
-  const sy = imgEl.naturalHeight / rect.height;
-  const c = document.createElement('canvas');
-  c.width  = Math.round(box.w * sx);
-  c.height = Math.round(box.h * sy);
-  const ctx = c.getContext('2d');
-  ctx.drawImage(
-    imgEl,
-    Math.round(box.x * sx), Math.round(box.y * sy),
-    Math.round(box.w * sx), Math.round(box.h * sy),
-    0, 0, c.width, c.height
-  );
-  return c;
-}
-
-async function applyMultiAndOCR(){
-  if(!multi.img) return;
-  const canvasCite    = cropFromImage(multi.img, multi.boxes.cite);
-  const canvasDetalle = cropFromImage(multi.img, multi.boxes.detalle);
-
-  const dataCite    = preprocessForOCR(canvasCite).toDataURL('image/jpeg', 0.92);
-  const dataDetalle = preprocessForOCR(canvasDetalle).toDataURL('image/jpeg', 0.92);
-
-  $('preview').src = dataDetalle;
-  $('preview').style.display = 'block';
-
-  closeMulti();
-
-  // Procesamos en serie (un solo worker) para no cargar dos OCR a la vez
-  await runOCR(dataCite, 'cite');
-  await runOCR(dataDetalle, 'contenido');
-}
-
-/* ============================================================
-   Preprocesado y OCR
-   ============================================================ */
 function preprocessForOCR(sourceCanvas){
   const c = document.createElement('canvas');
   c.width = sourceCanvas.width; c.height = sourceCanvas.height;
@@ -857,38 +1218,8 @@ function preprocessForOCR(sourceCanvas){
   return c;
 }
 
-async function runOCR(imageDataUrl, target){
-  if(!state.ocrReady){
-    setStatus('Cargando motor OCR (primera vez)...', true);
-    await preloadOCR();
-    if(!state.ocrReady){ setStatus('❌ No se pudo cargar OCR'); return; }
-  }
-  setStatus('Reconociendo texto...', true);
-  try{
-    const { data:{ text } } = await state.ocrWorker.recognize(imageDataUrl);
-    const limpio = text.trim().replace(/\n{3,}/g,'\n\n');
-    if(!limpio){ setStatus('⚠️ No se detectó texto'); toast('No se detectó texto en la región'); return; }
-
-    if(target==='cite'){
-      const primera = limpio.split(/\n/)[0].trim();
-      $('cite').value = primera;
-      updateBadge('cite', primera);
-    } else {
-      const ta = $('detalle');
-      ta.value = ta.value ? ta.value + '\n' + limpio : limpio;
-      updateBadge('contenido', ta.value);
-    }
-    setStatus(`✅ Texto extraído (${limpio.length} caracteres)`);
-    toast('Texto reconocido');
-  }catch(err){
-    console.error(err);
-    setStatus('❌ Error al reconocer texto');
-    toast('Error OCR: ' + err.message, 4000);
-  }
-}
-
 /* ============================================================
-   Galería (una zona)
+   Galería (una zona manual)
    ============================================================ */
 $('btnGallery').addEventListener('click', ()=>{
   const t = prompt('¿Para qué campo es esta imagen? Escribe "cite" o "contenido":', 'contenido');
@@ -905,7 +1236,7 @@ $('fileInput').addEventListener('change', (e)=>{
 });
 
 /* ============================================================
-   Guardar
+   Guardar registro
    ============================================================ */
 function guardar(){
   const tipo          = $('tipo').value.trim();
@@ -913,8 +1244,8 @@ function guardar(){
   const cite          = $('cite').value.trim();
   const detalle       = $('detalle').value.trim();
   const medidas       = $('medidas').value.trim();
-  const fecha         = getFechaISO();
-  const hora          = getHoraHHMM();
+  const fecha = getFechaISO();
+  const hora  = getHoraHHMM();
 
   if(!tipo || !entradaSalida){ toast('Complete Tipo y Entrada/Salida'); return; }
   if(!cite && !detalle){ toast('Debe registrar al menos CITE o Detalle'); return; }
@@ -933,15 +1264,11 @@ function guardar(){
   $('preview').style.display='none';
   updateBadge('cite',''); updateBadge('contenido','');
   setStatus('');
-  // Refrescar a la hora actual
-  const now = new Date();
-  state.hora.hour = now.getHours(); state.hora.min = now.getMinutes();
-  state.fecha.day = now.getDate(); state.fecha.month = now.getMonth(); state.fecha.year = now.getFullYear();
   initDateTimePicker();
 }
 
 /* ============================================================
-   Modal registros (Excel)
+   Modal registros
    ============================================================ */
 function openList(){ renderTabla(''); $('listModal').classList.add('active'); setTimeout(()=>$('searchInput').focus(), 100); }
 function closeList(){ $('listModal').classList.remove('active'); }
@@ -964,9 +1291,7 @@ function renderTabla(filtro){
 
   const tbody = $('xlsBody');
   const empty = $('emptyList');
-  if(!filtrados.length){
-    tbody.innerHTML=''; empty.style.display='block'; return;
-  }
+  if(!filtrados.length){ tbody.innerHTML=''; empty.style.display='block'; return; }
   empty.style.display='none';
 
   tbody.innerHTML = filtrados.map((r,i)=>`
@@ -995,13 +1320,10 @@ function renderTabla(filtro){
   });
 }
 
-function escapeHtml(s){
-  return String(s ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
 $('searchInput').addEventListener('input', e=> renderTabla(e.target.value));
 
 /* ============================================================
-   Excel
+   Exportar Excel
    ============================================================ */
 function exportarExcel(){
   if(!state.registros.length){ toast('No hay registros para exportar'); return; }
@@ -1025,7 +1347,7 @@ function exportarExcel(){
 /* ============================================================
    Eventos
    ============================================================ */
-$('btnScanDouble').addEventListener('click', ()=> openCamera('double'));
+$('btnScanLens').addEventListener('click', ()=> openCamera('lens'));
 document.querySelectorAll('.dest-picker button').forEach(btn=>{
   btn.addEventListener('click', ()=> openCamera('single', btn.dataset.target));
 });
@@ -1034,12 +1356,41 @@ $('btnShutter').addEventListener('click', capturePhoto);
 $('btnSwitchCam').addEventListener('click', switchCamera);
 $('btnCancelCrop').addEventListener('click', closeCropper);
 $('btnApplyCrop').addEventListener('click', applyCropAndOCR);
-$('btnCancelMulti').addEventListener('click', closeMulti);
-$('btnApplyMulti').addEventListener('click', applyMultiAndOCR);
 $('btnGuardar').addEventListener('click', guardar);
 $('btnVerRegistros').addEventListener('click', openList);
 $('btnCloseList').addEventListener('click', closeList);
 $('btnExportar').addEventListener('click', exportarExcel);
+
+// Controles Lens
+$('modeCite').addEventListener('click', ()=> setLensMode('cite'));
+$('modeDetalle').addEventListener('click', ()=> setLensMode('detalle'));
+$('btnLensUndo').addEventListener('click', undo);
+$('btnLensReset').addEventListener('click', ()=> { unassignAll(); toast('Selección reiniciada'); });
+$('btnLensExtract').addEventListener('click', extractSelection);
+$('btnLensCancel').addEventListener('click', closeLens);
+$('btnLensManual').addEventListener('click', ()=>{
+  closeLens();
+  // Preguntamos a qué campo
+  const t = prompt('¿Para qué campo? "cite" o "contenido":', 'contenido');
+  if(!t) return;
+  state.currentTarget = t.trim().toLowerCase().startsWith('c') ? 'cite' : 'contenido';
+  // Reusamos la última imagen del Lens
+  if(lens.img){ openCropper(lens.img.toDataURL('image/jpeg', 0.92)); }
+});
+$('btnLensZoomIn').addEventListener('click', ()=> zoomBy(1.4));
+$('btnLensZoomOut').addEventListener('click', ()=> zoomBy(1/1.4));
+
+function zoomBy(factor){
+  const stageRect = $('lensStage').getBoundingClientRect();
+  const cx = stageRect.width/2, cy = stageRect.height/2;
+  const newScale = Math.max(lens.minScale, Math.min(lens.maxScale, lens.scale * factor));
+  const imgX = (cx - lens.tx) / lens.scale;
+  const imgY = (cy - lens.ty) / lens.scale;
+  lens.scale = newScale;
+  lens.tx = cx - imgX * newScale;
+  lens.ty = cy - imgY * newScale;
+  applyTransform();
+}
 
 $('cite').addEventListener('input', e=> updateBadge('cite', e.target.value));
 $('detalle').addEventListener('input', e=> updateBadge('contenido', e.target.value));
@@ -1056,7 +1407,6 @@ window.addEventListener('beforeunload', ()=>{
   updateCount();
   updateBadge('cite',''); updateBadge('contenido','');
   initDateTimePicker();
-
   if('requestIdleCallback' in window) requestIdleCallback(preloadOCR, {timeout:3000});
   else setTimeout(preloadOCR, 1500);
 })();
