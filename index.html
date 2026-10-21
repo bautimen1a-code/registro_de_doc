@@ -4,193 +4,294 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#000000">
-<title>Registro de Documentación con OCR</title>
+<title>Registro de Documentación</title>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.css">
 <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <style>
-  :root {
-    --primary: #2563eb;
-    --primary-dark: #1e40af;
-    --success: #16a34a;
-    --danger: #dc2626;
-    --bg: #f1f5f9;
-    --card: #ffffff;
-    --text: #1e293b;
-    --muted: #64748b;
-    --border: #e2e8f0;
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  :root{
+    --primary:#2563eb; --primary-dark:#1e40af; --success:#16a34a; --danger:#dc2626;
+    --warn:#f59e0b; --bg:#f1f5f9; --card:#fff; --text:#1e293b; --muted:#64748b;
+    --border:#e2e8f0;
+    --safe-top: env(safe-area-inset-top,0px);
+    --safe-bottom: env(safe-area-inset-bottom,0px);
   }
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { margin: 0; padding: 0; height: 100%; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: var(--bg); color: var(--text);
-    padding: 16px; padding-bottom: calc(80px + var(--safe-bottom));
-    max-width: 640px; margin-inline: auto;
-    overflow-x: hidden;
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg);color:var(--text);
+    padding:16px;padding-bottom:calc(80px + var(--safe-bottom));
+    max-width:640px;margin-inline:auto;overflow-x:hidden;
   }
-  h1 { font-size: 1.35rem; margin: 0 0 16px; text-align: center; }
-  .card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
-  label { display: block; font-size: .85rem; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
-  input, select, textarea {
-    width: 100%; padding: 12px; font-size: 1rem; border: 1px solid var(--border);
-    border-radius: 8px; background: #f8fafc; color: var(--text); outline: none;
+  h1{font-size:1.3rem;margin:0 0 14px;text-align:center;}
+  .card{background:var(--card);border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);}
+  label{display:block;font-size:.82rem;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.02em;}
+  input,select,textarea{
+    width:100%;padding:12px;font-size:1rem;border:1px solid var(--border);
+    border-radius:8px;background:#f8fafc;color:var(--text);outline:none;
+    font-family:inherit;
   }
-  input:focus, select:focus, textarea:focus { border-color: var(--primary); background: #fff; }
-  .field { margin-bottom: 14px; }
-  .row { display: flex; gap: 12px; }
-  .row > .field { flex: 1; }
-  button { font-family: inherit; font-size: 1rem; font-weight: 600; cursor: pointer; border: none; border-radius: 10px; padding: 14px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform .1s, background .15s; }
-  button:active { transform: scale(.98); }
-  button:disabled { opacity: .55; cursor: not-allowed; }
-  .btn-primary { background: var(--primary); color: #fff; }
-  .btn-success { background: var(--success); color: #fff; }
-  .btn-danger { background: var(--danger); color: #fff; }
-  .btn-outline { background: #fff; color: var(--primary); border: 2px solid var(--primary); }
-  .btn-group { display: flex; gap: 10px; }
-  .btn-group button { flex: 1; }
+  input:focus,select:focus,textarea:focus{border-color:var(--primary);background:#fff;}
+  .field{margin-bottom:14px;}
+  .row{display:flex;gap:12px;}
+  .row>.field{flex:1;min-width:0;}
+  button{
+    font-family:inherit;font-size:1rem;font-weight:600;cursor:pointer;
+    border:none;border-radius:10px;padding:14px;width:100%;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    transition:transform .1s,background .15s;
+  }
+  button:active{transform:scale(.98);}
+  button:disabled{opacity:.55;cursor:not-allowed;}
+  .btn-primary{background:var(--primary);color:#fff;}
+  .btn-success{background:var(--success);color:#fff;}
+  .btn-danger{background:var(--danger);color:#fff;}
+  .btn-warn{background:var(--warn);color:#fff;}
+  .btn-outline{background:#fff;color:var(--primary);border:2px solid var(--primary);}
+  .btn-ghost{background:#f1f5f9;color:var(--text);}
+  .btn-sm{padding:9px 12px;font-size:.85rem;width:auto;}
+  .btn-group{display:flex;gap:10px;}
+  .btn-group button{flex:1;}
 
-  /* ====== Cámara tipo Google Lens ====== */
-  #cameraWrap {
-    display: none; position: fixed; inset: 0; background: #000; z-index: 1000;
+  /* Etiqueta de estado del OCR por zona */
+  .ocr-row{
+    display:flex;gap:8px;align-items:center;justify-content:space-between;
+    margin-bottom:8px;
   }
-  #cameraWrap.active { display: block; }
+  .ocr-row .tag{
+    font-size:.75rem;font-weight:700;padding:4px 10px;border-radius:99px;
+    background:#e0e7ff;color:#3730a3;
+  }
+  .ocr-row .tag.ok{background:#dcfce7;color:#166534;}
+  .ocr-row .tag.empty{background:#f1f5f9;color:#64748b;}
 
-  #video {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;   /* llena la pantalla sin deformar */
-    background: #000;
+  /* Cámara */
+  #cameraWrap{display:none;position:fixed;inset:0;background:#000;z-index:1000;}
+  #cameraWrap.active{display:block;}
+  #video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;}
+  #frameGuide{
+    position:absolute;inset:8% 6%;border:2px dashed rgba(255,255,255,.75);
+    border-radius:12px;pointer-events:none;
+    box-shadow:0 0 0 9999px rgba(0,0,0,.25);display:none;
+  }
+  #cameraWrap.guide #frameGuide{display:block;}
+  .cam-top{
+    position:absolute;top:0;left:0;right:0;
+    padding:calc(var(--safe-top) + 12px) 16px 12px;
+    display:flex;justify-content:space-between;align-items:center;
+    background:linear-gradient(to bottom,rgba(0,0,0,.6),transparent);z-index:2;
+  }
+  .cam-top .cam-title{color:#fff;font-size:.9rem;font-weight:600;opacity:.9;}
+  .icon-btn{
+    width:44px;height:44px;border-radius:50%;
+    background:rgba(0,0,0,.45);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.2rem;padding:0;
+  }
+  .cam-bottom{
+    position:absolute;bottom:0;left:0;right:0;
+    padding:20px 24px calc(var(--safe-bottom) + 20px);
+    display:flex;justify-content:space-between;align-items:center;
+    background:linear-gradient(to top,rgba(0,0,0,.75),transparent);z-index:2;gap:20px;
+  }
+  .shutter{
+    flex:0 0 auto;width:74px;height:74px;border-radius:50%;background:#fff;
+    border:5px solid rgba(255,255,255,.5);padding:0;
+    box-shadow:0 0 0 3px #000 inset;
   }
 
-  /* Guía visual tipo Lens (marco de encuadre del documento) */
-  #frameGuide {
-    position: absolute; inset: 8% 6%;
-    border: 2px dashed rgba(255,255,255,.75);
-    border-radius: 12px;
-    pointer-events: none;
-    box-shadow: 0 0 0 9999px rgba(0,0,0,.25);
-    display: none;
+  /* Selector de destino del OCR (aparece antes de abrir cámara) */
+  .dest-picker{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;
   }
-  #cameraWrap.guide #frameGuide { display: block; }
+  .dest-picker button{flex-direction:column;padding:16px;line-height:1.2;font-size:.95rem;}
+  .dest-picker button small{font-weight:400;font-size:.72rem;opacity:.85;margin-top:4px;}
 
-  /* Barra superior con botón cerrar */
-  .cam-top {
-    position: absolute; top: 0; left: 0; right: 0;
-    padding: calc(var(--safe-top) + 12px) 16px 12px;
-    display: flex; justify-content: space-between; align-items: center;
-    background: linear-gradient(to bottom, rgba(0,0,0,.6), transparent);
-    z-index: 2;
+  /* Cropper */
+  #cropperWrap{display:none;position:fixed;inset:0;background:#000;z-index:1001;flex-direction:column;}
+  #cropperWrap.active{display:flex;}
+  #cropperWrap .cropper-container-wrap{flex:1;min-height:0;overflow:hidden;position:relative;}
+  #cropperImage{max-width:100%;max-height:100%;display:block;}
+  .crop-bar{padding:14px 14px calc(var(--safe-bottom) + 14px);background:#111;display:flex;gap:10px;flex-direction:column;}
+  .crop-bar .target-label{
+    color:#fbbf24;font-size:.8rem;font-weight:700;text-align:center;
+    padding-bottom:6px;text-transform:uppercase;letter-spacing:.05em;
   }
-  .cam-top .cam-title { color: #fff; font-size: .9rem; font-weight: 600; opacity: .9; }
-  .icon-btn {
-    width: 44px; height: 44px; border-radius: 50%;
-    background: rgba(0,0,0,.45); color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.2rem; padding: 0;
-  }
+  .crop-bar .actions{display:flex;gap:10px;}
+  .crop-bar .actions button{flex:1;}
 
-  /* Controles inferiores — flotantes y siempre visibles */
-  .cam-bottom {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    padding: 20px 24px calc(var(--safe-bottom) + 20px);
-    display: flex; justify-content: space-between; align-items: center;
-    background: linear-gradient(to top, rgba(0,0,0,.75), transparent);
-    z-index: 2;
-    gap: 20px;
-  }
-  .shutter {
-    flex: 0 0 auto;
-    width: 74px; height: 74px;
-    border-radius: 50%;
-    background: #fff;
-    border: 5px solid rgba(255,255,255,.5);
-    padding: 0;
-    box-shadow: 0 0 0 3px #000 inset;
-  }
-  .shutter:active { background: #e2e8f0; }
+  /* Preview */
+  #preview{max-width:100%;border-radius:8px;display:none;margin-top:6px;}
 
-  /* ====== Cropper ====== */
-  #cropperWrap { display: none; position: fixed; inset: 0; background: #000; z-index: 1001; flex-direction: column; }
-  #cropperWrap.active { display: flex; }
-  #cropperWrap .cropper-container-wrap { flex: 1; min-height: 0; overflow: hidden; position: relative; }
-  #cropperImage { max-width: 100%; max-height: 100%; display: block; }
-  .crop-bar {
-    padding: 14px 14px calc(var(--safe-bottom) + 14px);
-    background: #111; display: flex; gap: 10px;
+  /* Spinner */
+  .spinner{
+    display:inline-block;width:18px;height:18px;border:3px solid #fff3;
+    border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;
   }
-  .crop-bar button { flex: 1; }
+  @keyframes spin{to{transform:rotate(360deg);}}
 
-  /* ====== Preview y estados ====== */
-  #preview { max-width: 100%; border-radius: 8px; display: none; margin-top: 10px; }
-  .spinner { display: inline-block; width: 18px; height: 18px; border: 3px solid #fff3; border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .status { font-size: .85rem; color: var(--muted); margin-top: 8px; text-align: center; min-height: 18px; }
-  .toast {
-    position: fixed; bottom: calc(20px + var(--safe-bottom)); left: 50%;
-    transform: translateX(-50%) translateY(120%);
-    background: var(--text); color: #fff; padding: 12px 22px; border-radius: 10px;
-    font-size: .9rem; transition: transform .3s; z-index: 2000; max-width: 90%;
+  /* Toast */
+  .toast{
+    position:fixed;bottom:calc(20px + var(--safe-bottom));left:50%;
+    transform:translateX(-50%) translateY(120%);
+    background:var(--text);color:#fff;padding:12px 22px;border-radius:10px;
+    font-size:.9rem;transition:transform .3s;z-index:2000;max-width:90%;
+    text-align:center;
   }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .hint { font-size: .78rem; color: var(--muted); margin-top: 4px; }
+  .toast.show{transform:translateX(-50%) translateY(0);}
+
+  /* Lista de registros (modal fullscreen) */
+  #listModal{
+    display:none;position:fixed;inset:0;background:var(--bg);z-index:1500;
+    flex-direction:column;
+  }
+  #listModal.active{display:flex;}
+  #listModal .list-header{
+    padding:calc(var(--safe-top) + 14px) 16px 14px;
+    background:#fff;border-bottom:1px solid var(--border);
+    display:flex;justify-content:space-between;align-items:center;gap:10px;
+  }
+  #listModal .list-header h2{font-size:1.1rem;margin:0;}
+  #listModal .list-body{
+    flex:1;overflow-y:auto;padding:12px;padding-bottom:calc(20px + var(--safe-bottom));
+  }
+  .reg-item{
+    background:#fff;border-radius:10px;padding:12px;margin-bottom:10px;
+    box-shadow:0 1px 2px rgba(0,0,0,.06);
+  }
+  .reg-item h3{font-size:1rem;margin:0 0 4px;}
+  .reg-item .meta{font-size:.78rem;color:var(--muted);margin-bottom:6px;display:flex;flex-wrap:wrap;gap:8px;}
+  .reg-item .meta span{background:#f1f5f9;padding:2px 8px;border-radius:99px;}
+  .reg-item p{font-size:.85rem;margin:6px 0;color:#334155;white-space:pre-wrap;max-height:5em;overflow:hidden;}
+  .reg-item .actions{display:flex;gap:8px;margin-top:8px;}
+  .reg-item .actions button{flex:1;padding:8px;font-size:.8rem;}
+
+  .empty-state{text-align:center;color:var(--muted);padding:40px 20px;font-size:.9rem;}
+
+  .hint{font-size:.78rem;color:var(--muted);margin-top:4px;}
 </style>
 </head>
 <body>
 
 <h1>📋 Registro de Documentación</h1>
 
+<!-- ================== FORMULARIO ================== -->
 <div class="card">
+
+  <!-- Tipo de documento + Nro documento -->
   <div class="row">
     <div class="field">
-      <label for="cite">Nro. CITE *</label>
-      <input id="cite" type="text" placeholder="Ej: CITE-2024-001" autocomplete="off">
+      <label for="tipo">Tipo de documento *</label>
+      <input id="tipo" list="tiposList" placeholder="Selecciona o escribe">
+      <datalist id="tiposList">
+        <option>Oficio</option><option>Memorándum</option><option>Carta</option>
+        <option>Informe</option><option>Solicitud</option><option>Resolución</option>
+        <option>Circular</option><option>Nota</option><option>Otro</option>
+      </datalist>
     </div>
     <div class="field">
-      <label for="correlativo">Nro. Correlativo *</label>
-      <input id="correlativo" type="text" placeholder="Ej: 0001" autocomplete="off">
+      <label for="nroDoc">Nro. de documento *</label>
+      <input id="nroDoc" type="text" placeholder="Ej: 0001" autocomplete="off">
+    </div>
+  </div>
+  <p class="hint" style="margin-top:-8px;margin-bottom:14px;">
+    💡 Para administrar tipos y que queden guardados: <a href="#" id="btnManageTypes">gestionar tipos</a>
+  </p>
+
+  <!-- CITE / CONTENIDO: doble OCR -->
+  <div class="field">
+    <div class="ocr-row">
+      <label style="margin:0;">CITE extraído por OCR</label>
+      <span class="tag empty" id="tagCite">vacío</span>
+    </div>
+    <input id="cite" type="text" placeholder="Ej: CITE-2024-001" autocomplete="off">
+  </div>
+
+  <!-- Detalle (extracto del contenido) -->
+  <div class="field">
+    <div class="ocr-row">
+      <label style="margin:0;">Detalle / contenido</label>
+      <span class="tag empty" id="tagContenido">vacío</span>
+    </div>
+    <textarea id="detalle" rows="5" placeholder="El texto reconocido aparecerá aquí..."></textarea>
+  </div>
+
+  <!-- Escaneo: dos zonas independientes -->
+  <div class="field">
+    <label>Escanear con cámara</label>
+    <div class="dest-picker">
+      <button class="btn-primary" data-target="cite">
+        🎯 CITE
+        <small>recorta solo el nro. de CITE</small>
+      </button>
+      <button class="btn-primary" data-target="contenido">
+        📝 CONTENIDO
+        <small>recorta el párrafo de detalle</small>
+      </button>
+    </div>
+    <div class="btn-group" style="margin-top:8px;">
+      <button id="btnGallery" class="btn-ghost" style="flex:1;">
+        🖼️ Galería
+      </button>
+    </div>
+    <input id="fileInput" type="file" accept="image/*" style="display:none">
+    <img id="preview" alt="Última captura">
+    <div class="status" id="status" style="font-size:.85rem;color:var(--muted);margin-top:8px;text-align:center;min-height:18px;"></div>
+  </div>
+
+  <!-- Entrada/salida + Hora -->
+  <div class="row">
+    <div class="field">
+      <label for="entradaSalida">Entrada / Salida *</label>
+      <select id="entradaSalida">
+        <option value="">—</option>
+        <option value="Entrada">Entrada</option>
+        <option value="Salida">Salida</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="hora">Hora *</label>
+      <input id="hora" type="time">
     </div>
   </div>
 
-  <div class="field">
-    <label for="tipo">Tipo de Documento *</label>
-    <select id="tipo">
-      <option value="">— Seleccionar —</option>
-      <option>Oficio</option><option>Memorándum</option><option>Carta</option>
-      <option>Informe</option><option>Solicitud</option><option>Resolución</option>
-      <option>Circular</option><option>Nota</option><option>Otro</option>
-    </select>
+  <!-- Fecha (ruleta nativa del móvil) + Medidas -->
+  <div class="row">
+    <div class="field">
+      <label for="fecha">Fecha *</label>
+      <input id="fecha" type="date">
+    </div>
+    <div class="field">
+      <label for="medidas">Medidas tomadas</label>
+      <input id="medidas" type="text" placeholder="Ej: 3 folios, 2 anexos">
+    </div>
   </div>
 
-  <div class="field">
-    <label>Texto extraído del documento</label>
-    <button id="btnScan" class="btn-primary">📷 Escanear documento</button>
-    <button id="btnGallery" class="btn-outline" style="margin-top:8px">🖼️ Subir imagen de galería</button>
-    <input id="fileInput" type="file" accept="image/*" style="display:none">
-    <p class="hint">Motor OCR precargado · elige solo la región del texto para mayor velocidad y precisión.</p>
-    <img id="preview" alt="Región seleccionada">
-    <div id="status" class="status"></div>
-  </div>
-
-  <div class="field">
-    <label for="textoOCR">Contenido (editable)</label>
-    <textarea id="textoOCR" rows="6" placeholder="El texto reconocido aparecerá aquí..."></textarea>
-  </div>
-
-  <button id="btnGuardar" class="btn-success">💾 Guardar Registro</button>
+  <button id="btnGuardar" class="btn-success">💾 Guardar registro</button>
 </div>
 
-<!-- Cámara -->
+<!-- ================== ACCIONES ================== -->
+<div class="card">
+  <div class="btn-group">
+    <button id="btnVerRegistros" class="btn-outline">📚 Ver registros</button>
+    <button id="btnExportar" class="btn-warn">📊 Exportar Excel</button>
+  </div>
+  <p class="hint" style="text-align:center;margin-top:10px;">
+    Registros guardados localmente: <strong id="countRegistros">0</strong>
+  </p>
+</div>
+
+<!-- ================== CÁMARA ================== -->
 <div id="cameraWrap">
   <video id="video" autoplay playsinline muted></video>
   <div id="frameGuide"></div>
   <div class="cam-top">
     <button class="icon-btn" id="btnCancelCam" aria-label="Cerrar">✕</button>
-    <span class="cam-title">Encuadra el documento</span>
+    <span class="cam-title" id="camTitle">Encuadra el CITE</span>
     <button class="icon-btn" id="btnSwitchCam" aria-label="Cambiar cámara">🔄</button>
   </div>
   <div class="cam-bottom">
@@ -200,15 +301,29 @@
   </div>
 </div>
 
-<!-- Cropper -->
+<!-- ================== CROPPER ================== -->
 <div id="cropperWrap">
   <div class="cropper-container-wrap">
     <img id="cropperImage" alt="Recorte">
   </div>
   <div class="crop-bar">
-    <button class="btn-danger" id="btnCancelCrop">Cancelar</button>
-    <button class="btn-primary" id="btnApplyCrop">✂️ Extraer texto</button>
+    <div class="target-label" id="cropTargetLabel">ZONA A RECORTAR</div>
+    <div class="actions">
+      <button class="btn-danger" id="btnCancelCrop">Cancelar</button>
+      <button class="btn-primary" id="btnApplyCrop">✂️ Extraer texto</button>
+    </div>
   </div>
+</div>
+
+<!-- ================== LISTA DE REGISTROS ================== -->
+<div id="listModal">
+  <div class="list-header">
+    <h2>Registros</h2>
+    <div style="display:flex;gap:8px;">
+      <button class="btn-ghost btn-sm" id="btnCloseList">✕</button>
+    </div>
+  </div>
+  <div class="list-body" id="listBody"></div>
 </div>
 
 <div id="toast" class="toast"></div>
@@ -217,63 +332,112 @@
 /* ============================================================
    Estado
    ============================================================ */
+const STORAGE_KEY = 'registros_docs_v2';
+const TYPES_KEY   = 'tipos_documento';
+
 const state = {
   stream: null,
   cropper: null,
   facingMode: 'environment',
-  ocrWorker: null,      // worker Tesseract precargado
+  ocrWorker: null,
   ocrReady: false,
   ocrLoading: false,
-  registros: JSON.parse(localStorage.getItem('registros_docs') || '[]')
+  currentTarget: null,          // 'cite' | 'contenido'
+  sourceImage: null,            // dataURL capturada o cargada
+  registros: JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'),
+  tipos: JSON.parse(localStorage.getItem(TYPES_KEY) || 'null')
 };
 const $ = (id) => document.getElementById(id);
 
 /* ============================================================
-   Utilidades UI
+   UI helpers
    ============================================================ */
 function toast(msg, ms = 2800) {
-  const t = $('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._t);
+  const t = $('toast'); t.textContent = msg;
+  t.classList.add('show'); clearTimeout(t._t);
   t._t = setTimeout(() => t.classList.remove('show'), ms);
 }
 function setStatus(msg, loading = false) {
   $('status').innerHTML = loading ? `<span class="spinner"></span> ${msg}` : msg;
 }
+function updateBadge(target, val) {
+  const tag = target === 'cite' ? $('tagCite') : $('tagContenido');
+  if (!tag) return;
+  if (val && val.trim()) { tag.textContent = 'listo'; tag.className = 'tag ok'; }
+  else { tag.textContent = 'vacío'; tag.className = 'tag empty'; }
+}
+function updateCount() {
+  $('countRegistros').textContent = state.registros.length;
+}
+function pad(n) { return String(n).padStart(2, '0'); }
+function todayISO() {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+function nowHHMM() {
+  const d = new Date();
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
 
 /* ============================================================
-   PRECARGA DEL MOTOR OCR (arranca al abrir la página)
-   Esto es lo que hace que se sienta "rápido" como Lens.
+   Gestión de tipos de documento (módulo aparte)
+   ============================================================ */
+function loadTipos() {
+  const dl = $('tiposList');
+  const defaults = ['Oficio','Memorándum','Carta','Informe','Solicitud','Resolución','Circular','Nota','Otro'];
+  const tipos = state.tipos || defaults;
+  dl.innerHTML = '';
+  tipos.forEach(t => {
+    const o = document.createElement('option');
+    o.value = t; o.textContent = t;
+    dl.appendChild(o);
+  });
+}
+$('btnManageTypes').addEventListener('click', (e) => {
+  e.preventDefault();
+  const defaults = ['Oficio','Memorándum','Carta','Informe','Solicitud','Resolución','Circular','Nota','Otro'];
+  const actual = (state.tipos || defaults).join(', ');
+  const input = prompt('Tipos de documento (separados por coma):', actual);
+  if (input === null) return;
+  const nuevos = input.split(',').map(s => s.trim()).filter(Boolean);
+  if (!nuevos.length) { toast('Debe haber al menos un tipo'); return; }
+  state.tipos = nuevos;
+  localStorage.setItem(TYPES_KEY, JSON.stringify(nuevos));
+  loadTipos();
+  toast('Tipos actualizados');
+});
+
+/* ============================================================
+   Precarga del OCR
    ============================================================ */
 async function preloadOCR() {
   if (state.ocrReady || state.ocrLoading) return;
   state.ocrLoading = true;
   try {
-    state.ocrWorker = await Tesseract.createWorker('spa', 1, {
-      logger: () => {} // silencioso durante precarga
-    });
-    // Ajustes que aceleran y mejoran OCR en documentos
+    state.ocrWorker = await Tesseract.createWorker('spa', 1, { logger: () => {} });
     await state.ocrWorker.setParameters({
-      tessedit_pageseg_mode: '6',          // asume bloque uniforme de texto
+      tessedit_pageseg_mode: '6',
       preserve_interword_spaces: '1'
     });
     state.ocrReady = true;
-    console.log('[OCR] Motor listo');
+    console.log('[OCR] listo');
   } catch (e) {
-    console.warn('[OCR] No se pudo precargar', e);
+    console.warn('[OCR] fallo precarga', e);
   } finally {
     state.ocrLoading = false;
   }
 }
 
 /* ============================================================
-   CÁMARA (resolución moderada = menos lag)
+   CÁMARA
    ============================================================ */
-async function openCamera() {
-  const video = $('video');
+async function openCamera(target) {
+  state.currentTarget = target;
+  $('camTitle').textContent = target === 'cite'
+    ? 'Encuadra el número de CITE'
+    : 'Encuadra el contenido / detalle';
+
   try {
-    // Resolución ideal 1280x720 → suficiente para OCR y fluido en gama media
     state.stream = await navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: { ideal: state.facingMode },
@@ -283,10 +447,10 @@ async function openCamera() {
       },
       audio: false
     });
-    video.srcObject = state.stream;
-    await video.play();
+    const v = $('video');
+    v.srcObject = state.stream;
+    await v.play();
     $('cameraWrap').classList.add('active', 'guide');
-    // Precarga el OCR en paralelo si aún no está listo
     preloadOCR();
   } catch (err) {
     console.error(err);
@@ -295,10 +459,7 @@ async function openCamera() {
 }
 
 function closeCamera() {
-  if (state.stream) {
-    state.stream.getTracks().forEach(t => t.stop());
-    state.stream = null;
-  }
+  if (state.stream) { state.stream.getTracks().forEach(t => t.stop()); state.stream = null; }
   $('video').srcObject = null;
   $('cameraWrap').classList.remove('active');
 }
@@ -306,17 +467,16 @@ function closeCamera() {
 async function switchCamera() {
   state.facingMode = state.facingMode === 'environment' ? 'user' : 'environment';
   closeCamera();
-  await openCamera();
+  await openCamera(state.currentTarget);
 }
 
 function capturePhoto() {
-  const video = $('video');
-  if (!video.videoWidth) { toast('La cámara aún no está lista'); return; }
-  const canvas = document.createElement('canvas');
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  canvas.getContext('2d').drawImage(video, 0, 0);
-  const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+  const v = $('video');
+  if (!v.videoWidth) { toast('La cámara aún no está lista'); return; }
+  const c = document.createElement('canvas');
+  c.width = v.videoWidth; c.height = v.videoHeight;
+  c.getContext('2d').drawImage(v, 0, 0);
+  const dataUrl = c.toDataURL('image/jpeg', 0.92);
   closeCamera();
   openCropper(dataUrl);
 }
@@ -325,6 +485,11 @@ function capturePhoto() {
    CROPPER
    ============================================================ */
 function openCropper(dataUrl) {
+  state.sourceImage = dataUrl;
+  $('cropTargetLabel').textContent = state.currentTarget === 'cite'
+    ? '✂️ Recortando para → CITE'
+    : '✂️ Recortando para → CONTENIDO';
+
   const img = $('cropperImage');
   img.src = dataUrl;
   $('cropperWrap').classList.add('active');
@@ -332,16 +497,9 @@ function openCropper(dataUrl) {
   img.onload = () => {
     if (state.cropper) state.cropper.destroy();
     state.cropper = new Cropper(img, {
-      viewMode: 1,
-      autoCropArea: 0.7,
-      movable: true,
-      zoomable: true,
-      scalable: false,
-      responsive: true,
-      background: false,
-      guides: true,
-      cropBoxMovable: true,
-      cropBoxResizable: true
+      viewMode: 1, autoCropArea: 0.7, movable: true, zoomable: true,
+      scalable: false, responsive: true, background: false, guides: true,
+      cropBoxMovable: true, cropBoxResizable: true
     });
   };
 }
@@ -356,30 +514,28 @@ async function applyCropAndOCR() {
   const canvas = state.cropper.getCroppedCanvas({
     maxWidth: 1400, maxHeight: 1400, fillColor: '#fff'
   });
-
-  // Preprocesado: escala de grises + contraste para acelerar el OCR
   const processed = preprocessForOCR(canvas);
-  const croppedDataUrl = processed.toDataURL('image/jpeg', 0.92);
+  const dataUrl = processed.toDataURL('image/jpeg', 0.92);
 
-  $('preview').src = croppedDataUrl;
+  $('preview').src = dataUrl;
   $('preview').style.display = 'block';
 
+  const target = state.currentTarget;
   closeCropper();
-  await runOCR(croppedDataUrl);
+  await runOCR(dataUrl, target);
 }
 
-/* Escala de grises + ajuste de contraste simple (rápido en canvas) */
+/* Preprocesado: escala de grises + umbral suave */
 function preprocessForOCR(sourceCanvas) {
   const c = document.createElement('canvas');
-  c.width = sourceCanvas.width;
-  c.height = sourceCanvas.height;
+  c.width = sourceCanvas.width; c.height = sourceCanvas.height;
   const ctx = c.getContext('2d', { willReadFrequently: true });
   ctx.drawImage(sourceCanvas, 0, 0);
   const img = ctx.getImageData(0, 0, c.width, c.height);
   const d = img.data;
   for (let i = 0; i < d.length; i += 4) {
-    const g = (d[i]*0.299 + d[i+1]*0.587 + d[i+2]*0.114);
-    const v = g < 110 ? 0 : g > 160 ? 255 : g; // ligero umbral suave
+    const g = d[i]*0.299 + d[i+1]*0.587 + d[i+2]*0.114;
+    const v = g < 110 ? 0 : g > 160 ? 255 : g;
     d[i] = d[i+1] = d[i+2] = v;
   }
   ctx.putImageData(img, 0, 0);
@@ -387,20 +543,30 @@ function preprocessForOCR(sourceCanvas) {
 }
 
 /* ============================================================
-   OCR (usa el worker precargado)
+   OCR
    ============================================================ */
-async function runOCR(imageDataUrl) {
+async function runOCR(imageDataUrl, target) {
   if (!state.ocrReady) {
     setStatus('Cargando motor OCR (primera vez)...', true);
     await preloadOCR();
-    if (!state.ocrReady) { setStatus('❌ No se pudo cargar OCR', false); return; }
+    if (!state.ocrReady) { setStatus('❌ No se pudo cargar OCR'); return; }
   }
   setStatus('Reconociendo texto...', true);
   try {
     const { data: { text } } = await state.ocrWorker.recognize(imageDataUrl);
-    const limpio = text.trim().replace(/\n{3,}/g, '\n\n');
-    const ta = $('textoOCR');
-    ta.value = ta.value ? ta.value + '\n' + limpio : limpio;
+    let limpio = text.trim().replace(/\n{3,}/g, '\n\n');
+    if (!limpio) { setStatus('⚠️ No se detectó texto'); toast('No se detectó texto en la región'); return; }
+
+    if (target === 'cite') {
+      // El CITE normalmente es una línea con formato XXX-YYYY-NNNN
+      const primera = limpio.split(/\n/)[0].trim();
+      $('cite').value = primera;
+      updateBadge('cite', primera);
+    } else {
+      const ta = $('detalle');
+      ta.value = ta.value ? ta.value + '\n' + limpio : limpio;
+      updateBadge('contenido', ta.value);
+    }
     setStatus(`✅ Texto extraído (${limpio.length} caracteres)`);
     toast('Texto reconocido');
   } catch (err) {
@@ -411,9 +577,16 @@ async function runOCR(imageDataUrl) {
 }
 
 /* ============================================================
-   Galería (respaldo si la cámara no está disponible)
+   Galería
    ============================================================ */
-$('btnGallery').addEventListener('click', () => $('fileInput').click());
+$('btnGallery').addEventListener('click', () => {
+  // Preguntamos al usuario para qué zona es la imagen
+  const t = prompt('¿Para qué campo es esta imagen? Escribe "cite" o "contenido":', 'contenido');
+  if (!t) return;
+  const target = t.trim().toLowerCase().startsWith('c') ? 'cite' : 'contenido';
+  state.currentTarget = target;
+  $('fileInput').click();
+});
 $('fileInput').addEventListener('change', (e) => {
   const f = e.target.files?.[0];
   if (!f) return;
@@ -424,48 +597,166 @@ $('fileInput').addEventListener('change', (e) => {
 });
 
 /* ============================================================
-   Guardar
+   Guardar registro
    ============================================================ */
 function guardar() {
-  const cite = $('cite').value.trim();
-  const correlativo = $('correlativo').value.trim();
-  const tipo = $('tipo').value;
-  const texto = $('textoOCR').value.trim();
-  if (!cite || !correlativo || !tipo) { toast('Complete CITE, Correlativo y Tipo'); return; }
+  const tipo         = $('tipo').value.trim();
+  const nroDoc       = $('nroDoc').value.trim();
+  const cite         = $('cite').value.trim();
+  const detalle      = $('detalle').value.trim();
+  const entradaSalida= $('entradaSalida').value;
+  const hora         = $('hora').value;
+  const fecha        = $('fecha').value;
+  const medidas      = $('medidas').value.trim();
 
-  state.registros.push({ id: Date.now(), cite, correlativo, tipo, texto, fecha: new Date().toISOString() });
-  localStorage.setItem('registros_docs', JSON.stringify(state.registros));
+  if (!tipo || !nroDoc || !entradaSalida || !hora || !fecha) {
+    toast('Complete todos los campos obligatorios (*)');
+    return;
+  }
+  if (!cite && !detalle) {
+    toast('Debe registrar al menos CITE o Detalle');
+    return;
+  }
+
+  const reg = {
+    id: Date.now(),
+    tipo, nroDoc, cite, detalle, entradaSalida, hora, fecha, medidas,
+    creadoEn: new Date().toISOString()
+  };
+  state.registros.push(reg);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.registros));
+  updateCount();
   toast('✅ Registro guardado');
 
-  $('cite').value = ''; $('correlativo').value = ''; $('tipo').value = '';
-  $('textoOCR').value = ''; $('preview').style.display = 'none'; setStatus('');
+  // Limpieza
+  ['nroDoc','cite','detalle','hora','medidas'].forEach(id => $(id).value = '');
+  $('tipo').value = '';
+  $('entradaSalida').value = '';
+  $('preview').style.display = 'none';
+  updateBadge('cite', ''); updateBadge('contenido', '');
+  setStatus('');
+  // Dejamos la fecha de hoy por defecto por conveniencia
+  $('fecha').value = todayISO();
+}
+
+/* ============================================================
+   Lista de registros
+   ============================================================ */
+function openList() { renderList(); $('listModal').classList.add('active'); }
+function closeList() { $('listModal').classList.remove('active'); }
+
+function renderList() {
+  const body = $('listBody');
+  if (!state.registros.length) {
+    body.innerHTML = '<div class="empty-state">📭 Aún no hay registros guardados.</div>';
+    return;
+  }
+  const rows = [...state.registros].reverse();
+  body.innerHTML = rows.map(r => `
+    <div class="reg-item" data-id="${r.id}">
+      <h3>${escapeHtml(r.tipo)} · Nro. ${escapeHtml(r.nroDoc)}</h3>
+      <div class="meta">
+        <span>📅 ${escapeHtml(r.fecha)}</span>
+        <span>🕒 ${escapeHtml(r.hora)}</span>
+        <span>${r.entradaSalida === 'Entrada' ? '⬇️ Entrada' : '⬆️ Salida'}</span>
+        ${r.cite ? `<span>🏷️ ${escapeHtml(r.cite)}</span>` : ''}
+        ${r.medidas ? `<span>📏 ${escapeHtml(r.medidas)}</span>` : ''}
+      </div>
+      ${r.detalle ? `<p>${escapeHtml(r.detalle)}</p>` : ''}
+      <div class="actions">
+        <button class="btn-danger" data-act="del">🗑️ Eliminar</button>
+      </div>
+    </div>
+  `).join('');
+
+  body.querySelectorAll('[data-act="del"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const id = Number(e.target.closest('.reg-item').dataset.id);
+      if (!confirm('¿Eliminar este registro?')) return;
+      state.registros = state.registros.filter(x => x.id !== id);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.registros));
+      updateCount();
+      renderList();
+    });
+  });
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+
+/* ============================================================
+   Exportar a Excel
+   ============================================================ */
+function exportarExcel() {
+  if (!state.registros.length) { toast('No hay registros para exportar'); return; }
+
+  const datos = state.registros.map(r => ({
+    'Tipo de documento': r.tipo,
+    'Nro. de documento': r.nroDoc,
+    'CITE': r.cite,
+    'Detalle': r.detalle,
+    'Entrada/Salida': r.entradaSalida,
+    'Hora': r.hora,
+    'Fecha': r.fecha,
+    'Medidas tomadas': r.medidas
+  }));
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.json_to_sheet(datos);
+  // Anchos de columna cómodos
+  ws['!cols'] = [
+    { wch: 18 }, { wch: 16 }, { wch: 20 }, { wch: 40 },
+    { wch: 14 }, { wch: 8 },  { wch: 12 }, { wch: 24 }
+  ];
+  XLSX.utils.book_append_sheet(wb, ws, 'Registros');
+
+  const nombre = `registros_${new Date().toISOString().slice(0,10)}.xlsx`;
+  XLSX.writeFile(wb, nombre);
+  toast('📊 Excel generado');
 }
 
 /* ============================================================
    Eventos
    ============================================================ */
-$('btnScan').addEventListener('click', openCamera);
+document.querySelectorAll('.dest-picker button').forEach(btn => {
+  btn.addEventListener('click', () => openCamera(btn.dataset.target));
+});
 $('btnCancelCam').addEventListener('click', closeCamera);
 $('btnShutter').addEventListener('click', capturePhoto);
 $('btnSwitchCam').addEventListener('click', switchCamera);
 $('btnCancelCrop').addEventListener('click', closeCropper);
 $('btnApplyCrop').addEventListener('click', applyCropAndOCR);
 $('btnGuardar').addEventListener('click', guardar);
+$('btnVerRegistros').addEventListener('click', openList);
+$('btnCloseList').addEventListener('click', closeList);
+$('btnExportar').addEventListener('click', exportarExcel);
 
-$('cite').addEventListener('blur', () => {
-  const corr = $('correlativo');
-  if (corr.value) return;
-  const m = $('cite').value.match(/(\d+)\s*$/);
-  if (m) corr.value = m[1].padStart(4, '0');
-});
+// Mantener sincronizado el badge cuando se edita a mano
+$('cite').addEventListener('input', e => updateBadge('cite', e.target.value));
+$('detalle').addEventListener('input', e => updateBadge('contenido', e.target.value));
 
+// Detener stream si se cierra
 window.addEventListener('beforeunload', () => {
   if (state.stream) state.stream.getTracks().forEach(t => t.stop());
 });
 
-// Precarga el OCR en cuanto el navegador esté libre
-if ('requestIdleCallback' in window) requestIdleCallback(preloadOCR, { timeout: 3000 });
-else setTimeout(preloadOCR, 1500);
+/* ============================================================
+   Init
+   ============================================================ */
+(function init() {
+  loadTipos();
+  updateCount();
+  updateBadge('cite', '');
+  updateBadge('contenido', '');
+  $('fecha').value = todayISO();
+  $('hora').value  = nowHHMM();
+
+  if ('requestIdleCallback' in window) requestIdleCallback(preloadOCR, { timeout: 3000 });
+  else setTimeout(preloadOCR, 1500);
+})();
 </script>
 </body>
 </html>
