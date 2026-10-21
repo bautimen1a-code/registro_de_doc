@@ -2,14 +2,11 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
 <title>Registro de Documentación con OCR</title>
 
-<!-- Cropper.js para selección de región -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.css">
 <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.js"></script>
-
-<!-- Tesseract.js para OCR -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
 
 <style>
@@ -25,12 +22,15 @@
     --border: #e2e8f0;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; height: 100%; }
   body {
-    margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: var(--bg); color: var(--text); padding: 16px; padding-bottom: 80px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text);
+    padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom));
     max-width: 640px; margin-inline: auto;
   }
   h1 { font-size: 1.35rem; margin: 0 0 16px; text-align: center; }
+
   .card {
     background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 16px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
@@ -39,12 +39,12 @@
   input, select, textarea {
     width: 100%; padding: 12px; font-size: 1rem; border: 1px solid var(--border);
     border-radius: 8px; background: #f8fafc; color: var(--text); outline: none;
-    transition: border-color .15s;
   }
   input:focus, select:focus, textarea:focus { border-color: var(--primary); background: #fff; }
   .field { margin-bottom: 14px; }
   .row { display: flex; gap: 12px; }
   .row > .field { flex: 1; }
+
   button {
     font-family: inherit; font-size: 1rem; font-weight: 600; cursor: pointer;
     border: none; border-radius: 10px; padding: 14px; width: 100%;
@@ -54,46 +54,106 @@
   button:active { transform: scale(0.98); }
   button:disabled { opacity: 0.55; cursor: not-allowed; }
   .btn-primary { background: var(--primary); color: #fff; }
-  .btn-primary:hover:not(:disabled) { background: var(--primary-dark); }
   .btn-success { background: var(--success); color: #fff; }
   .btn-danger  { background: var(--danger); color: #fff; }
-  .btn-outline { background: #fff; color: var(--primary); border: 2px solid var(--primary); }
-  .btn-group { display: flex; gap: 10px; }
-  .btn-group button { flex: 1; }
 
-  /* Cámara */
-  #cameraWrap { display: none; position: fixed; inset: 0; background: #000; z-index: 1000; flex-direction: column; }
+  /* ================= CÁMARA ================= */
+  #cameraWrap {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 1000;
+    /* Usar dvh para respetar la barra del navegador en móvil */
+    height: 100dvh;
+    height: 100vh; /* fallback */
+    flex-direction: column;
+  }
   #cameraWrap.active { display: flex; }
-  #video { flex: 1; width: 100%; object-fit: cover; }
-  .camera-bar {
-    padding: 14px; background: #000; display: flex; justify-content: space-between; align-items: center;
+
+  /* Zona del video: ocupa el espacio disponible SIN desbordar */
+  .video-slot {
+    flex: 1 1 0;      /* crece y se encoge, base 0 */
+    min-height: 0;     /* CLAVE: permite encoger dentro de flex */
+    position: relative;
+    overflow: hidden;
+    background: #000;
   }
-  .camera-bar button { width: auto; padding: 12px 20px; }
-  .shutter {
-    width: 68px; height: 68px; border-radius: 50%; background: #fff;
-    border: 5px solid #94a3b8; padding: 0;
+  #video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* contain: nunca recorta ni estira fuera */
+    background: #000;
   }
 
-  /* Cropper */
-  #cropperWrap { display: none; position: fixed; inset: 0; background: #000; z-index: 1001; flex-direction: column; }
+  /* Barra inferior de botones: fija, nunca se encoge */
+  .camera-bar {
+    flex: 0 0 auto;                 /* NO crece ni se encoge */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom));
+    background: #000;
+    border-top: 1px solid #222;
+    z-index: 2;
+  }
+  .camera-bar button {
+    width: auto;
+    min-width: 64px;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+  }
+  .shutter {
+    width: 68px !important;
+    height: 68px;
+    min-width: 68px !important;
+    border-radius: 50% !important;
+    background: #fff !important;
+    border: 5px solid #94a3b8 !important;
+    padding: 0 !important;
+    flex: 0 0 auto;
+  }
+
+  /* ================= CROPPER ================= */
+  #cropperWrap {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 1001;
+    height: 100dvh;
+    height: 100vh;
+    flex-direction: column;
+  }
   #cropperWrap.active { display: flex; }
+  .cropper-container {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+  }
   #cropperImage { max-width: 100%; max-height: 100%; display: block; }
-  .cropper-container { flex: 1; overflow: hidden; }
-  .crop-bar { padding: 14px; background: #111; display: flex; gap: 10px; }
+  .crop-bar {
+    flex: 0 0 auto;
+    padding: 14px 18px;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom));
+    background: #111;
+    display: flex;
+    gap: 10px;
+  }
   .crop-bar button { flex: 1; }
 
-  /* Preview + resultado */
+  /* ================= OTROS ================= */
   #preview { max-width: 100%; border-radius: 8px; display: none; margin-top: 10px; }
   .spinner {
-    display: inline-block; width: 18px; height: 18px; border: 3px solid #fff3;
-    border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite;
+    display: inline-block; width: 16px; height: 16px; border: 3px solid #2563eb33;
+    border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite;
+    vertical-align: middle;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .status { font-size: 0.85rem; color: var(--muted); margin-top: 8px; text-align: center; }
-  .badge {
-    display: inline-block; background: #dbeafe; color: var(--primary-dark);
-    padding: 3px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 600;
-  }
+  .status { font-size: 0.85rem; color: var(--muted); margin-top: 8px; text-align: center; min-height: 20px; }
   .toast {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(120%);
     background: var(--text); color: #fff; padding: 12px 22px; border-radius: 10px;
@@ -107,7 +167,6 @@
 
 <h1>📋 Registro de Documentación</h1>
 
-<!-- Formulario -->
 <div class="card">
   <div class="row">
     <div class="field">
@@ -138,8 +197,8 @@
 
   <div class="field">
     <label>Texto extraído del documento</label>
-    <button id="btnScan" class="btn-primary">📷 Escanear documento con cámara</button>
-    <p class="hint">Se abrirá la cámara. Podrás seleccionar la región del texto que te interesa antes de extraerlo.</p>
+    <button id="btnScan" class="btn-primary">📷 Escanear documento</button>
+    <p class="hint">Selecciona solo el área con texto para un OCR rápido y preciso.</p>
     <img id="preview" alt="Región seleccionada">
     <div id="status" class="status"></div>
   </div>
@@ -154,11 +213,13 @@
 
 <!-- Cámara -->
 <div id="cameraWrap">
-  <video id="video" autoplay playsinline muted></video>
+  <div class="video-slot">
+    <video id="video" autoplay playsinline muted></video>
+  </div>
   <div class="camera-bar">
-    <button class="btn-danger" id="btnCancelCam">✕</button>
-    <button class="shutter" id="btnShutter"></button>
-    <button class="btn-outline" id="btnSwitchCam" style="background:#fff">🔄</button>
+    <button class="btn-danger" id="btnCancelCam">Cancelar</button>
+    <button class="shutter" id="btnShutter" aria-label="Capturar"></button>
+    <button class="btn-primary" id="btnSwitchCam">Invertir</button>
   </div>
 </div>
 
@@ -177,17 +238,19 @@
 
 <script>
 /* ============================================================
-   Estado y utilidades
+   Estado
    ============================================================ */
 const state = {
   stream: null,
   cropper: null,
-  facingMode: 'environment', // cámara trasera por defecto
-  capturedImage: null,
+  facingMode: 'environment',
+  tesseractWorker: null,   // se reutiliza entre escaneos
   registros: JSON.parse(localStorage.getItem('registros_docs') || '[]')
 };
 
 const $ = (id) => document.getElementById(id);
+const MAX_CAPTURE_WIDTH = 1280; // capturar a 1280px (suficiente para documentos, rápido)
+const MAX_OCR_WIDTH = 1400;     // redimensionar antes de OCR
 
 function toast(msg, ms = 2800) {
   const t = $('toast');
@@ -196,29 +259,52 @@ function toast(msg, ms = 2800) {
   clearTimeout(t._t);
   t._t = setTimeout(() => t.classList.remove('show'), ms);
 }
-
 function setStatus(msg, loading = false) {
-  $('status').innerHTML = loading
-    ? `<span class="spinner"></span> ${msg}`
-    : msg;
+  $('status').innerHTML = loading ? `<span class="spinner"></span> ${msg}` : msg;
 }
 
 /* ============================================================
-   Cámara
+   Cámara — resoluciones MÁS LIGERAS para evitar lentitud
    ============================================================ */
 async function openCamera() {
   try {
-    state.stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: state.facingMode, width: { ideal: 1920 }, height: { ideal: 1080 } },
+    // Detener stream previo si existe
+    if (state.stream) {
+      state.stream.getTracks().forEach(t => t.stop());
+      state.stream = null;
+    }
+
+    const constraints = {
+      video: {
+        facingMode: { ideal: state.facingMode },
+        // 1280x720 es MUCHO más rápido que 1920x1080 en móviles
+        width:  { ideal: 1280 },
+        height: { ideal: 720 },
+        // frameRate bajo para documentos (ahorra CPU y batería)
+        frameRate: { ideal: 20, max: 30 }
+      },
       audio: false
-    });
+    };
+
+    state.stream = await navigator.mediaDevices.getUserMedia(constraints);
     const video = $('video');
     video.srcObject = state.stream;
+
+    // iOS requiere un play() explícito y a veces esperar metadata
+    await new Promise((res) => {
+      if (video.readyState >= 1) return res();
+      video.onloadedmetadata = () => res();
+    });
     await video.play();
+
     $('cameraWrap').classList.add('active');
   } catch (err) {
     console.error(err);
-    toast('No se pudo acceder a la cámara: ' + err.message, 4000);
+    let msg = err.name + ': ' + err.message;
+    if (err.name === 'NotAllowedError') msg = 'Permiso de cámara denegado. Habilítalo en la configuración del navegador.';
+    if (err.name === 'NotFoundError')  msg = 'No se encontró ninguna cámara.';
+    if (err.name === 'NotReadableError') msg = 'La cámara está ocupada por otra app.';
+    toast(msg, 5000);
   }
 }
 
@@ -232,36 +318,43 @@ function closeCamera() {
 
 async function switchCamera() {
   state.facingMode = state.facingMode === 'environment' ? 'user' : 'environment';
-  closeCamera();
   await openCamera();
 }
 
+/* Captura redimensionada: mucho más rápido el resto del pipeline */
 function capturePhoto() {
   const video = $('video');
+  const vw = video.videoWidth;
+  const vh = video.videoHeight;
+  if (!vw || !vh) { toast('La cámara aún no está lista'); return; }
+
+  const scale = Math.min(1, MAX_CAPTURE_WIDTH / vw);
+  const w = Math.round(vw * scale);
+  const h = Math.round(vh * scale);
+
   const canvas = document.createElement('canvas');
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  canvas.getContext('2d').drawImage(video, 0, 0);
-  const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+  canvas.width = w;
+  canvas.height = h;
+  canvas.getContext('2d').drawImage(video, 0, 0, w, h);
+
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.85); // calidad 0.85 basta
   closeCamera();
   openCropper(dataUrl);
 }
 
 /* ============================================================
-   Cropper — selección de región
+   Cropper
    ============================================================ */
 function openCropper(dataUrl) {
-  state.capturedImage = dataUrl;
   const img = $('cropperImage');
   img.src = dataUrl;
   $('cropperWrap').classList.add('active');
 
-  // Esperar a que la imagen cargue antes de inicializar Cropper
   img.onload = () => {
-    if (state.cropper) state.cropper.destroy();
+    if (state.cropper) { state.cropper.destroy(); state.cropper = null; }
     state.cropper = new Cropper(img, {
       viewMode: 1,
-      autoCropArea: 0.6,
+      autoCropArea: 0.7,
       movable: true,
       zoomable: true,
       scalable: false,
@@ -269,11 +362,11 @@ function openCropper(dataUrl) {
       background: false,
       guides: true,
       cropBoxMovable: true,
-      cropBoxResizable: true
+      cropBoxResizable: true,
+      toggleDragModeOnDblclick: false
     });
   };
 }
-
 function closeCropper() {
   $('cropperWrap').classList.remove('active');
   if (state.cropper) { state.cropper.destroy(); state.cropper = null; }
@@ -281,46 +374,54 @@ function closeCropper() {
 
 async function applyCropAndOCR() {
   if (!state.cropper) return;
-  const canvas = state.cropper.getCroppedCanvas({
-    maxWidth: 1600, maxHeight: 1600, fillColor: '#fff'
+  const cropped = state.cropper.getCroppedCanvas({
+    maxWidth: MAX_OCR_WIDTH,
+    maxHeight: MAX_OCR_WIDTH,
+    fillColor: '#fff'
   });
-  const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
 
-  // Mostrar preview
-  $('preview').src = croppedDataUrl;
+  // Preview visual (más pequeño para no llenar memoria)
+  const previewUrl = cropped.toDataURL('image/jpeg', 0.75);
+  $('preview').src = previewUrl;
   $('preview').style.display = 'block';
 
   closeCropper();
-  await runOCR(croppedDataUrl);
+
+  // OCR: pasar el canvas directamente (más rápido que dataURL)
+  await runOCR(cropped);
 }
 
 /* ============================================================
-   OCR con Tesseract.js
+   OCR — reutiliza worker + solo spa si hace falta
    ============================================================ */
-async function runOCR(imageDataUrl) {
-  setStatus('Inicializando motor OCR...', true);
-  try {
-    const worker = await Tesseract.createWorker('spa', 1, {
-      logger: (m) => {
-        if (m.status === 'recognizing text') {
-          setStatus(`Reconociendo texto... ${Math.round(m.progress * 100)}%`, true);
-        } else {
-          setStatus(`${m.status}...`, true);
-        }
+async function getWorker() {
+  if (state.tesseractWorker) return state.tesseractWorker;
+  setStatus('Preparando motor OCR (una sola vez)...', true);
+  state.tesseractWorker = await Tesseract.createWorker('spa', 1, {
+    logger: (m) => {
+      if (m.status === 'recognizing text') {
+        setStatus(`Reconociendo... ${Math.round(m.progress * 100)}%`, true);
       }
-    });
+    }
+  });
+  return state.tesseractWorker;
+}
 
-    const { data: { text } } = await worker.recognize(imageDataUrl);
-    await worker.terminate();
+async function runOCR(sourceCanvas) {
+  setStatus('Inicializando OCR...', true);
+  try {
+    const worker = await getWorker();
+    setStatus('Reconociendo texto...', true);
+
+    // `recognize` acepta canvas directamente → evita serializar base64
+    const { data: { text } } = await worker.recognize(sourceCanvas);
 
     const limpio = text.trim().replace(/\n{3,}/g, '\n\n');
-    const textarea = $('textoOCR');
-    textarea.value = textarea.value
-      ? textarea.value + '\n' + limpio
-      : limpio;
+    const ta = $('textoOCR');
+    ta.value = ta.value ? ta.value + '\n' + limpio : limpio;
 
     setStatus(`✅ Texto extraído (${limpio.length} caracteres)`, false);
-    toast('Texto reconocido correctamente');
+    toast('Texto reconocido');
   } catch (err) {
     console.error(err);
     setStatus('❌ Error al reconocer texto', false);
@@ -329,7 +430,7 @@ async function runOCR(imageDataUrl) {
 }
 
 /* ============================================================
-   Guardar registro
+   Guardar
    ============================================================ */
 function guardar() {
   const cite = $('cite').value.trim();
@@ -338,22 +439,16 @@ function guardar() {
   const texto = $('textoOCR').value.trim();
 
   if (!cite || !correlativo || !tipo) {
-    toast('Complete CITE, Correlativo y Tipo de Documento');
+    toast('Complete CITE, Correlativo y Tipo');
     return;
   }
-
-  const registro = {
-    id: Date.now(),
-    cite, correlativo, tipo, texto,
+  state.registros.push({
+    id: Date.now(), cite, correlativo, tipo, texto,
     fecha: new Date().toISOString()
-  };
-  state.registros.push(registro);
+  });
   localStorage.setItem('registros_docs', JSON.stringify(state.registros));
+  toast('✅ Registro guardado');
 
-  toast('✅ Registro guardado correctamente');
-  console.log('Registro guardado:', registro);
-
-  // Resetear formulario
   $('cite').value = '';
   $('correlativo').value = '';
   $('tipo').value = '';
@@ -369,13 +464,10 @@ $('btnScan').addEventListener('click', openCamera);
 $('btnCancelCam').addEventListener('click', closeCamera);
 $('btnShutter').addEventListener('click', capturePhoto);
 $('btnSwitchCam').addEventListener('click', switchCamera);
-
 $('btnCancelCrop').addEventListener('click', closeCropper);
 $('btnApplyCrop').addEventListener('click', applyCropAndOCR);
-
 $('btnGuardar').addEventListener('click', guardar);
 
-// Autocompletar correlativo cuando se pierde foco del CITE (opcional)
 $('cite').addEventListener('blur', () => {
   const corr = $('correlativo');
   if (corr.value) return;
@@ -383,9 +475,9 @@ $('cite').addEventListener('blur', () => {
   if (m) corr.value = m[1].padStart(4, '0');
 });
 
-// Limpieza al salir
 window.addEventListener('beforeunload', () => {
   if (state.stream) state.stream.getTracks().forEach(t => t.stop());
+  if (state.tesseractWorker) state.tesseractWorker.terminate();
 });
 </script>
 </body>
