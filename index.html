@@ -63,21 +63,20 @@
   .ocr-row .tag.ok{background:#dcfce7;color:#166534;}
   .ocr-row .tag.empty{background:#f1f5f9;color:#64748b;}
 
-  /* ========= FECHA/HORA COLAPSABLE ========= */
+  /* Botón "gestionar" al lado del tipo */
+  .tipo-wrap{display:flex;gap:6px;align-items:stretch;}
+  .tipo-wrap select{flex:1;min-width:0;}
+  .tipo-wrap button{width:auto;flex:0 0 auto;padding:0 10px;background:#e2e8f0;color:var(--text);font-size:.9rem;}
+
+  /* ===== FECHA/HORA COLAPSABLE ===== */
   .dt-summary{
     display:flex;align-items:center;justify-content:space-between;gap:10px;
-    background:#f8fafc;border:1px solid var(--border);border-radius:8px;
-    padding:10px 12px;
+    background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:10px 12px;
   }
   .dt-summary .dt-text{font-size:.92rem;font-weight:600;color:var(--text);}
-  .dt-summary .dt-text small{display:block;font-size:.68rem;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;}
   .dt-summary button{width:auto;padding:7px 12px;font-size:.78rem;}
-
-  #dtEditor{
-    margin-top:8px;display:none;
-  }
+  #dtEditor{margin-top:8px;display:none;}
   #dtEditor.open{display:block;}
-
   .picker{
     display:flex;background:#f8fafc;border:1px solid var(--border);
     border-radius:8px;overflow:hidden;height:112px;position:relative;
@@ -103,7 +102,6 @@
   }
   .picker-col .item.sel{font-weight:700;color:var(--primary);}
   .picker-col .item.dim{color:#94a3b8;}
-
   .dt-actions{display:flex;gap:8px;margin-top:8px;}
   .dt-actions button{flex:1;}
 
@@ -113,8 +111,7 @@
   #video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;}
   #frameGuide{
     position:absolute;inset:8% 6%;border:2px dashed rgba(255,255,255,.75);
-    border-radius:12px;pointer-events:none;
-    box-shadow:0 0 0 9999px rgba(0,0,0,.25);display:none;
+    border-radius:12px;pointer-events:none;box-shadow:0 0 0 9999px rgba(0,0,0,.25);display:none;
   }
   #cameraWrap.guide #frameGuide{display:block;}
   .cam-top{
@@ -125,10 +122,8 @@
   }
   .cam-top .cam-title{color:#fff;font-size:.9rem;font-weight:600;opacity:.9;}
   .icon-btn{
-    width:44px;height:44px;border-radius:50%;
-    background:rgba(0,0,0,.45);color:#fff;
-    display:flex;align-items:center;justify-content:center;
-    font-size:1.2rem;padding:0;
+    width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:1.2rem;padding:0;
   }
   .cam-bottom{
     position:absolute;bottom:0;left:0;right:0;
@@ -138,15 +133,14 @@
   }
   .shutter{
     flex:0 0 auto;width:74px;height:74px;border-radius:50%;background:#fff;
-    border:5px solid rgba(255,255,255,.5);padding:0;
-    box-shadow:0 0 0 3px #000 inset;
+    border:5px solid rgba(255,255,255,.5);padding:0;box-shadow:0 0 0 3px #000 inset;
   }
 
   .dest-picker{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
   .dest-picker button{flex-direction:column;padding:12px;line-height:1.2;font-size:.85rem;}
   .dest-picker button small{font-weight:400;font-size:.68rem;opacity:.85;margin-top:2px;}
 
-  /* Cropper simple (una zona) */
+  /* Cropper simple */
   #cropperWrap{display:none;position:fixed;inset:0;background:#000;z-index:1001;flex-direction:column;}
   #cropperWrap.active{display:flex;}
   #cropperWrap .cropper-container-wrap{flex:1;min-height:0;overflow:hidden;position:relative;}
@@ -156,13 +150,10 @@
   .crop-bar .actions{display:flex;gap:8px;}
   .crop-bar .actions button{flex:1;}
 
-  /* ========= MODO SELECCIÓN LIBRE (trazo + zoom pinch) ========= */
+  /* MODO SELECCIÓN LIBRE */
   #multiWrap{display:none;position:fixed;inset:0;background:#000;z-index:1002;flex-direction:column;}
   #multiWrap.active{display:flex;}
-
-  .multi-tabs{
-    display:flex;background:#111;padding:calc(var(--safe-top) + 8px) 8px 8px;gap:8px;
-  }
+  .multi-tabs{display:flex;background:#111;padding:calc(var(--safe-top) + 8px) 8px 8px;gap:8px;}
   .multi-tab{
     flex:1;padding:10px;border-radius:8px;background:#1e293b;color:#94a3b8;
     font-size:.82rem;font-weight:700;border:2px solid transparent;
@@ -171,31 +162,14 @@
   .multi-tab.active{color:#000;border-color:#000;}
   .multi-tab[data-tipo="cite"].active{background:var(--cite);}
   .multi-tab[data-tipo="detalle"].active{background:var(--detalle);}
-  .multi-tab .dot{
-    width:10px;height:10px;border-radius:50%;background:currentColor;opacity:.6;
-  }
+  .multi-tab .dot{width:10px;height:10px;border-radius:50%;background:currentColor;opacity:.6;}
   .multi-tab .dot.done{background:#16a34a;opacity:1;}
 
-  #multiStage{
-    flex:1;min-height:0;position:relative;overflow:hidden;
-    background:#000;touch-action:none;
-  }
-  #multiCanvasWrap{
-    position:absolute;top:0;left:0;
-    transform-origin: 0 0;
-    will-change: transform;
-  }
-  #multiImage{
-    display:block;
-    user-select:none;-webkit-user-drag:none;
-    pointer-events:none;
-  }
-  /* Selección activa */
-  .sel-box{
-    position:absolute;border:2px solid;box-sizing:border-box;
-    background:transparent;
-    box-shadow:0 0 0 9999px rgba(0,0,0,.55);
-  }
+  #multiStage{flex:1;min-height:0;position:relative;overflow:hidden;background:#000;touch-action:none;}
+  #multiCanvasWrap{position:absolute;top:0;left:0;transform-origin:0 0;will-change:transform;}
+  #multiImage{display:block;user-select:none;-webkit-user-drag:none;pointer-events:none;}
+
+  .sel-box{position:absolute;border:2px solid;box-sizing:border-box;background:transparent;box-shadow:0 0 0 9999px rgba(0,0,0,.55);}
   .sel-box[data-tipo="cite"]{border-color:var(--cite);--c:var(--cite);}
   .sel-box[data-tipo="detalle"]{border-color:var(--detalle);--c:var(--detalle);}
   .sel-box .box-label{
@@ -203,46 +177,31 @@
     background:var(--c);color:#000;font-size:.7rem;font-weight:800;
     border-radius:4px;white-space:nowrap;
   }
-  .sel-box .handle{
-    position:absolute;width:26px;height:26px;background:var(--c);
-    border:2px solid #000;border-radius:50%;
-    touch-action:none;
-  }
-  .sel-box .handle.br{right:-13px;bottom:-13px;cursor:nwse-resize;}
-  .sel-box .handle.tr{right:-13px;top:-13px;cursor:nesw-resize;}
-  .sel-box .handle.bl{left:-13px;bottom:-13px;cursor:nesw-resize;}
-  .sel-box .handle.tl{left:-13px;top:-13px;cursor:nwse-resize;}
+  .sel-box .handle{position:absolute;width:26px;height:26px;background:var(--c);border:2px solid #000;border-radius:50%;touch-action:none;}
+  .sel-box .handle.br{right:-13px;bottom:-13px;}
+  .sel-box .handle.tr{right:-13px;top:-13px;}
+  .sel-box .handle.bl{left:-13px;bottom:-13px;}
+  .sel-box .handle.tl{left:-13px;top:-13px;}
 
-  /* Rectángulo de trazo (preview mientras arrastras) */
   #traceRect{
-    position:absolute;border:2px dashed var(--cite);
-    background:rgba(251,191,36,.15);
-    pointer-events:none;box-sizing:border-box;
-    display:none;
+    position:absolute;border:2px dashed var(--cite);background:rgba(251,191,36,.15);
+    pointer-events:none;box-sizing:border-box;display:none;
   }
   #traceRect[data-tipo="detalle"]{border-color:var(--detalle);background:rgba(56,189,248,.15);}
 
-  /* Instrucción flotante */
   #multiHint{
     position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
     color:#fff;font-size:.9rem;text-align:center;pointer-events:none;
-    background:rgba(0,0,0,.55);padding:12px 18px;border-radius:10px;
-    max-width:80%;
+    background:rgba(0,0,0,.55);padding:12px 18px;border-radius:10px;max-width:80%;
   }
 
-  /* Botones flotantes arriba del stage */
-  .multi-top-actions{
-    position:absolute;top:8px;right:8px;z-index:5;display:flex;gap:6px;
-  }
+  .multi-top-actions{position:absolute;top:8px;right:8px;z-index:5;display:flex;gap:6px;}
   .multi-top-actions button{
     width:38px;height:38px;padding:0;border-radius:50%;
     background:rgba(0,0,0,.6);color:#fff;font-size:1rem;
   }
 
-  .multi-bar{
-    background:#111;padding:10px 10px calc(var(--safe-bottom) + 10px);
-    display:flex;flex-direction:column;gap:6px;
-  }
+  .multi-bar{background:#111;padding:10px 10px calc(var(--safe-bottom) + 10px);display:flex;flex-direction:column;gap:6px;}
   .multi-bar .hint-bar{color:#cbd5e1;font-size:.72rem;text-align:center;padding:0 6px;}
   .multi-bar .actions{display:flex;gap:8px;}
   .multi-bar .actions button{flex:1;}
@@ -256,12 +215,11 @@
     position:fixed;bottom:calc(20px + var(--safe-bottom));left:50%;
     transform:translateX(-50%) translateY(120%);
     background:var(--text);color:#fff;padding:10px 18px;border-radius:8px;
-    font-size:.85rem;transition:transform .3s;z-index:2000;max-width:90%;
-    text-align:center;
+    font-size:.85rem;transition:transform .3s;z-index:2000;max-width:90%;text-align:center;
   }
   .toast.show{transform:translateX(-50%) translateY(0);}
 
-  /* Modal registros tipo Excel */
+  /* Modal registros */
   #listModal{display:none;position:fixed;inset:0;background:var(--bg);z-index:1500;flex-direction:column;}
   #listModal.active{display:flex;}
   .list-header{
@@ -295,6 +253,37 @@
   table.xls td .del-btn{background:none;border:none;color:var(--danger);font-size:.95rem;padding:0;width:auto;cursor:pointer;}
   .empty-state{text-align:center;color:var(--muted);padding:36px 20px;font-size:.85rem;}
 
+  /* Modal gestión de tipos */
+  #typesModal{
+    display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:1600;
+    align-items:flex-end;justify-content:center;
+  }
+  #typesModal.active{display:flex;}
+  .types-panel{
+    background:#fff;width:100%;max-width:560px;max-height:85vh;
+    border-radius:16px 16px 0 0;display:flex;flex-direction:column;
+    padding-bottom:var(--safe-bottom);
+  }
+  .types-head{
+    padding:14px 14px 10px;border-bottom:1px solid var(--border);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .types-head h3{margin:0;font-size:1rem;}
+  .types-add{display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--border);}
+  .types-add input{flex:1;}
+  .types-add button{width:auto;padding:8px 14px;}
+  .types-list{flex:1;overflow-y:auto;padding:6px 14px 14px;}
+  .type-item{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:10px 8px;border-bottom:1px solid #eef2f7;
+  }
+  .type-item:last-child{border-bottom:none;}
+  .type-item span{font-size:.92rem;}
+  .type-item button{
+    width:auto;padding:6px 10px;font-size:.78rem;background:#fee2e2;color:#991b1b;
+  }
+  .types-foot{padding:10px 14px;border-top:1px solid var(--border);}
+
   .hint{font-size:.72rem;color:var(--muted);margin-top:2px;}
 </style>
 </head>
@@ -304,11 +293,14 @@
 
 <div class="card">
 
-  <!-- Tipo + Entrada/Salida -->
+  <!-- Tipo (editable) + Entrada/Salida -->
   <div class="row">
     <div class="field">
       <label for="tipo">Tipo de documento *</label>
-      <select id="tipo"><option value="">— Seleccionar —</option></select>
+      <div class="tipo-wrap">
+        <select id="tipo"><option value="">— Seleccionar —</option></select>
+        <button type="button" id="btnManageTypes" title="Gestionar tipos">⚙️</button>
+      </div>
     </div>
     <div class="field">
       <label for="entradaSalida">Entrada / Salida *</label>
@@ -338,6 +330,18 @@
     <textarea id="detalle" rows="3" placeholder="Texto reconocido del documento…"></textarea>
   </div>
 
+  <!-- Unidad/Destino + Medidas -->
+  <div class="row">
+    <div class="field">
+      <label for="unidad">Unidad / Destino</label>
+      <input id="unidad" type="text" placeholder="Ej: RR.HH., Gerencia…">
+    </div>
+    <div class="field">
+      <label for="medidas">Medidas tomadas</label>
+      <input id="medidas" type="text" placeholder="Ej: 3 folios, 2 anexos">
+    </div>
+  </div>
+
   <!-- Escaneo -->
   <div class="field">
     <label>Escanear con cámara</label>
@@ -356,7 +360,7 @@
     <div class="status" id="status" style="font-size:.78rem;color:var(--muted);margin-top:6px;text-align:center;min-height:16px;"></div>
   </div>
 
-  <!-- FECHA Y HORA (colapsable) -->
+  <!-- Fecha y hora colapsable -->
   <div class="field">
     <label>Fecha y hora *</label>
     <div class="dt-summary">
@@ -377,12 +381,6 @@
         <button class="btn-primary" id="btnApplyDT">Aplicar</button>
       </div>
     </div>
-  </div>
-
-  <!-- Medidas -->
-  <div class="field">
-    <label for="medidas">Medidas tomadas</label>
-    <input id="medidas" type="text" placeholder="Ej: 3 folios, 2 anexos">
   </div>
 
   <button id="btnGuardar" class="btn-success">💾 Guardar registro</button>
@@ -414,9 +412,7 @@
 
 <!-- ============ CROPPER simple ============ -->
 <div id="cropperWrap">
-  <div class="cropper-container-wrap">
-    <img id="cropperImage" alt="Recorte">
-  </div>
+  <div class="cropper-container-wrap"><img id="cropperImage" alt="Recorte"></div>
   <div class="crop-bar">
     <div class="target-label" id="cropTargetLabel">ZONA A RECORTAR</div>
     <div class="actions">
@@ -426,33 +422,24 @@
   </div>
 </div>
 
-<!-- ============ MODO SELECCIÓN LIBRE (doble zona) ============ -->
+<!-- ============ MODO SELECCIÓN LIBRE ============ -->
 <div id="multiWrap">
   <div class="multi-tabs">
-    <button class="multi-tab active" data-tipo="cite" id="tabCite">
-      <span class="dot" id="dotCite"></span> 🎯 CITE
-    </button>
-    <button class="multi-tab" data-tipo="detalle" id="tabDetalle">
-      <span class="dot" id="dotDetalle"></span> 📝 DETALLE
-    </button>
+    <button class="multi-tab active" data-tipo="cite" id="tabCite"><span class="dot" id="dotCite"></span> 🎯 CITE</button>
+    <button class="multi-tab" data-tipo="detalle" id="tabDetalle"><span class="dot" id="dotDetalle"></span> 📝 DETALLE</button>
   </div>
-
   <div id="multiStage">
     <div id="multiCanvasWrap">
       <img id="multiImage" alt="Documento">
       <div class="sel-box" id="selCite" data-tipo="cite" style="display:none;">
         <span class="box-label">CITE</span>
-        <div class="handle tl" data-h="tl"></div>
-        <div class="handle tr" data-h="tr"></div>
-        <div class="handle bl" data-h="bl"></div>
-        <div class="handle br" data-h="br"></div>
+        <div class="handle tl" data-h="tl"></div><div class="handle tr" data-h="tr"></div>
+        <div class="handle bl" data-h="bl"></div><div class="handle br" data-h="br"></div>
       </div>
       <div class="sel-box" id="selDetalle" data-tipo="detalle" style="display:none;">
         <span class="box-label">DETALLE</span>
-        <div class="handle tl" data-h="tl"></div>
-        <div class="handle tr" data-h="tr"></div>
-        <div class="handle bl" data-h="bl"></div>
-        <div class="handle br" data-h="br"></div>
+        <div class="handle tl" data-h="tl"></div><div class="handle tr" data-h="tr"></div>
+        <div class="handle bl" data-h="bl"></div><div class="handle br" data-h="br"></div>
       </div>
       <div id="traceRect" data-tipo="cite"></div>
     </div>
@@ -462,9 +449,8 @@
       <button id="btnClearSel" title="Borrar selección actual">🗑️</button>
     </div>
   </div>
-
   <div class="multi-bar">
-    <div class="hint-bar">Toca arriba para cambiar entre CITE y DETALLE · usa 2 dedos para zoom · arrastra para seleccionar</div>
+    <div class="hint-bar">Toca arriba para cambiar entre CITE y DETALLE · 2 dedos = zoom · arrastra para seleccionar</div>
     <div class="actions">
       <button class="btn-danger" id="btnCancelMulti">Cancelar</button>
       <button class="btn-success" id="btnApplyMulti">✂️ Extraer ambos textos</button>
@@ -493,6 +479,7 @@
           <th>CITE</th>
           <th>Detalle</th>
           <th>E/S</th>
+          <th>Unidad/Destino</th>
           <th>Fecha</th>
           <th>Hora</th>
           <th>Medidas</th>
@@ -502,6 +489,24 @@
       <tbody id="xlsBody"></tbody>
     </table>
     <div class="empty-state" id="emptyList" style="display:none;">📭 No hay registros que coincidan.</div>
+  </div>
+</div>
+
+<!-- ============ MODAL GESTIÓN DE TIPOS ============ -->
+<div id="typesModal">
+  <div class="types-panel">
+    <div class="types-head">
+      <h3>⚙️ Tipos de documento</h3>
+      <button class="btn-ghost btn-sm" id="btnCloseTypes">✕</button>
+    </div>
+    <div class="types-add">
+      <input id="newTypeInput" type="text" placeholder="Nuevo tipo…">
+      <button class="btn-primary" id="btnAddType">➕ Agregar</button>
+    </div>
+    <div class="types-list" id="typesList"></div>
+    <div class="types-foot">
+      <button class="btn-ghost" id="btnResetTypes">↺ Restaurar predeterminados</button>
+    </div>
   </div>
 </div>
 
@@ -515,29 +520,23 @@ const STORAGE_KEY = 'registros_docs_v4';
 const TYPES_KEY   = 'tipos_documento_v4';
 
 const state = {
-  stream: null,
-  cropper: null,
-  facingMode: 'environment',
-  ocrWorker: null,
-  ocrReady: false,
-  ocrLoading: false,
-  currentTarget: null,
-  currentMode: null,
+  stream:null, cropper:null, facingMode:'environment',
+  ocrWorker:null, ocrReady:false, ocrLoading:false,
+  currentTarget:null, currentMode:null,
   registros: JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'),
   tipos: JSON.parse(localStorage.getItem(TYPES_KEY) || 'null'),
-  fecha: { day:1, month:0, year:new Date().getFullYear() },
-  hora:  { hour:0, min:0 },
-  fechaBackup: null,
-  horaBackup: null
+  fecha:{day:1,month:0,year:new Date().getFullYear()},
+  hora:{hour:0,min:0},
+  fechaBackup:null, horaBackup:null
 };
-const $ = (id) => document.getElementById(id);
-const pad = n => String(n).padStart(2, '0');
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,'0');
 const MESES_CORTOS = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
 
 /* ============================================================
    Utilidades
    ============================================================ */
-function toast(msg, ms=2800){
+function toast(msg,ms=2800){
   const t=$('toast'); t.textContent=msg; t.classList.add('show');
   clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),ms);
 }
@@ -553,42 +552,98 @@ function updateBadge(target,val){
 function updateCount(){ $('countRegistros').textContent = state.registros.length; }
 
 /* ============================================================
-   TIPOS
+   TIPOS DE DOCUMENTO (editable + eliminar)
    ============================================================ */
-const TIPOS_DEFAULT=['Oficio','Memorándum','Carta','Informe','Solicitud','Resolución','Circular','Nota','Otro'];
+const TIPOS_DEFAULT = ['Oficio','Memorándum','Carta','Informe','Solicitud','Resolución','Circular','Nota','Otro'];
+function getTipos(){ return state.tipos || TIPOS_DEFAULT.slice(); }
+function saveTipos(list){
+  state.tipos = list;
+  localStorage.setItem(TYPES_KEY, JSON.stringify(list));
+}
+
 function loadTipos(){
-  const sel=$('tipo'); const tipos=state.tipos||TIPOS_DEFAULT;
+  const sel=$('tipo');
+  const prevValue = sel.value;
   sel.innerHTML='<option value="">— Seleccionar —</option>';
-  tipos.forEach(t=>{
+  getTipos().forEach(t=>{
     const o=document.createElement('option'); o.value=t; o.textContent=t; sel.appendChild(o);
   });
-  const add=document.createElement('option'); add.value='__ADD__'; add.textContent='➕ Agregar tipo…';
-  sel.appendChild(add);
+  // Mantener valor si existe
+  if(prevValue && getTipos().includes(prevValue)) sel.value=prevValue;
+  else if(prevValue && prevValue!=='') sel.value='';
 }
-$('tipo').addEventListener('change', e=>{
-  if(e.target.value!=='__ADD__') return;
-  const nuevo=prompt('Nombre del nuevo tipo:');
-  if(!nuevo||!nuevo.trim()){ e.target.value=''; return; }
-  const tipos=(state.tipos||TIPOS_DEFAULT).slice();
-  const limpio=nuevo.trim();
-  if(!tipos.includes(limpio)) tipos.push(limpio);
-  state.tipos=tipos; localStorage.setItem(TYPES_KEY,JSON.stringify(tipos));
-  loadTipos(); $('tipo').value=limpio; toast('Tipo agregado');
+
+function renderTypesList(){
+  const list=$('typesList');
+  const tipos = getTipos();
+  if(!tipos.length){
+    list.innerHTML = '<div class="empty-state" style="padding:20px;">Sin tipos. Agrega uno arriba.</div>';
+    return;
+  }
+  list.innerHTML = tipos.map((t,i)=>`
+    <div class="type-item">
+      <span>${escapeHtml(t)}</span>
+      <button data-idx="${i}" title="Eliminar">🗑️ Eliminar</button>
+    </div>
+  `).join('');
+  list.querySelectorAll('button[data-idx]').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      const idx = Number(e.target.dataset.idx);
+      const tipos = getTipos();
+      const nombre = tipos[idx];
+      if(!confirm(`¿Eliminar el tipo "${nombre}"?`)) return;
+      tipos.splice(idx,1);
+      saveTipos(tipos);
+      renderTypesList();
+      loadTipos();
+      toast('Tipo eliminado');
+    });
+  });
+}
+
+$('btnManageTypes').addEventListener('click', ()=>{
+  renderTypesList();
+  $('typesModal').classList.add('active');
+});
+$('btnCloseTypes').addEventListener('click', ()=>{
+  $('typesModal').classList.remove('active');
+});
+$('btnAddType').addEventListener('click', ()=>{
+  const val = $('newTypeInput').value.trim();
+  if(!val){ toast('Escribe un nombre'); return; }
+  const tipos = getTipos();
+  if(tipos.some(t=>t.toLowerCase()===val.toLowerCase())){
+    toast('Ese tipo ya existe'); return;
+  }
+  tipos.push(val);
+  saveTipos(tipos);
+  $('newTypeInput').value='';
+  renderTypesList();
+  loadTipos();
+  $('tipo').value = val;
+  toast('Tipo agregado');
+});
+$('newTypeInput').addEventListener('keydown', e=>{
+  if(e.key==='Enter'){ e.preventDefault(); $('btnAddType').click(); }
+});
+$('btnResetTypes').addEventListener('click', ()=>{
+  if(!confirm('¿Restaurar la lista predeterminada? Se perderán los tipos personalizados.')) return;
+  saveTipos(TIPOS_DEFAULT.slice());
+  renderTypesList();
+  loadTipos();
+  toast('Tipos restaurados');
 });
 
 /* ============================================================
-   FECHA/HORA COLAPSABLE
+   FECHA/HORA
    ============================================================ */
-let dtBuilt = false;
+let dtBuilt=false;
 function setDTNow(){
-  const now = new Date();
-  state.fecha = { day:now.getDate(), month:now.getMonth(), year:now.getFullYear() };
-  state.hora  = { hour:now.getHours(), min:now.getMinutes() };
+  const now=new Date();
+  state.fecha={day:now.getDate(),month:now.getMonth(),year:now.getFullYear()};
+  state.hora={hour:now.getHours(),min:now.getMinutes()};
 }
-function fechaBonita(){
-  const f=state.fecha;
-  return `${pad(f.day)} ${MESES_CORTOS[f.month]} ${f.year}`;
-}
+function fechaBonita(){ const f=state.fecha; return `${pad(f.day)} ${MESES_CORTOS[f.month]} ${f.year}`; }
 function horaBonita(){ return `${pad(state.hora.hour)}:${pad(state.hora.min)}`; }
 function refreshDTSummary(){
   $('dtSummaryText').innerHTML = `${fechaBonita()} <span style="color:#94a3b8;margin:0 4px;">·</span> ${horaBonita()}`;
@@ -613,9 +668,7 @@ function buildPickerCol(containerEl,colKey,items,renderItem,selectedIdx,onChange
     timer=setTimeout(()=>{
       const idx=Math.round(col.scrollTop/38);
       const clamped=Math.max(0,Math.min(items.length-1,idx));
-      if(Math.abs(col.scrollTop-clamped*38)>1){
-        col.scrollTo({top:clamped*38,behavior:'smooth'});
-      }
+      if(Math.abs(col.scrollTop-clamped*38)>1) col.scrollTo({top:clamped*38,behavior:'smooth'});
       col.querySelectorAll('.item').forEach((el,i)=>{
         el.classList.toggle('sel',i===clamped);
         el.classList.toggle('dim',i!==clamped);
@@ -640,26 +693,27 @@ function buildDateTimePicker(){
   buildPickerCol($('dateTimePicker'),'year',years,v=>v,years.indexOf(state.fecha.year),i=>state.fecha.year=years[i]);
   buildPickerCol($('dateTimePicker'),'hour',hours,v=>pad(v),state.hora.hour,i=>state.hora.hour=hours[i]);
   buildPickerCol($('dateTimePicker'),'min',mins,v=>pad(v),state.hora.min,i=>state.hora.min=mins[i]);
-  dtBuilt = true;
+  dtBuilt=true;
 }
 function openDTEditor(){
-  state.fechaBackup = { ...state.fecha };
-  state.horaBackup  = { ...state.hora };
+  state.fechaBackup={...state.fecha};
+  state.horaBackup={...state.hora};
   setDTNow();
   buildDateTimePicker();
-  // Refrescar los pickers con los valores actuales
   const wrap=$('dateTimePicker');
-  const cols = {
-    day: state.fecha.day-1,
-    month: state.fecha.month,
-    year: state.fecha.year - (new Date().getFullYear()-5),
-    hour: state.hora.hour,
-    min: state.hora.min
+  const now=new Date();
+  const cols={
+    day: now.getDate()-1, month: now.getMonth(),
+    year: now.getFullYear()-(now.getFullYear()-5),
+    hour: now.getHours(), min: now.getMinutes()
   };
   Object.entries(cols).forEach(([k,v])=>{
-    const col = wrap.querySelector(`[data-col="${k}"]`);
-    if(col) col.scrollTo({top:v*38, behavior:'auto'});
+    const col=wrap.querySelector(`[data-col="${k}"]`);
+    if(col) col.scrollTo({top:v*38,behavior:'auto'});
   });
+  // Re-sincronizar state
+  state.fecha={day:now.getDate(),month:now.getMonth(),year:now.getFullYear()};
+  state.hora={hour:now.getHours(),min:now.getMinutes()};
   $('dtEditor').classList.add('open');
   $('btnEditDT').style.display='none';
 }
@@ -681,10 +735,56 @@ async function preloadOCR(){
   state.ocrLoading=true;
   try{
     state.ocrWorker=await Tesseract.createWorker('spa',1,{logger:()=>{}});
-    await state.ocrWorker.setParameters({tessedit_pageseg_mode:'6',preserve_interword_spaces:'1'});
+    await state.ocrWorker.setParameters({
+      tessedit_pageseg_mode:'6',
+      preserve_interword_spaces:'1'
+    });
     state.ocrReady=true;
   }catch(e){console.warn('[OCR]',e);}
   finally{state.ocrLoading=false;}
+}
+
+/* ============================================================
+   OCR MULTI-ORIENTACIÓN
+   Prueba la imagen en 4 rotaciones (0°, 90°, 180°, 270°) con
+   un reconocimiento rápido y elige la que devuelve más texto
+   con mayor confianza. Después reconoce completo con esa rotación.
+   ============================================================ */
+function rotateCanvas(src, deg){
+  if(deg===0) return src;
+  const rad = deg*Math.PI/180;
+  const swap = deg===90 || deg===270;
+  const c=document.createElement('canvas');
+  c.width = swap ? src.height : src.width;
+  c.height= swap ? src.width  : src.height;
+  const ctx=c.getContext('2d');
+  ctx.translate(c.width/2, c.height/2);
+  ctx.rotate(rad);
+  ctx.drawImage(src, -src.width/2, -src.height/2);
+  return c;
+}
+
+async function recognizeBestRotation(imageCanvas){
+  const rotations = [0, 90, 180, 270];
+  let best = { deg:0, text:'', confidence:-1 };
+  for(const deg of rotations){
+    const c = rotateCanvas(imageCanvas, deg);
+    const dataUrl = c.toDataURL('image/jpeg', 0.85);
+    try{
+      const res = await state.ocrWorker.recognize(dataUrl);
+      const { data } = res;
+      const text = (data.text||'').trim();
+      const conf = Number(data.confidence ?? 0);
+      // Heurística: puntaje = confianza * log(longitud+1)
+      const score = conf * Math.log10(text.length + 10);
+      if(score > best.confidence || best.text.length===0){
+        best = { deg, text, confidence: score };
+      }
+      // Si ya obtuvimos texto muy bueno (alta confianza y suficiente longitud), cortar
+      if(conf > 80 && text.length > 20){ break; }
+    }catch(e){ /* continuar con siguiente rotación */ }
+  }
+  return best;
 }
 
 /* ============================================================
@@ -732,7 +832,7 @@ function capturePhoto(){
 }
 
 /* ============================================================
-   CROPPER simple
+   CROPPER simple (una zona) - con detección de orientación
    ============================================================ */
 function openCropper(dataUrl){
   $('cropTargetLabel').textContent = state.currentTarget==='cite'
@@ -759,21 +859,18 @@ async function applyCropAndOCR(){
   $('preview').src=dataUrl; $('preview').style.display='block';
   const target=state.currentTarget;
   closeCropper();
-  await runOCR(dataUrl,target);
+  await runOCR(canvas,target);
 }
 
 /* ============================================================
-   MODO SELECCIÓN LIBRE — trazo + zoom pinch
+   MODO SELECCIÓN LIBRE
    ============================================================ */
 const multi = {
-  img:null,
-  wrap:null,
-  stage:null,
+  img:null, wrap:null, stage:null,
   zoom:1, panX:0, panY:0,
-  // selecciones en coordenadas NATURALES de la imagen (no pantalla)
-  sel: { cite:null, detalle:null },   // {x,y,w,h} en px de la imagen natural
-  activeTab: 'cite',
-  gesture: null   // {type:'trace'|'resize'|'pan', ...}
+  sel:{cite:null,detalle:null},
+  activeTab:'cite',
+  gesture:null
 };
 
 function openMulti(dataUrl){
@@ -791,235 +888,156 @@ function openMulti(dataUrl){
 
   img.onload=()=>{
     multi.img=img;
-    // Ajustar el tamaño para que la imagen quepa en el stage
     requestAnimationFrame(()=>{
       const stageRect=multi.stage.getBoundingClientRect();
       const nW=img.naturalWidth, nH=img.naturalHeight;
       const scale=Math.min(stageRect.width/nW, stageRect.height/nH);
       const w=Math.round(nW*scale), h=Math.round(nH*scale);
-      img.style.width = w+'px';
-      img.style.height= h+'px';
-      multi.wrap.style.width = w+'px';
-      multi.wrap.style.height= h+'px';
-      // Centrar
-      multi.panX = (stageRect.width - w)/2;
-      multi.panY = (stageRect.height - h)/2;
+      img.style.width=w+'px'; img.style.height=h+'px';
+      multi.wrap.style.width=w+'px'; multi.wrap.style.height=h+'px';
+      multi.panX=(stageRect.width-w)/2;
+      multi.panY=(stageRect.height-h)/2;
       applyTransform();
     });
   };
 }
-
 function applyTransform(){
-  multi.wrap.style.transform = `translate(${multi.panX}px, ${multi.panY}px) scale(${multi.zoom})`;
+  multi.wrap.style.transform=`translate(${multi.panX}px, ${multi.panY}px) scale(${multi.zoom})`;
 }
-
 function updateMultiTabs(){
   document.querySelectorAll('.multi-tab').forEach(t=>{
     t.classList.toggle('active', t.dataset.tipo===multi.activeTab);
   });
-  $('traceRect').dataset.tipo = multi.activeTab;
-  // Mostrar/ocultar cajas según existan
+  $('traceRect').dataset.tipo=multi.activeTab;
   const sc=$('selCite'), sd=$('selDetalle');
-  if(multi.sel.cite){ sc.style.display='block'; renderSel('cite'); } else { sc.style.display='none'; }
-  if(multi.sel.detalle){ sd.style.display='block'; renderSel('detalle'); } else { sd.style.display='none'; }
-  // Puntos "listo" en las pestañas
-  $('dotCite').classList.toggle('done', !!multi.sel.cite);
-  $('dotDetalle').classList.toggle('done', !!multi.sel.detalle);
+  if(multi.sel.cite){ sc.style.display='block'; renderSel('cite'); } else sc.style.display='none';
+  if(multi.sel.detalle){ sd.style.display='block'; renderSel('detalle'); } else sd.style.display='none';
+  $('dotCite').classList.toggle('done',!!multi.sel.cite);
+  $('dotDetalle').classList.toggle('done',!!multi.sel.detalle);
 }
-function hideSels(){
-  $('selCite').style.display='none';
-  $('selDetalle').style.display='none';
-}
+function hideSels(){ $('selCite').style.display='none'; $('selDetalle').style.display='none'; }
 function renderSel(key){
-  const s = multi.sel[key]; if(!s) return;
-  const img = multi.img;
-  const nW = img.naturalWidth, nH = img.naturalHeight;
-  const dispW = img.clientWidth, dispH = img.clientHeight;
-  const sx = dispW/nW, sy = dispH/nH;
-  const el = key==='cite' ? $('selCite') : $('selDetalle');
-  el.style.left   = (s.x*sx)+'px';
-  el.style.top    = (s.y*sy)+'px';
-  el.style.width  = (s.w*sx)+'px';
-  el.style.height = (s.h*sy)+'px';
+  const s=multi.sel[key]; if(!s) return;
+  const img=multi.img;
+  const nW=img.naturalWidth, nH=img.naturalHeight;
+  const dispW=img.clientWidth, dispH=img.clientHeight;
+  const sx=dispW/nW, sy=dispH/nH;
+  const el = key==='cite'?$('selCite'):$('selDetalle');
+  el.style.left=(s.x*sx)+'px'; el.style.top=(s.y*sy)+'px';
+  el.style.width=(s.w*sx)+'px'; el.style.height=(s.h*sy)+'px';
+}
+function screenToImage(clientX,clientY){
+  const wrapRect=multi.wrap.getBoundingClientRect();
+  const localX=(clientX-wrapRect.left)/multi.zoom;
+  const localY=(clientY-wrapRect.top)/multi.zoom;
+  const imgW=multi.img.clientWidth, imgH=multi.img.clientHeight;
+  const nW=multi.img.naturalWidth, nH=multi.img.naturalHeight;
+  const sx=nW/imgW, sy=nH/imgH;
+  return {x:localX*sx,y:localY*sy};
 }
 
-/* Conversión pantalla → coordenadas naturales de la imagen */
-function screenToImage(clientX, clientY){
-  const wrapRect = multi.wrap.getBoundingClientRect();
-  // Restar el offset del wrap (que ya incluye pan+zoom)
-  const localX = (clientX - wrapRect.left) / multi.zoom;
-  const localY = (clientY - wrapRect.top)  / multi.zoom;
-  // localX está en "píxeles mostrados" de la imagen
-  const imgW = multi.img.clientWidth, imgH = multi.img.clientHeight;
-  const nW = multi.img.naturalWidth, nH = multi.img.naturalHeight;
-  const sx = nW/imgW, sy = nH/imgH;
-  return { x: localX*sx, y: localY*sy, dispX: localX, dispY: localY };
-}
-
-/* Convierte coordenadas naturales → pantalla (para dibujar sel-box) */
-function imageToScreen(nx, ny){
-  const imgW = multi.img.clientWidth, imgH = multi.img.clientHeight;
-  const nW = multi.img.naturalWidth, nH = multi.img.naturalHeight;
-  const sx = imgW/nW, sy = imgH/nH;
-  return { x: nx*sx, y: ny*sy };
-}
-
-/* ---- Gestos: 1 dedo = trazar/resize, 2 dedos = zoom/pan ---- */
-let activePointers = new Map();
-let lastPinch = null;
-
-multiStage && 0; // placeholder
+let activePointers=new Map();
+let lastPinch=null;
 
 function bindStageGestures(){
-  const stage = $('multiStage');
-  // Touch + Mouse unificados
-  stage.addEventListener('touchstart', onPointerStart, {passive:false});
-  stage.addEventListener('touchmove',  onPointerMove,  {passive:false});
-  stage.addEventListener('touchend',   onPointerEnd,   {passive:false});
-  stage.addEventListener('touchcancel',onPointerEnd,   {passive:false});
-
-  stage.addEventListener('mousedown', onMouseStart);
-  window.addEventListener('mousemove', onMouseMove);
-  window.addEventListener('mouseup',   onMouseEnd);
+  const stage=$('multiStage');
+  stage.addEventListener('touchstart',onPointerStart,{passive:false});
+  stage.addEventListener('touchmove',onPointerMove,{passive:false});
+  stage.addEventListener('touchend',onPointerEnd,{passive:false});
+  stage.addEventListener('touchcancel',onPointerEnd,{passive:false});
+  stage.addEventListener('mousedown',onMouseStart);
+  window.addEventListener('mousemove',onMouseMove);
+  window.addEventListener('mouseup',onMouseEnd);
 }
-
-/* ======== TOUCH ======== */
 function onPointerStart(e){
-  for(const t of e.changedTouches){ activePointers.set(t.identifier, {x:t.clientX, y:t.clientY}); }
-
+  for(const t of e.changedTouches) activePointers.set(t.identifier,{x:t.clientX,y:t.clientY});
   if(activePointers.size===2){
-    // Inicio pinch
-    const pts = [...activePointers.values()];
-    lastPinch = {
-      dist: Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y),
-      cx:   (pts[0].x+pts[1].x)/2,
-      cy:   (pts[0].y+pts[1].y)/2,
-      zoom: multi.zoom, panX: multi.panX, panY: multi.panY
+    const pts=[...activePointers.values()];
+    lastPinch={
+      dist:Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y),
+      cx:(pts[0].x+pts[1].x)/2, cy:(pts[0].y+pts[1].y)/2,
+      zoom:multi.zoom, panX:multi.panX, panY:multi.panY
     };
-    // Cancelar cualquier trazo en curso
-    multi.gesture=null;
-    $('traceRect').style.display='none';
+    multi.gesture=null; $('traceRect').style.display='none';
     return;
   }
-
   if(activePointers.size!==1) return;
-  const t = e.changedTouches[0];
-  handleStart(t.clientX, t.clientY, e);
+  const t=e.changedTouches[0];
+  handleStart(t.clientX,t.clientY,e);
 }
-
 function onPointerMove(e){
-  for(const t of e.changedTouches){ if(activePointers.has(t.identifier)) activePointers.set(t.identifier,{x:t.clientX,y:t.clientY}); }
-
+  for(const t of e.changedTouches) if(activePointers.has(t.identifier)) activePointers.set(t.identifier,{x:t.clientX,y:t.clientY});
   if(activePointers.size===2 && lastPinch){
     e.preventDefault();
     const pts=[...activePointers.values()];
     const dist=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);
     const cx=(pts[0].x+pts[1].x)/2, cy=(pts[0].y+pts[1].y)/2;
     const ratio=dist/lastPinch.dist;
-    let newZoom=Math.max(1, Math.min(5, lastPinch.zoom*ratio));
-    // Punto del stage que debe quedarse fijo
+    const newZoom=Math.max(1,Math.min(5,lastPinch.zoom*ratio));
     const stageRect=multi.stage.getBoundingClientRect();
     const px=cx-stageRect.left, py=cy-stageRect.top;
-    // Ajuste pan para mantener el foco
-    multi.panX = lastPinch.panX - (px - lastPinch.panX) * (newZoom/lastPinch.zoom - 1)
-                 + (cx - lastPinch.cx);
-    multi.panY = lastPinch.panY - (py - lastPinch.panY) * (newZoom/lastPinch.zoom - 1)
-                 + (cy - lastPinch.cy);
-    multi.zoom=newZoom;
-    applyTransform();
-    return;
+    multi.panX=lastPinch.panX - (px-lastPinch.panX)*(newZoom/lastPinch.zoom-1) + (cx-lastPinch.cx);
+    multi.panY=lastPinch.panY - (py-lastPinch.panY)*(newZoom/lastPinch.zoom-1) + (cy-lastPinch.cy);
+    multi.zoom=newZoom; applyTransform(); return;
   }
-
   if(activePointers.size===1 && multi.gesture){
     e.preventDefault();
     const t=e.changedTouches[0];
-    handleMove(t.clientX, t.clientY);
+    handleMove(t.clientX,t.clientY);
   }
 }
-
 function onPointerEnd(e){
-  for(const t of e.changedTouches){ activePointers.delete(t.identifier); }
-
+  for(const t of e.changedTouches) activePointers.delete(t.identifier);
   if(activePointers.size===0){
     if(multi.gesture) handleEnd();
     lastPinch=null;
   }
 }
+function onMouseStart(e){ if(activePointers.size>0) return; handleStart(e.clientX,e.clientY,e); }
+function onMouseMove(e){ if(multi.gesture) handleMove(e.clientX,e.clientY); }
+function onMouseEnd(){ if(multi.gesture) handleEnd(); }
 
-/* ======== MOUSE ======== */
-function onMouseStart(e){
-  if(activePointers.size>0) return;
-  handleStart(e.clientX, e.clientY, e);
-}
-function onMouseMove(e){
-  if(multi.gesture) handleMove(e.clientX, e.clientY);
-}
-function onMouseEnd(){
-  if(multi.gesture) handleEnd();
-}
-
-/* ======== LÓGICA COMÚN DE TRAZO Y RESIZE ======== */
-function handleStart(clientX, clientY, ev){
-  const stage=$('multiStage');
-  const stageRect=stage.getBoundingClientRect();
-  // Si toca un handle de una selección → resize
-  const handleEl = ev.target.closest('.handle');
+function handleStart(clientX,clientY,ev){
+  const stage=$('multiStage'); const stageRect=stage.getBoundingClientRect();
+  const handleEl=ev.target.closest('.handle');
   if(handleEl){
     ev.preventDefault();
-    const boxEl = handleEl.closest('.sel-box');
-    const key = boxEl.dataset.tipo;
-    const s = multi.sel[key]; if(!s) return;
-    multi.gesture = {
-      type:'resize', key, handle: handleEl.dataset.h,
-      startClientX: clientX, startClientY: clientY,
-      orig: { ...s }
-    };
+    const boxEl=handleEl.closest('.sel-box');
+    const key=boxEl.dataset.tipo;
+    const s=multi.sel[key]; if(!s) return;
+    multi.gesture={type:'resize',key,handle:handleEl.dataset.h,startClientX:clientX,startClientY:clientY,orig:{...s}};
     return;
   }
-  // Si toca dentro de una selección existente → mover? No, preferimos permitir re-trazar.
-  // (Para re-trazar solo el usuario hace nueva selección.)
-  // Trazo nuevo:
   ev.preventDefault();
-  const p = screenToImage(clientX, clientY);
-  multi.gesture = {
-    type:'trace', key: multi.activeTab,
-    startX: p.x, startY: p.y,
-    startClientX: clientX, startClientY: clientY,
-    stageRect
-  };
-  // Previsualización
+  const p=screenToImage(clientX,clientY);
+  multi.gesture={type:'trace',key:multi.activeTab,startX:p.x,startY:p.y,startClientX:clientX,startClientY:clientY,stageRect};
   const tr=$('traceRect');
-  tr.dataset.tipo = multi.activeTab;
+  tr.dataset.tipo=multi.activeTab;
   tr.style.display='block';
-  tr.style.left = (clientX - stageRect.left) + 'px';
-  tr.style.top  = (clientY - stageRect.top)  + 'px';
+  tr.style.left=(clientX-stageRect.left)+'px';
+  tr.style.top=(clientY-stageRect.top)+'px';
   tr.style.width='0px'; tr.style.height='0px';
   $('multiHint').style.display='none';
 }
-
-function handleMove(clientX, clientY){
-  const g = multi.gesture; if(!g) return;
+function handleMove(clientX,clientY){
+  const g=multi.gesture; if(!g) return;
   if(g.type==='trace'){
-    const stageRect = multi.stage.getBoundingClientRect();
-    const x1 = Math.min(g.startClientX, clientX) - stageRect.left;
-    const y1 = Math.min(g.startClientY, clientY) - stageRect.top;
-    const w  = Math.abs(clientX - g.startClientX);
-    const h  = Math.abs(clientY - g.startClientY);
+    const stageRect=multi.stage.getBoundingClientRect();
+    const x1=Math.min(g.startClientX,clientX)-stageRect.left;
+    const y1=Math.min(g.startClientY,clientY)-stageRect.top;
+    const w=Math.abs(clientX-g.startClientX);
+    const h=Math.abs(clientY-g.startClientY);
     const tr=$('traceRect');
-    tr.style.left = x1+'px'; tr.style.top=y1+'px';
+    tr.style.left=x1+'px'; tr.style.top=y1+'px';
     tr.style.width=w+'px'; tr.style.height=h+'px';
   } else if(g.type==='resize'){
     const s=multi.sel[g.key]; if(!s) return;
-    // dx,dy en pantalla → convertir a coordenadas de imagen
     const nW=multi.img.naturalWidth, nH=multi.img.naturalHeight;
     const dispW=multi.img.clientWidth, dispH=multi.img.clientHeight;
     const sx=nW/dispW, sy=nH/dispH;
-    const dxRaw=(clientX-g.startClientX)/multi.zoom;
-    const dyRaw=(clientY-g.startClientY)/multi.zoom;
-    const dx=dxRaw*sx, dy=dyRaw*sy;
-    const o=g.orig;
-    let nb={...o};
-    const MIN=8;
+    const dx=((clientX-g.startClientX)/multi.zoom)*sx;
+    const dy=((clientY-g.startClientY)/multi.zoom)*sy;
+    const o=g.orig; let nb={...o}; const MIN=8;
     const h=g.handle;
     if(h.includes('l')){ nb.x=o.x+dx; nb.w=o.w-dx; }
     if(h.includes('r')){ nb.w=o.w+dx; }
@@ -1027,7 +1045,6 @@ function handleMove(clientX, clientY){
     if(h.includes('b')){ nb.h=o.h+dy; }
     if(nb.w<MIN) nb.w=MIN;
     if(nb.h<MIN) nb.h=MIN;
-    // Limitar dentro de la imagen
     if(nb.x<0){ nb.w+=nb.x; nb.x=0; }
     if(nb.y<0){ nb.h+=nb.y; nb.y=0; }
     if(nb.x+nb.w>nW) nb.w=nW-nb.x;
@@ -1036,7 +1053,6 @@ function handleMove(clientX, clientY){
     renderSel(g.key);
   }
 }
-
 function handleEnd(){
   const g=multi.gesture; if(!g) return;
   if(g.type==='trace'){
@@ -1045,57 +1061,44 @@ function handleEnd(){
     tr.style.display='none';
     if(rect.width<8 || rect.height<8){
       multi.gesture=null;
-      // Mostrar hint de nuevo si no hay selección
       if(!multi.sel.cite && !multi.sel.detalle) $('multiHint').style.display='';
       return;
     }
-    // Convertir rect de pantalla a coordenadas naturales
-    const stageRect=multi.stage.getBoundingClientRect();
     const wrapRect=multi.wrap.getBoundingClientRect();
-    // El rect está en coordenadas de pantalla; pasamos a coordenadas del wrap (aplicando zoom)
-    const localX1=(rect.left - wrapRect.left)/multi.zoom;
-    const localY1=(rect.top  - wrapRect.top )/multi.zoom;
-    const localX2=(rect.right - wrapRect.left)/multi.zoom;
-    const localY2=(rect.bottom- wrapRect.top )/multi.zoom;
-
+    const localX1=(rect.left-wrapRect.left)/multi.zoom;
+    const localY1=(rect.top-wrapRect.top)/multi.zoom;
+    const localX2=(rect.right-wrapRect.left)/multi.zoom;
+    const localY2=(rect.bottom-wrapRect.top)/multi.zoom;
     const nW=multi.img.naturalWidth, nH=multi.img.naturalHeight;
     const dispW=multi.img.clientWidth, dispH=multi.img.clientHeight;
     const sx=nW/dispW, sy=nH/dispH;
-
     const nx1=localX1*sx, ny1=localY1*sy;
     const nx2=localX2*sx, ny2=localY2*sy;
-
-    multi.sel[g.key] = {
-      x: Math.max(0,nx1), y: Math.max(0,ny1),
-      w: Math.min(nW,nx2)-Math.max(0,nx1),
-      h: Math.min(nH,ny2)-Math.max(0,ny1)
+    multi.sel[g.key]={
+      x:Math.max(0,nx1), y:Math.max(0,ny1),
+      w:Math.min(nW,nx2)-Math.max(0,nx1),
+      h:Math.min(nH,ny2)-Math.max(0,ny1)
     };
     updateMultiTabs();
-    // Auto-cambiar a la otra pestaña si aún falta
     if(g.key==='cite' && !multi.sel.detalle){ multi.activeTab='detalle'; updateMultiTabs(); }
     else if(g.key==='detalle' && !multi.sel.cite){ multi.activeTab='cite'; updateMultiTabs(); }
   }
   multi.gesture=null;
 }
 
-/* ============================================================
-   Zoom con rueda (desktop)
-   ============================================================ */
 $('multiStage').addEventListener('wheel', e=>{
   if(!multi.img) return;
   e.preventDefault();
   const rect=multi.stage.getBoundingClientRect();
   const px=e.clientX-rect.left, py=e.clientY-rect.top;
-  const factor = e.deltaY<0 ? 1.15 : 1/1.15;
-  const newZoom = Math.max(1, Math.min(5, multi.zoom*factor));
-  multi.panX = multi.panX - (px - multi.panX)*(newZoom/multi.zoom - 1);
-  multi.panY = multi.panY - (py - multi.panY)*(newZoom/multi.zoom - 1);
-  multi.zoom=newZoom;
-  applyTransform();
-}, {passive:false});
+  const factor=e.deltaY<0?1.15:1/1.15;
+  const newZoom=Math.max(1,Math.min(5,multi.zoom*factor));
+  multi.panX=multi.panX-(px-multi.panX)*(newZoom/multi.zoom-1);
+  multi.panY=multi.panY-(py-multi.panY)*(newZoom/multi.zoom-1);
+  multi.zoom=newZoom; applyTransform();
+},{passive:false});
 
-/* Botones flotantes del modo multi */
-$('btnZoomReset').addEventListener('click', ()=>{
+$('btnZoomReset').addEventListener('click',()=>{
   multi.zoom=1;
   const stageRect=multi.stage.getBoundingClientRect();
   const w=multi.img.clientWidth, h=multi.img.clientHeight;
@@ -1103,68 +1106,55 @@ $('btnZoomReset').addEventListener('click', ()=>{
   multi.panY=(stageRect.height-h)/2;
   applyTransform();
 });
-$('btnClearSel').addEventListener('click', ()=>{
+$('btnClearSel').addEventListener('click',()=>{
   multi.sel[multi.activeTab]=null;
   updateMultiTabs();
-  $('multiHint').style.display = '';
+  $('multiHint').style.display='';
 });
-
-/* Cambio de pestaña CITE/DETALLE */
 document.querySelectorAll('.multi-tab').forEach(t=>{
-  t.addEventListener('click', ()=>{
+  t.addEventListener('click',()=>{
     multi.activeTab=t.dataset.tipo;
     updateMultiTabs();
   });
 });
 
-/* ============================================================
-   Recorte desde imagen natural
-   ============================================================ */
-function cropFromImageNatural(imgEl, box){
+function cropFromImageNatural(imgEl,box){
   const c=document.createElement('canvas');
   c.width=Math.max(1,Math.round(box.w));
   c.height=Math.max(1,Math.round(box.h));
   const ctx=c.getContext('2d');
-  ctx.drawImage(imgEl, Math.round(box.x), Math.round(box.y), Math.round(box.w), Math.round(box.h), 0,0, c.width, c.height);
+  ctx.drawImage(imgEl,Math.round(box.x),Math.round(box.y),Math.round(box.w),Math.round(box.h),0,0,c.width,c.height);
   return c;
 }
-
 function closeMulti(){
   $('multiWrap').classList.remove('active');
   $('multiImage').src='';
   multi.img=null;
   multi.sel={cite:null,detalle:null};
 }
-
 async function applyMultiAndOCR(){
   if(!multi.img) return;
-  if(!multi.sel.cite && !multi.sel.detalle){
-    toast('Dibuja al menos una selección'); return;
-  }
-  const jobs = [];
-  if(multi.sel.cite)    jobs.push({ target:'cite',      box: multi.sel.cite });
-  if(multi.sel.detalle) jobs.push({ target:'contenido', box: multi.sel.detalle });
+  if(!multi.sel.cite && !multi.sel.detalle){ toast('Dibuja al menos una selección'); return; }
+  const jobs=[];
+  if(multi.sel.cite)    jobs.push({target:'cite',box:multi.sel.cite});
+  if(multi.sel.detalle) jobs.push({target:'contenido',box:multi.sel.detalle});
 
-  // Capturar datos antes de cerrar
-  const imgEl = multi.img;
-  const prepared = jobs.map(j=>{
-    const canvas = cropFromImageNatural(imgEl, j.box);
-    const dataUrl = preprocessForOCR(canvas).toDataURL('image/jpeg',0.92);
-    return { target:j.target, dataUrl };
+  const imgEl=multi.img;
+  const prepared=jobs.map(j=>{
+    const canvas=cropFromImageNatural(imgEl,j.box);
+    const processed=preprocessForOCR(canvas);
+    return {target:j.target, canvas:processed, dataUrl:processed.toDataURL('image/jpeg',0.92)};
   });
-
-  $('preview').src = prepared[prepared.length-1].dataUrl;
+  $('preview').src=prepared[prepared.length-1].dataUrl;
   $('preview').style.display='block';
-
   closeMulti();
-
   for(const p of prepared){
-    await runOCR(p.dataUrl, p.target);
+    await runOCR(p.canvas, p.target);
   }
 }
 
 /* ============================================================
-   Preprocesado y OCR
+   PREPROCESADO Y OCR (con rotación automática)
    ============================================================ */
 function preprocessForOCR(sourceCanvas){
   const c=document.createElement('canvas');
@@ -1181,17 +1171,35 @@ function preprocessForOCR(sourceCanvas){
   ctx.putImageData(img,0,0);
   return c;
 }
-async function runOCR(imageDataUrl,target){
+
+async function runOCR(imageCanvas, target){
   if(!state.ocrReady){
     setStatus('Cargando motor OCR (primera vez)...',true);
     await preloadOCR();
     if(!state.ocrReady){ setStatus('❌ No se pudo cargar OCR'); return; }
   }
-  setStatus('Reconociendo texto...',true);
+  setStatus('Detectando orientación…',true);
   try{
-    const {data:{text}}=await state.ocrWorker.recognize(imageDataUrl);
-    const limpio=text.trim().replace(/\n{3,}/g,'\n\n');
+    // Detectar la mejor rotación para esta imagen
+    const best = await recognizeBestRotation(imageCanvas);
+    let text = best.text.trim();
+
+    // El texto elegido ya viene en la orientación correcta.
+    // Si la confianza es muy baja, hacer una segunda pasada con PSM distinto
+    if(!text || text.length < 3){
+      setStatus('Reintentando reconocimiento…',true);
+      const dataUrl = rotateCanvas(imageCanvas, best.deg).toDataURL('image/jpeg',0.92);
+      try{
+        await state.ocrWorker.setParameters({tessedit_pageseg_mode:'3'});
+        const {data} = await state.ocrWorker.recognize(dataUrl);
+        text = (data.text||'').trim();
+        await state.ocrWorker.setParameters({tessedit_pageseg_mode:'6'});
+      }catch(_){}
+    }
+
+    const limpio = text.replace(/\n{3,}/g,'\n\n').trim();
     if(!limpio){ setStatus('⚠️ No se detectó texto'); toast('No se detectó texto en la región'); return; }
+
     if(target==='cite'){
       const primera=limpio.split(/\n/)[0].trim();
       $('cite').value=primera; updateBadge('cite',primera);
@@ -1200,7 +1208,7 @@ async function runOCR(imageDataUrl,target){
       ta.value = ta.value ? ta.value+'\n'+limpio : limpio;
       updateBadge('contenido',ta.value);
     }
-    setStatus(`✅ Texto extraído (${limpio.length} caracteres)`);
+    setStatus(`✅ Texto extraído (${limpio.length} caracteres · ${best.deg}°)`);
     toast('Texto reconocido');
   }catch(err){
     console.error(err);
@@ -1212,7 +1220,7 @@ async function runOCR(imageDataUrl,target){
 /* ============================================================
    Galería
    ============================================================ */
-$('btnGallery').addEventListener('click', ()=>{
+$('btnGallery').addEventListener('click',()=>{
   const t=prompt('¿Para qué campo es esta imagen? "cite" o "contenido":','contenido');
   if(!t) return;
   state.currentTarget=t.trim().toLowerCase().startsWith('c')?'cite':'contenido';
@@ -1230,37 +1238,35 @@ $('fileInput').addEventListener('change', e=>{
    Guardar
    ============================================================ */
 function guardar(){
-  const tipo          = $('tipo').value.trim();
-  const entradaSalida = $('entradaSalida').value;
-  const cite          = $('cite').value.trim();
-  const detalle       = $('detalle').value.trim();
-  const medidas       = $('medidas').value.trim();
-  const fecha = `${state.fecha.year}-${pad(state.fecha.month+1)}-${pad(state.fecha.day)}`;
-  const hora  = `${pad(state.hora.hour)}:${pad(state.hora.min)}`;
+  const tipo=$('tipo').value.trim();
+  const entradaSalida=$('entradaSalida').value;
+  const cite=$('cite').value.trim();
+  const detalle=$('detalle').value.trim();
+  const unidad=$('unidad').value.trim();
+  const medidas=$('medidas').value.trim();
+  const fecha=`${state.fecha.year}-${pad(state.fecha.month+1)}-${pad(state.fecha.day)}`;
+  const hora=`${pad(state.hora.hour)}:${pad(state.hora.min)}`;
 
   if(!tipo||!entradaSalida){ toast('Complete Tipo y Entrada/Salida'); return; }
   if(!cite&&!detalle){ toast('Debe registrar al menos CITE o Detalle'); return; }
 
   state.registros.push({
-    id:Date.now(), tipo, cite, detalle, entradaSalida, fecha, hora, medidas,
+    id:Date.now(), tipo, cite, detalle, entradaSalida, unidad, fecha, hora, medidas,
     creadoEn:new Date().toISOString()
   });
   localStorage.setItem(STORAGE_KEY,JSON.stringify(state.registros));
   updateCount();
   toast('✅ Registro guardado');
 
-  ['cite','detalle','medidas'].forEach(id=> $(id).value='');
+  ['cite','detalle','unidad','medidas'].forEach(id=> $(id).value='');
   $('tipo').value=''; $('entradaSalida').value='';
   $('preview').style.display='none';
   updateBadge('cite',''); updateBadge('contenido','');
   setStatus('');
-  // Refrescar fecha/hora a la actual
-  setDTNow();
-  refreshDTSummary();
-  // Si el editor está abierto, sincronizar
+  setDTNow(); refreshDTSummary();
   if($('dtEditor').classList.contains('open')){
-    const wrap=$('dateTimePicker');
     const now=new Date();
+    const wrap=$('dateTimePicker');
     wrap.querySelector('[data-col="day"]').scrollTo({top:(now.getDate()-1)*38, behavior:'auto'});
     wrap.querySelector('[data-col="month"]').scrollTo({top:now.getMonth()*38, behavior:'auto'});
     wrap.querySelector('[data-col="year"]').scrollTo({top:(now.getFullYear()-(now.getFullYear()-5))*38, behavior:'auto'});
@@ -1274,16 +1280,12 @@ function guardar(){
    ============================================================ */
 function openList(){ renderTabla(''); $('listModal').classList.add('active'); setTimeout(()=>$('searchInput').focus(),100); }
 function closeList(){ $('listModal').classList.remove('active'); }
-
-function normalizar(s){
-  return String(s??'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-}
+function normalizar(s){ return String(s??'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 function renderTabla(filtro){
   const q=normalizar(filtro.trim());
   const todos=[...state.registros].reverse();
   const filtrados=!q?todos:todos.filter(r=>{
-    const bolsa=[r.tipo,r.cite,r.detalle,r.entradaSalida,r.hora,r.fecha,r.medidas]
-      .map(normalizar).join(' | ');
+    const bolsa=[r.tipo,r.cite,r.detalle,r.entradaSalida,r.unidad,r.hora,r.fecha,r.medidas].map(normalizar).join(' | ');
     return bolsa.includes(q);
   });
   $('countFiltered').textContent=`${filtrados.length} registro${filtrados.length===1?'':'s'}`+(q?` (de ${todos.length})`:'');
@@ -1297,6 +1299,7 @@ function renderTabla(filtro){
       <td>${escapeHtml(r.cite)}</td>
       <td class="wrap">${escapeHtml(r.detalle)}</td>
       <td>${r.entradaSalida==='Entrada'?'⬇️':'⬆️'} ${escapeHtml(r.entradaSalida)}</td>
+      <td>${escapeHtml(r.unidad)}</td>
       <td>${escapeHtml(r.fecha)}</td>
       <td>${escapeHtml(r.hora)}</td>
       <td>${escapeHtml(r.medidas)}</td>
@@ -1317,7 +1320,7 @@ function renderTabla(filtro){
 function escapeHtml(s){
   return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-$('searchInput').addEventListener('input', e=> renderTabla(e.target.value));
+$('searchInput').addEventListener('input',e=> renderTabla(e.target.value));
 
 /* ============================================================
    Excel
@@ -1329,13 +1332,14 @@ function exportarExcel(){
     'CITE':r.cite,
     'Detalle':r.detalle,
     'Entrada/Salida':r.entradaSalida,
+    'Unidad/Destino':r.unidad,
     'Fecha':r.fecha,
     'Hora':r.hora,
     'Medidas tomadas':r.medidas
   }));
   const wb=XLSX.utils.book_new();
   const ws=XLSX.utils.json_to_sheet(datos);
-  ws['!cols']=[{wch:18},{wch:20},{wch:40},{wch:14},{wch:12},{wch:8},{wch:24}];
+  ws['!cols']=[{wch:18},{wch:20},{wch:40},{wch:14},{wch:20},{wch:12},{wch:8},{wch:24}];
   XLSX.utils.book_append_sheet(wb,ws,'Registros');
   XLSX.writeFile(wb,`registros_${new Date().toISOString().slice(0,10)}.xlsx`);
   toast('📊 Excel generado');
@@ -1359,14 +1363,11 @@ $('btnGuardar').addEventListener('click',guardar);
 $('btnVerRegistros').addEventListener('click',openList);
 $('btnCloseList').addEventListener('click',closeList);
 $('btnExportar').addEventListener('click',exportarExcel);
-
 $('cite').addEventListener('input',e=>updateBadge('cite',e.target.value));
 $('detalle').addEventListener('input',e=>updateBadge('contenido',e.target.value));
-
 $('btnEditDT').addEventListener('click',openDTEditor);
 $('btnCancelDT').addEventListener('click',()=>closeDTEditor(false));
 $('btnApplyDT').addEventListener('click',()=>closeDTEditor(true));
-
 window.addEventListener('beforeunload',()=>{
   if(state.stream) state.stream.getTracks().forEach(t=>t.stop());
 });
@@ -1378,10 +1379,8 @@ window.addEventListener('beforeunload',()=>{
   loadTipos();
   updateCount();
   updateBadge('cite',''); updateBadge('contenido','');
-  setDTNow();
-  refreshDTSummary();
+  setDTNow(); refreshDTSummary();
   bindStageGestures();
-
   if('requestIdleCallback' in window) requestIdleCallback(preloadOCR,{timeout:3000});
   else setTimeout(preloadOCR,1500);
 })();
