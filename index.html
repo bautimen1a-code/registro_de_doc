@@ -58,13 +58,9 @@
   .btn-group{display:flex;gap:8px;}
   .btn-group button{flex:1;}
 
-  /* Input con botón ⚙️ al lado */
   .input-with-action{display:flex;gap:6px;}
   .input-with-action select{flex:1;min-width:0;}
-  .input-with-action button{
-    width:40px;padding:0;flex:0 0 40px;
-    background:#e2e8f0;color:var(--text);font-size:1.05rem;
-  }
+  .input-with-action button{width:40px;padding:0;flex:0 0 40px;background:#e2e8f0;color:var(--text);font-size:1.05rem;}
   .input-with-action button:hover{background:#cbd5e1;}
 
   .ocr-row{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:4px;}
@@ -72,7 +68,6 @@
   .ocr-row .tag.ok{background:#dcfce7;color:#166534;}
   .ocr-row .tag.empty{background:#f1f5f9;color:#64748b;}
 
-  /* FECHA/HORA COLAPSABLE */
   .dt-summary{
     display:flex;align-items:center;justify-content:space-between;gap:10px;
     background:#f8fafc;border:1px solid var(--border);border-radius:8px;
@@ -107,7 +102,6 @@
   .dt-actions{display:flex;gap:8px;margin-top:8px;}
   .dt-actions button{flex:1;}
 
-  /* Cámara */
   #cameraWrap{display:none;position:fixed;inset:0;background:#000;z-index:1000;}
   #cameraWrap.active{display:block;}
   #video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;}
@@ -146,7 +140,6 @@
   .dest-picker button{flex-direction:column;padding:12px;line-height:1.2;font-size:.85rem;}
   .dest-picker button small{font-weight:400;font-size:.68rem;opacity:.85;margin-top:2px;}
 
-  /* Cropper simple */
   #cropperWrap{display:none;position:fixed;inset:0;background:#000;z-index:1001;flex-direction:column;}
   #cropperWrap.active{display:flex;}
   #cropperWrap .cropper-container-wrap{flex:1;min-height:0;overflow:hidden;position:relative;}
@@ -156,7 +149,6 @@
   .crop-bar .actions{display:flex;gap:8px;}
   .crop-bar .actions button{flex:1;}
 
-  /* MODO SELECCIÓN LIBRE */
   #multiWrap{display:none;position:fixed;inset:0;background:#000;z-index:1002;flex-direction:column;}
   #multiWrap.active{display:flex;}
   .multi-tabs{display:flex;background:#111;padding:calc(var(--safe-top) + 8px) 8px 8px;gap:8px;}
@@ -213,7 +205,6 @@
   }
   .toast.show{transform:translateX(-50%) translateY(0);}
 
-  /* Modal Registros */
   #listModal{display:none;position:fixed;inset:0;background:var(--bg);z-index:1500;flex-direction:column;}
   #listModal.active{display:flex;}
   .list-header{
@@ -238,7 +229,6 @@
   table.xls td .del-btn{background:none;border:none;color:var(--danger);font-size:.95rem;padding:0;width:auto;cursor:pointer;}
   .empty-state{text-align:center;color:var(--muted);padding:36px 20px;font-size:.85rem;}
 
-  /* ========= MODAL GESTOR DE LISTAS (tipos / unidades) ========= */
   #listMgr{
     display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:1600;
     align-items:flex-end;
@@ -257,12 +247,8 @@
     display:flex;justify-content:space-between;align-items:center;gap:8px;
   }
   .mgr-head h3{margin:0;font-size:1rem;}
-  .mgr-body{
-    padding:12px 16px;overflow-y:auto;flex:1;
-  }
-  .mgr-add{
-    display:flex;gap:8px;margin-bottom:12px;
-  }
+  .mgr-body{padding:12px 16px;overflow-y:auto;flex:1;}
+  .mgr-add{display:flex;gap:8px;margin-bottom:12px;}
   .mgr-add input{flex:1;padding:8px 10px;font-size:.9rem;border-radius:7px;border:1px solid var(--border);background:#f8fafc;}
   .mgr-add button{width:auto;padding:8px 14px;font-size:.85rem;}
   .mgr-item{
@@ -295,7 +281,6 @@
 
 <div class="card">
 
-  <!-- Tipo de documento + Unidad/Destino -->
   <div class="row">
     <div class="field">
       <label for="tipo">Tipo de documento *</label>
@@ -313,7 +298,6 @@
     </div>
   </div>
 
-  <!-- Entrada/Salida -->
   <div class="row">
     <div class="field">
       <label for="entradaSalida">Entrada / Salida *</label>
@@ -329,7 +313,6 @@
     </div>
   </div>
 
-  <!-- CITE -->
   <div class="field">
     <div class="ocr-row">
       <label style="margin:0;">CITE (OCR)</label>
@@ -338,7 +321,6 @@
     <input id="cite" type="text" placeholder="Ej: CITE-2024-001" autocomplete="off">
   </div>
 
-  <!-- Detalle -->
   <div class="field">
     <div class="ocr-row">
       <label style="margin:0;">Detalle / contenido (OCR)</label>
@@ -347,7 +329,6 @@
     <textarea id="detalle" rows="3" placeholder="Texto reconocido del documento…"></textarea>
   </div>
 
-  <!-- Escaneo -->
   <div class="field">
     <label>Escanear con cámara</label>
     <button id="btnScanDouble" class="btn-primary" style="margin-bottom:8px;">
@@ -365,7 +346,6 @@
     <div class="status" id="status" style="font-size:.78rem;color:var(--muted);margin-top:6px;text-align:center;min-height:16px;"></div>
   </div>
 
-  <!-- FECHA Y HORA -->
   <div class="field">
     <label>Fecha y hora *</label>
     <div class="dt-summary">
@@ -399,7 +379,7 @@
   <p class="hint" style="text-align:center;margin-top:6px;">Registros guardados: <strong id="countRegistros">0</strong></p>
 </div>
 
-<!-- ============ CÁMARA ============ -->
+<!-- CÁMARA -->
 <div id="cameraWrap">
   <video id="video" autoplay playsinline muted></video>
   <div id="frameGuide"></div>
@@ -415,7 +395,7 @@
   </div>
 </div>
 
-<!-- ============ CROPPER simple ============ -->
+<!-- CROPPER simple -->
 <div id="cropperWrap">
   <div class="cropper-container-wrap">
     <img id="cropperImage" alt="Recorte">
@@ -429,7 +409,7 @@
   </div>
 </div>
 
-<!-- ============ MODO SELECCIÓN LIBRE ============ -->
+<!-- MODO SELECCIÓN LIBRE -->
 <div id="multiWrap">
   <div class="multi-tabs">
     <button class="multi-tab active" data-tipo="cite" id="tabCite">
@@ -475,7 +455,7 @@
   </div>
 </div>
 
-<!-- ============ MODAL REGISTROS ============ -->
+<!-- MODAL REGISTROS -->
 <div id="listModal">
   <div class="list-header">
     <div class="title-row">
@@ -509,7 +489,7 @@
   </div>
 </div>
 
-<!-- ============ MODAL GESTOR DE LISTAS ============ -->
+<!-- MODAL GESTOR DE LISTAS -->
 <div id="listMgr">
   <div class="sheet">
     <div class="mgr-head">
@@ -556,7 +536,7 @@ const state = {
   hora:  { hour:0, min:0 },
   fechaBackup: null,
   horaBackup: null,
-  mgr: { target:null }   // 'tipos' | 'unidades'
+  mgr: { target:null }
 };
 const $ = (id) => document.getElementById(id);
 const pad = n => String(n).padStart(2, '0');
@@ -581,7 +561,7 @@ function updateBadge(target,val){
 function updateCount(){ $('countRegistros').textContent = state.registros.length; }
 
 /* ============================================================
-   GESTOR DE LISTAS (tipos y unidades)
+   GESTOR DE LISTAS
    ============================================================ */
 const TIPOS_DEFAULT = ['Oficio','Memorándum','Carta','Informe','Solicitud','Resolución','Circular','Nota','Otro'];
 const UNIDADES_DEFAULT = ['Secretaría General','Recursos Humanos','Contabilidad','Tesorería','Logística','Legal','Dirección','Archivo'];
@@ -603,11 +583,8 @@ function refreshSelect(kind){
   arr.forEach(v=>{
     const o=document.createElement('option'); o.value=v; o.textContent=v; sel.appendChild(o);
   });
-  // Restaurar si aún existe
   if(arr.includes(prev)) sel.value = prev;
 }
-
-/* Abrir gestor */
 function openMgr(kind){
   state.mgr.target = kind;
   $('mgrTitle').textContent = kind==='tipos' ? 'Tipos de documento' : 'Unidades / Destino';
@@ -637,8 +614,6 @@ function renderMgrList(){
       </div>
     </div>
   `).join('');
-
-  // Guardar renombrado
   cont.querySelectorAll('[data-act="save"]').forEach(btn=>{
     btn.addEventListener('click', e=>{
       const idx = Number(e.target.dataset.idx);
@@ -646,7 +621,6 @@ function renderMgrList(){
       const nuevo = input.value.trim();
       if(!nuevo){ toast('El nombre no puede estar vacío'); return; }
       const arr = getList(kind).slice();
-      // Evitar duplicado
       if(arr.some((x,j)=> j!==idx && x.toLowerCase()===nuevo.toLowerCase())){
         toast('Ya existe un elemento con ese nombre'); return;
       }
@@ -656,7 +630,6 @@ function renderMgrList(){
       toast('Actualizado');
     });
   });
-  // Eliminar
   cont.querySelectorAll('[data-act="del"]').forEach(btn=>{
     btn.addEventListener('click', e=>{
       const idx = Number(e.target.dataset.idx);
@@ -669,7 +642,6 @@ function renderMgrList(){
       toast('Eliminado');
     });
   });
-  // Enter en input = guardar
   cont.querySelectorAll('.mgr-item input').forEach(input=>{
     input.addEventListener('keydown', e=>{
       if(e.key==='Enter'){ e.preventDefault(); input.parentElement.querySelector('[data-act="save"]').click(); }
@@ -794,38 +766,61 @@ function closeDTEditor(apply){
 }
 
 /* ============================================================
-   OCR — worker principal + worker OSD (orientación)
+   OCR — worker principal + worker OSD
    ============================================================ */
 async function preloadOCR(){
   if(state.ocrReady||state.ocrLoading) return;
   state.ocrLoading=true;
   try{
-    // Worker principal: OCR español
+    // 🔧 OSD: Worker principal con OEM=1 (LSTM_ONLY, mejor para texto impreso)
+    //          El modo de página se ajusta a '3' (AUTO_OSD) en cada recognize.
     state.ocrWorker = await Tesseract.createWorker('spa', 1, {logger:()=>{}});
     await state.ocrWorker.setParameters({
-      tessedit_pageseg_mode:'6',
-      preserve_interword_spaces:'1'
+      tessedit_pageseg_mode: '3',            // 🔧 AUTO_OSD (detecta orientación + texto)
+      preserve_interword_spaces: '1'
     });
-    // Worker secundario: OSD (detección de orientación y script)
-    state.osdWorker = await Tesseract.createWorker('osd', 1, {logger:()=>{}});
+
+    // 🔧 OSD: Worker de detección de orientación con OEM=2 (TESSERACT_LSTM_COMBINED)
+    //        Con OEM=1 los ángulos suelen devolverse erróneos.
+    state.osdWorker = await Tesseract.createWorker('osd', 2, {logger:()=>{}});
+    await state.osdWorker.setParameters({
+      tessedit_pageseg_mode: '0'             // 🔧 OSD_ONLY puro
+    });
+
     state.ocrReady = true;
-    console.log('[OCR] listo (principal + OSD)');
+    console.log('[OCR] listo (spa OEM=1 + osd OEM=2)');
   }catch(e){ console.warn('[OCR]',e); }
   finally{ state.ocrLoading=false; }
 }
 
-/* Detecta la orientación del texto (0/90/180/270) y devuelve la imagen rotada
-   para que el OCR principal reconozca aunque el documento esté girado. */
+/* 🔧 OSD: Detecta orientación (0/90/180/270) y devuelve la imagen enderezada.
+   Si OSD falla, devuelve la imagen original sin bloquear el OCR. */
 async function autoRotateForOCR(dataUrl){
-  if(!state.osdWorker) return dataUrl;  // si no hay OSD, devolvemos igual
+  if(!state.osdWorker) return dataUrl;
   try{
-    const { data } = await state.osdWorker.recognize(dataUrl);
-    // data.orientation_degrees puede ser 0, 90, 180, 270 (giro necesario para enderezar)
-    const deg = Number(data.orientation_degrees || 0);
-    if(!deg || deg === 0) return dataUrl;
+    // 1ª pasada con OSD_ONLY
+    let { data } = await state.osdWorker.recognize(dataUrl);
+    let deg = Number(data.orientation_degrees ?? 0);
+
+    // Fallback: si no hay ángulo válido, reintenta en modo AUTO_OSD
+    if(!deg || !Number.isFinite(deg)){
+      try{
+        await state.osdWorker.setParameters({ tessedit_pageseg_mode: '3' });
+        const r2 = await state.osdWorker.recognize(dataUrl);
+        deg = Number(r2.data.orientation_degrees ?? 0);
+        await state.osdWorker.setParameters({ tessedit_pageseg_mode: '0' });
+      }catch(_){ /* silencioso */ }
+    }
+
+    // Normalizar a múltiplos de 90
+    deg = Math.round(deg / 90) * 90;
+    deg = ((deg % 360) + 360) % 360;
+    if(!deg) return dataUrl;
+
+    console.log('[OSD] rotación detectada:', deg, '°');
     return await rotateImageDataURL(dataUrl, deg);
   }catch(e){
-    console.warn('[OSD] fallo', e);
+    console.warn('[OSD] fallo, se usa imagen original', e);
     return dataUrl;
   }
 }
@@ -1251,22 +1246,37 @@ function preprocessForOCR(sourceCanvas){
   return c;
 }
 
-/* OCR con auto-rotación: detecta orientación, endereza y reconoce */
+/* 🔧 OCR con doble pasada de orientación:
+   1) OSD_ONLY para detectar los 4 ángulos cardinales
+   2) Rotación de la imagen si hace falta
+   3) Reconocimiento con AUTO_OSD + rotateAuto (ajuste fino para ángulos < 15°) */
 async function runOCR(imageDataUrl, target){
   if(!state.ocrReady){
     setStatus('Cargando motor OCR (primera vez)...', true);
     await preloadOCR();
     if(!state.ocrReady){ setStatus('❌ No se pudo cargar OCR'); return; }
   }
-  setStatus('Detectando orientación…', true);
   try{
-    // 1) Auto-rotar según OSD
+    // Paso 1: enderezar si está girado 90/180/270
+    setStatus('Detectando orientación…', true);
     const rectified = await autoRotateForOCR(imageDataUrl);
 
-    // 2) Reconocer texto
+    // Paso 2: reconocimiento principal con AUTO_OSD y rotateAuto (ángulos pequeños)
     setStatus('Reconociendo texto...', true);
-    const { data:{ text } } = await state.ocrWorker.recognize(rectified);
-    const limpio = text.trim().replace(/\n{3,}/g,'\n\n');
+    await state.ocrWorker.setParameters({
+      tessedit_pageseg_mode: '3',            // 🔧 AUTO_OSD
+      preserve_interword_spaces: '1'
+    });
+
+    let result;
+    try{
+      result = await state.ocrWorker.recognize(rectified, { rotateAuto: true });
+    }catch(_){
+      // Si rotateAuto no está soportado en esta versión, reintenta sin él
+      result = await state.ocrWorker.recognize(rectified);
+    }
+
+    const limpio = (result.data.text || '').trim().replace(/\n{3,}/g,'\n\n');
     if(!limpio){ setStatus('⚠️ No se detectó texto'); toast('No se detectó texto en la región'); return; }
 
     if(target==='cite'){
